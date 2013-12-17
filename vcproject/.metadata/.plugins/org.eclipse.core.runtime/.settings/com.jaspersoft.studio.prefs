@@ -1,0 +1,5 @@
+dataAdapters=<dataAdapters>\n<emptyDataAdapter class\="net.sf.jasperreports.data.empty.EmptyDataAdapterImpl"><name>One Empty Record</name><recordCount>1</recordCount></emptyDataAdapter><jdbcDataAdapter class\="net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl"><name>Sample DB</name><driver>org.hsqldb.jdbcDriver</driver><username>sa</username><password></password><savePassword>true</savePassword><url>jdbc\:hsqldb\:res\:/defaults/hsqldb/test</url><database></database><serverAddress></serverAddress></jdbcDataAdapter></dataAdapters>
+eclipse.preferences.version=1
+jssbranding_product_mainbundle=com.jaspersoft.studio
+jssbranding_product_name=Jaspersoft Studio plug-in
+jssbranding_product_version=5.5.0.final
