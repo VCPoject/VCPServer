@@ -16,8 +16,6 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 
-import controler.LogIn_controller;
-
 public class VCP_Main_Frame extends JFrame {
 
 	/**
@@ -25,13 +23,14 @@ public class VCP_Main_Frame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Main_Panel mainPanel;
-	private LogIn_Frame loginframe;
+	private LogIn_Panel loginpanel;
 	private Order_Panel orderPanel;
 	private Register_Panel registerPanel;
 	private Payment_Frame paymentFrame;
 	private CheckInOut_Frame CheckInOutFrame;
 	private CancelOrder_Panel cancelOrder;
-	private LogIn_controller logincontroller;
+	private Complain_Panel complain;
+	private ComplainFu_Panel complainFu;
 
 	public VCP_Main_Frame() {
 		super();
@@ -74,48 +73,9 @@ public class VCP_Main_Frame extends JFrame {
 
 		getMainPanel().getBtnEmploeyLogin().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				getLogIn_Frame();
-				getLogIn_Frame().setVisible(true);
-			
-				loginframe.getLogIn_Panel().getBtnReturn().addActionListener(new ActionListener(){
-					
-					public void actionPerformed(ActionEvent e) {
-						loginframe.dispose();
-						enableMainFrame();
-					}
-					
-				});
-				
-				loginframe.getLogIn_Panel().getBtnSubmit().addActionListener(new ActionListener(){
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						 
-						String username=loginframe.getLogIn_Panel().getUserText().getText();
-						String password=loginframe.getLogIn_Panel().getPswdText().getText();
-						logincontroller=new LogIn_controller(username, password);
-						logincontroller.checkValidity();
-						//System.out.println(loginframe.getLogIn_Panel().getPswdText().getText());
-						//System.out.println(loginframe.getLogIn_Panel().getUserText().getText());
-					}
-					
-				});
-				
-				loginframe.getLogIn_Panel().getPswdText().addKeyListener(new KeyAdapter(){
-					public void keyPressed(KeyEvent e){
-				        if (e.getKeyCode() == KeyEvent.VK_ENTER)
-				        	loginframe.getLogIn_Panel().getBtnSubmit().doClick();
-				        
-				     }
-				 });
-				
-				loginframe.getLogIn_Panel().getUserText().addKeyListener(new KeyAdapter(){
-					public void keyPressed(KeyEvent e){
-				        if (e.getKeyCode() == KeyEvent.VK_ENTER)
-				        	loginframe.getLogIn_Panel().getBtnSubmit().doClick();
-				    }
-				 });
+				setContentPane(getLogIn_Panel());
 			}
+
 		});
 	
 
@@ -160,7 +120,41 @@ public class VCP_Main_Frame extends JFrame {
 			}
 		});
 		
+		getLogIn_Panel().getBtnReturn().addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getMainPanel());
+				
+			}
+			
+		});
 		
+		getLogIn_Panel().getBtnSubmit().addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 
+				
+				System.out.println(getLogIn_Panel().getPswdText().getText());
+				 System.out.println(getLogIn_Panel().getUserText().getText());
+			}
+			
+		});
+		
+		getLogIn_Panel().getPswdText().addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent e){
+		        if (e.getKeyCode() == KeyEvent.VK_ENTER)
+		        	getLogIn_Panel().getBtnSubmit().doClick();
+		        
+		     }
+		 });
+		
+		getLogIn_Panel().getUserText().addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent e){
+		        if (e.getKeyCode() == KeyEvent.VK_ENTER)
+		        	getLogIn_Panel().getBtnSubmit().doClick();
+		    }
+		 });
 		
 		mainPanel.getBtnCheckIn().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -203,8 +197,48 @@ public class VCP_Main_Frame extends JFrame {
 				setContentPane(getMainPanel());
 			}
 		});	
+		
+		mainPanel.getBtnComplain().addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+			setContentPane(getComplainPanel());
+		}
+		});
+		
+		getComplainPanel().getBtnReturn().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getMainPanel());
+			}
+		});
+		
+		mainPanel.getBtnComplainFu().addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+			setContentPane(getComplainPanelFu());
+		}
+		});
+		
+		getComplainPanelFu().getBtnReturn().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getMainPanel());
+			}
+		});
 	}
 	
+
+	public   Complain_Panel getComplainPanel() {
+		if (complain == null) {
+			complain = new Complain_Panel();
+		}
+		return complain;
+		
+	}
+	
+	public   ComplainFu_Panel getComplainPanelFu() {
+		if (complainFu == null) {
+			complainFu = new ComplainFu_Panel();
+		}
+		return complainFu;
+		
+	}
 
 	private void closeMainFrame() {
 		this.setVisible(false);
@@ -228,12 +262,12 @@ public class VCP_Main_Frame extends JFrame {
 	}
 	
 
-	public LogIn_Frame getLogIn_Frame() {
+	public LogIn_Panel getLogIn_Panel() {
 		
-		if(loginframe==null)
-			loginframe=new LogIn_Frame();
+		if(loginpanel==null)
+			loginpanel=new LogIn_Panel();
 		
-		return loginframe; 
+		return loginpanel; 
 	}
 
 
@@ -261,7 +295,6 @@ public class VCP_Main_Frame extends JFrame {
 		}
 		return paymentFrame;
 	}
-	
 	
 	public CheckInOut_Frame getCheckInFrame(boolean isCheckIn) {
 		if(CheckInOutFrame == null)
