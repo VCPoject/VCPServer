@@ -5,8 +5,12 @@ package ocsf.server;
 // license found at www.lloseng.com 
 
 import java.io.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import ocsf.server.*;
+import serverGui.Main_Frame;
 import sun.security.jca.GetInstance.Instance;
 
 /**
@@ -39,6 +43,11 @@ public class EchoServer extends AbstractServer {
 		super(port);
 	}
 
+	
+	public int getNumberOfConnections(){
+		return getNumberOfClients();
+	}
+
 	// Instance methods ************************************************
 
 	/**
@@ -49,25 +58,27 @@ public class EchoServer extends AbstractServer {
 	 * @param client
 	 *            The connection from which the message originated.
 	 */
-	
+
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		try {
 			MySqlConnection toDB = new MySqlConnection();
 			toDB.update(toDB.getConn(), (Object[]) msg);
 			this.sendToAllClients(toDB.getResult());
 		} catch (Exception e) {
-			System.out.println("handleMessageFromClient error:" + e.getMessage());
+			System.out.println("handleMessageFromClient error:"
+					+ e.getMessage());
 		}
 
 	}
-	
+
 	public void handleMessageFromClient(Object[] msg, ConnectionToClient client) {
 		try {
 			MySqlConnection toDB = new MySqlConnection();
 			toDB.update(toDB.getConn(), msg);
 			this.sendToAllClients(toDB.getResult());
 		} catch (Exception e) {
-			System.out.println("handleMessageFromClient error:" + e.getMessage());
+			System.out.println("handleMessageFromClient error:"
+					+ e.getMessage());
 		}
 
 	}
@@ -90,31 +101,5 @@ public class EchoServer extends AbstractServer {
 	}
 
 	// Class methods ***************************************************
-
-	/**
-	 * This method is responsible for the creation of the server instance (there
-	 * is no UI in this phase).
-	 * 
-	 * @param args
-	 *            [0] The port number to listen on. Defaults to 5555 if no
-	 *            argument is entered.
-	 */
-	public static void main(String[] args) {
-		int port = 0; // Port to listen on
-
-		try {
-			port = Integer.parseInt(args[0]); // Get port from command line
-		} catch (Throwable t) {
-			port = DEFAULT_PORT; // Set port to 5555
-		}
-
-		EchoServer sv = new EchoServer(port);
-
-		try {
-			sv.listen(); // Start listening for connections
-		} catch (Exception ex) {
-			System.out.println("ERROR - Could not listen for clients!");
-		}
-	}
 }
 // End of EchoServer class
