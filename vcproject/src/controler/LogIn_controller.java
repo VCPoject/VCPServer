@@ -14,14 +14,26 @@ public class LogIn_controller   implements Controller{
 	public LogIn_controller(String username,String password){
 		this.username=username;
 		this.password=password;
+		
+		if(loggedin.get(this.username)==null){
 		loggedin.put(this.username,0);
+			System.out.println(loggedin.get(this.username));
+		}
+			
 	}
 	
 	public void checkValidity(){
 		 
 		  if(username.equals("gal") && password.equals("1234")){
-			  showSeccussesMsg("Login was seccessfully acomplished");
-			  loggedin.put(this.username,1);
+			 
+			  if(checkedIfAlreadyLoggedIn()==false){
+					
+				  updateAsLoggedIn();
+				  showSeccussesMsg("Login was seccessfully acomplished");
+			  }
+			  
+			  else
+				  showSeccussesMsg("You are already loggedin");
 		  }
 		  
 		  if(!password.equals("1234") && username.equals("gal"))
@@ -44,8 +56,19 @@ public class LogIn_controller   implements Controller{
 		JOptionPane.showMessageDialog(frame,msg,"",JOptionPane.PLAIN_MESSAGE);
 	}
 	
-	public void checkedIfAlreadyLoggedIn(){
-		if(loggedin.get(this.username)==1)
-			showWarningMsg("You are already loggedin");
+	public boolean checkedIfAlreadyLoggedIn(){
+		
+		if(loggedin.get(this.username)==1){
+			System.out.println("a");
+			return true;
+		}
+			
+		
+		return false;
+	}
+	
+	public void updateAsLoggedIn(){
+		  loggedin.put(this.username,1);
+		  //System.out.println(loggedin.get(this.username));
 	}
 }
