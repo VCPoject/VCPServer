@@ -49,9 +49,22 @@ public class EchoServer extends AbstractServer {
 	 * @param client
 	 *            The connection from which the message originated.
 	 */
+	
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		try {
-			mysqlConnection toDB = new mysqlConnection(msg);
+			MySqlConnection toDB = new MySqlConnection();
+			toDB.update(toDB.getConn(), (Object[]) msg);
+			this.sendToAllClients(toDB.getResult());
+		} catch (Exception e) {
+			System.out.println("handleMessageFromClient error:" + e.getMessage());
+		}
+
+	}
+	
+	public void handleMessageFromClient(Object[] msg, ConnectionToClient client) {
+		try {
+			MySqlConnection toDB = new MySqlConnection();
+			toDB.update(toDB.getConn(), msg);
 			this.sendToAllClients(toDB.getResult());
 		} catch (Exception e) {
 			System.out.println("handleMessageFromClient error:" + e.getMessage());
