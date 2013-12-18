@@ -1,4 +1,5 @@
 package ocsf.server;
+
 import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,10 +22,8 @@ public class MySqlConnection {
 		}
 
 		try {
-			conn = (Connection) DriverManager
-					.getConnection(
-							"jdbc:mysql://localhost/bsi_db?CharSet=utf8&useUnicode=true&characterEncoding=utf8",
-							"root", "Op8448060");
+			conn = (Connection) DriverManager.getConnection(
+					"jdbc:mysql://localhost/vcp_db", "root", "Braude");
 			conn.setAutoCommit(false);
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {/* handle any errors */
@@ -77,12 +76,12 @@ public class MySqlConnection {
 			ResultSetMetaData metadata = rs.getMetaData();
 			int numberOfColumns = metadata.getColumnCount();
 			while (rs.next()) {
-				for (int i = 1; i <= numberOfColumns; i++){
+				for (int i = 1; i <= numberOfColumns; i++) {
 					Object obj = rs.getObject(i);
-					if(obj instanceof String)
-						list.add((String)obj);
+					if (obj instanceof String)
+						list.add((String) obj);
 					else if (obj instanceof Integer)
-						list.add((Integer)obj);
+						list.add((Integer) obj);
 				}
 				thereIsRslt = true;
 			}
