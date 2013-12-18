@@ -13,10 +13,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 
 import controler.LogIn_controller;
+import controler.Reminder;
 
 public class VCP_Main_Frame extends JFrame {
 
@@ -32,6 +35,7 @@ public class VCP_Main_Frame extends JFrame {
 	private CheckInOut_Frame CheckInOutFrame;
 	private CancelOrder_Panel cancelOrder;
 	private LogIn_controller logincontroller;
+	
 
 	public VCP_Main_Frame() {
 		super();
@@ -76,43 +80,58 @@ public class VCP_Main_Frame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				getLogIn_Frame();
 				getLogIn_Frame().setVisible(true);
-			
-				loginframe.getLogIn_Panel().getBtnReturn().addActionListener(new ActionListener(){
+				
+				
+				getLogIn_Frame().addWindowListener(new WindowAdapter() {
+					
+					public void windowClosed(WindowEvent arg0) {
+						loginframe=null;
+					}
+				});
+				
+				
+				getLogIn_Frame().getLogIn_Panel().getBtnExit().addActionListener(new ActionListener(){
 					
 					public void actionPerformed(ActionEvent e) {
-						loginframe.dispose();
-						enableMainFrame();
+						JFrame frame = new JFrame();
+						
+						int result = JOptionPane.showConfirmDialog(frame,
+								"Are you sure you want to exit the application?",
+								"Exit Application", JOptionPane.YES_NO_OPTION);
+						
+						if (result == JOptionPane.YES_OPTION) {
+							frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+							getLogIn_Frame().closeLoginFrame();
+						}
 					}
 					
 				});
 				
-				loginframe.getLogIn_Panel().getBtnSubmit().addActionListener(new ActionListener(){
+				getLogIn_Frame().getLogIn_Panel().getBtnSubmit().addActionListener(new ActionListener(){
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						 
-						String username=loginframe.getLogIn_Panel().getUserText().getText();
-						String password=loginframe.getLogIn_Panel().getPswdText().getText();
+						String username=getLogIn_Frame().getLogIn_Panel().getUserText().getText();
+						String password=getLogIn_Frame().getLogIn_Panel().getPswdText().getText();
 						logincontroller=new LogIn_controller(username, password);
 						logincontroller.checkValidity();
-						//System.out.println(loginframe.getLogIn_Panel().getPswdText().getText());
-						//System.out.println(loginframe.getLogIn_Panel().getUserText().getText());
 					}
 					
 				});
 				
-				loginframe.getLogIn_Panel().getPswdText().addKeyListener(new KeyAdapter(){
+				getLogIn_Frame().getLogIn_Panel().getPswdText().addKeyListener(new KeyAdapter(){
 					public void keyPressed(KeyEvent e){
 				        if (e.getKeyCode() == KeyEvent.VK_ENTER)
-				        	loginframe.getLogIn_Panel().getBtnSubmit().doClick();
+				        	getLogIn_Frame().getLogIn_Panel().getBtnSubmit().doClick();
 				        
 				     }
 				 });
 				
-				loginframe.getLogIn_Panel().getUserText().addKeyListener(new KeyAdapter(){
+				getLogIn_Frame().getLogIn_Panel().getUserText().addKeyListener(new KeyAdapter(){
 					public void keyPressed(KeyEvent e){
 				        if (e.getKeyCode() == KeyEvent.VK_ENTER)
-				        	loginframe.getLogIn_Panel().getBtnSubmit().doClick();
+				        	getLogIn_Frame().getLogIn_Panel().getBtnSubmit().doClick();
 				    }
 				 });
 			}
