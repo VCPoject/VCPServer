@@ -47,7 +47,6 @@ public class MySqlConnection {
 			if (command.contains("SELECT")) {
 				readDB(conn, msg);
 			}
-
 			else if (command.contains("UPDATE")) {
 				updateDB(conn, msg);
 			} else if (command.contains("INSERT")) {
@@ -76,12 +75,16 @@ public class MySqlConnection {
 			ResultSetMetaData metadata = rs.getMetaData();
 			int numberOfColumns = metadata.getColumnCount();
 			while (rs.next()) {
-				for (int i = 1; i <= numberOfColumns; i++) {
+				for (int i = 1; i <= numberOfColumns; i++){
 					Object obj = rs.getObject(i);
-					if (obj instanceof String)
-						list.add((String) obj);
+					if(obj == null)
+						obj = "no value".toString();
+					if(obj instanceof String)
+						list.add((String)obj);
 					else if (obj instanceof Integer)
-						list.add((Integer) obj);
+						list.add((Integer)obj);
+					else if (obj instanceof Long)
+						list.add((Long)obj);
 				}
 				thereIsRslt = true;
 			}

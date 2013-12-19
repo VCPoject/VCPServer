@@ -4,8 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
@@ -15,9 +13,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
-import javax.swing.JButton;
-
 import controler.LogIn_controller;
 import controler.Reminder;
 
@@ -26,6 +21,9 @@ public class VCP_Main_Frame extends JFrame {
 	/**
 	 * 
 	 */
+	final public int DEFAULT_PORT = 5555;
+	public String host = null;
+	public int port = 0;
 	private static final long serialVersionUID = 1L;
 	private Main_Panel mainPanel;
 	private LogIn_Frame loginframe;
@@ -37,8 +35,16 @@ public class VCP_Main_Frame extends JFrame {
 	private LogIn_controller logincontroller;
 	
 
-	public VCP_Main_Frame() {
+	public VCP_Main_Frame(String[] args) {
 		super();
+		if(args[0] == null)
+			this.host = "localhost";
+		else
+			host = args[0];
+		if(args[1] == null)
+			port = DEFAULT_PORT;
+		else
+			port = Integer.parseInt(args[1]);
 		initialize();
 	}
 
@@ -70,6 +76,7 @@ public class VCP_Main_Frame extends JFrame {
 				if (result == JOptionPane.YES_OPTION) {
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					closeMainFrame();
+					System.exit(0);
 				}
 
 			}
