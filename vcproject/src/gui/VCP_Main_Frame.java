@@ -115,7 +115,7 @@ public class VCP_Main_Frame extends JFrame {
 						String username=getLogIn_Frame().getLogIn_Panel().getUserText().getText();
 						String password=getLogIn_Frame().getLogIn_Panel().getPswdText().getText();
 						logincontroller=new LogIn_controller(username, password);
-						logincontroller.checkValidity();
+						//logincontroller.checkValidity();
 					}
 					
 				});

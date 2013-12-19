@@ -1,5 +1,7 @@
 package controler;
 
+import gui.VCP_Main_Frame;
+
 import java.util.HashMap;
 
 import javax.swing.JFrame;
@@ -11,18 +13,15 @@ public class LogIn_controller   implements Controller{
 	
 	private String username;
 	private String password;
-	HashMap<String,Integer> loggedin=new HashMap<String,Integer>();
+	//HashMap<String,Integer> loggedin=new HashMap<String,Integer>();
 	private ClientConsole c;
+	private VCP_Main_Frame
 		
 	public LogIn_controller(String username,String password){
 		this.username=username;
 		this.password=password;
-		
-		if(loggedin.get(this.username)==null){
-		loggedin.put(this.username,0);
-			System.out.println(loggedin.get(this.username));
-		}
-			
+	    c=new ClientConsole()
+		checkValidity();
 	}
 	
 	public void checkValidity(){
