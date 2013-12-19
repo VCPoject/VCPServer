@@ -1,23 +1,15 @@
 package serverGui;
 
 import java.awt.SystemColor;
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-
 import java.awt.Font;
-
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.PrintStream;
-
 import javax.swing.JTextArea;
-
 import ocsf.server.TextAreaOutputStream;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
@@ -65,6 +57,7 @@ public class Main_Panel extends JPanel {
 		add(btnStartServer);
 
 		btnStopServer = new JButton("Stop Server");
+		btnStopServer.setEnabled(false);
 		btnStopServer.setBounds(441, 65, 148, 102);
 		add(btnStopServer);
 

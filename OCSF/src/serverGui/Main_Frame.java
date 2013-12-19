@@ -1,29 +1,24 @@
 package serverGui;
 
-import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import ocsf.server.ConnectionToClient;
 import ocsf.server.EchoServer;
-import ocsf.server.TextAreaOutputStream;
 
 public class Main_Frame extends JFrame {
 
@@ -124,6 +119,8 @@ public class Main_Frame extends JFrame {
 		getContentPane().setBackground(SystemColor.activeCaption);
 		this.setSize(800, 600);
 		this.setResizable(false);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 	}
 
 	private void listners() {
@@ -156,6 +153,8 @@ public class Main_Frame extends JFrame {
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						setConnection(port);
+						getMainPanel().getBtnStopServer().setEnabled(true);
+						getMainPanel().getBtnStartServer().setEnabled(false);
 					}
 				});
 
@@ -164,6 +163,8 @@ public class Main_Frame extends JFrame {
 					public void actionPerformed(ActionEvent arg0) {
 						try {
 							sv.close();
+							getMainPanel().getBtnStopServer().setEnabled(false);
+							getMainPanel().getBtnStartServer().setEnabled(true);
 							Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 							String[] columnNames = { "Client IP", "Client port" };
 							int len = columnNames.length;

@@ -32,14 +32,13 @@ public class Register_Panel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JButton btnReturn;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
+	private final ButtonGroup buttonGroupSubscribeType = new ButtonGroup();
+	private final ButtonGroup buttonGroupCustomerType = new ButtonGroup();
 	private JTextField txtIdNumber;
 	private JFormattedTextField formattedTextFieldCarNumber;
 	private JButton btnSubmit;
 	private JButton btnAddCar;
 	private JComboBox<String> comboBoxAddCar;
-	private final ButtonGroup buttonGroup_2 = new ButtonGroup();
 
 	public Register_Panel() {
 		super();
@@ -76,14 +75,14 @@ public class Register_Panel extends JPanel {
 		panel.setLayout(null);
 
 		JRadioButton rdbtnPartial = new JRadioButton("Partial");
-		buttonGroup.add(rdbtnPartial);
+		buttonGroupSubscribeType.add(rdbtnPartial);
 		rdbtnPartial.setBounds(6, 16, 71, 23);
 		panel.add(rdbtnPartial);
 		rdbtnPartial.setBackground(SystemColor.activeCaption);
 		rdbtnPartial.setSelected(true);
 
 		JRadioButton rdbtnFull = new JRadioButton("Full");
-		buttonGroup.add(rdbtnFull);
+		buttonGroupSubscribeType.add(rdbtnFull);
 		rdbtnFull.setBounds(79, 16, 55, 23);
 		panel.add(rdbtnFull);
 		rdbtnFull.setBackground(SystemColor.activeCaption);
@@ -113,14 +112,14 @@ public class Register_Panel extends JPanel {
 		panel_1.setLayout(null);
 
 		JRadioButton rdbtnPrivate = new JRadioButton("Private");
-		buttonGroup_1.add(rdbtnPrivate);
+		buttonGroupCustomerType.add(rdbtnPrivate);
 		rdbtnPrivate.setSelected(true);
 		rdbtnPrivate.setBackground(SystemColor.activeCaption);
 		rdbtnPrivate.setBounds(6, 16, 73, 23);
 		panel_1.add(rdbtnPrivate);
 
 		JRadioButton rdbtnBusiness = new JRadioButton("Business");
-		buttonGroup_1.add(rdbtnBusiness);
+		buttonGroupCustomerType.add(rdbtnBusiness);
 		rdbtnBusiness.setBackground(SystemColor.activeCaption);
 		rdbtnBusiness.setBounds(81, 16, 82, 23);
 		panel_1.add(rdbtnBusiness);
