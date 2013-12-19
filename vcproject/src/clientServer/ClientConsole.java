@@ -7,6 +7,7 @@ package clientServer;
 import java.io.*;
 import java.sql.Time;
 import java.util.*;
+
 import common.*;
 import client.*;
 
@@ -27,7 +28,7 @@ public class ClientConsole implements ClientIF {
 	 * The default port to connect on.
 	 */
 	final public static int DEFAULT_PORT = 5555;
-	private ArrayList<Object> result = null;
+	private ArrayList<Object> result = new ArrayList<Object>();
 	// Instance variables **********************************************
 
 	/**
@@ -64,14 +65,15 @@ public class ClientConsole implements ClientIF {
 	public void accept(Object[] msg) {
 		try {
 			Object[] message = msg;
-			while (true) {
+			message=msg;
+			//while (true) {
 				Thread.sleep(10);
 				if (message != null) {
 					client.handleMessageFromClientUI(message);
-					message = null;
+					message=null;
 				}
 
-			}
+			//}
 		} catch (Exception ex) {
 			ArrayList<Object> error = new ArrayList<Object>();
 			String errMsg = "Unexpected error while reading from console! error: " + ex.getMessage();
@@ -103,10 +105,11 @@ public class ClientConsole implements ClientIF {
 	}
 	
 	public ArrayList<Object> getResult() {
-		ArrayList<Object> resultCopy = new ArrayList<Object>();
-		Collections.copy(this.result, resultCopy);
-		result = null;
-		return resultCopy;
+		//ArrayList<Object> resultCopy = new ArrayList<Object>();
+		//Collections.copy(this.result, resultCopy);
+		//result = null;
+		//System.out.println(result.get(0).toString());
+		return result;
 	}
 
 	// Class methods ***************************************************

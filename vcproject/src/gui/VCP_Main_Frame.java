@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
@@ -13,6 +14,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import controler.LogIn_controller;
 import controler.Reminder;
 
@@ -34,17 +36,26 @@ public class VCP_Main_Frame extends JFrame {
 	private CancelOrder_Panel cancelOrder;
 	private LogIn_controller logincontroller;
 	
+	
+	public VCP_Main_Frame(){}
 
 	public VCP_Main_Frame(String[] args) {
 		super();
-		if(args[0] == null)
+		
+		try{
+		
+		host = args[0];
+		}
+		
+		catch(Exception e){
 			this.host = "localhost";
-		else
-			host = args[0];
-		if(args[1] == null)
-			port = DEFAULT_PORT;
-		else
-			port = Integer.parseInt(args[1]);
+		}
+		
+		//if(args[1] == null)
+			//port = DEFAULT_PORT;
+		//else
+			//port = Integer.parseInt(args[1]);
+		
 		initialize();
 	}
 
@@ -122,7 +133,7 @@ public class VCP_Main_Frame extends JFrame {
 						String username=getLogIn_Frame().getLogIn_Panel().getUserText().getText();
 						String password=getLogIn_Frame().getLogIn_Panel().getPswdText().getText();
 						logincontroller=new LogIn_controller(username, password);
-						logincontroller.checkValidity();
+						//logincontroller.checkValidity();
 					}
 					
 				});
