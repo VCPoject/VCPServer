@@ -7,9 +7,8 @@ package clientServer;
 import java.io.*;
 import java.sql.Time;
 import java.util.*;
-
-import client.*;
 import common.*;
+import client.*;
 
 /**
  * This class constructs the UI for a chat client. It implements the chat
@@ -104,10 +103,10 @@ public class ClientConsole implements ClientIF {
 	}
 	
 	public ArrayList<Object> getResult() {
-		ArrayList<Object> copyResult = new ArrayList<Object>();
-		Collections.copy(this.result, copyResult);
+		ArrayList<Object> resultCopy = new ArrayList<Object>();
+		Collections.copy(this.result, resultCopy);
 		result = null;
-		return copyResult;
+		return resultCopy;
 	}
 
 	// Class methods ***************************************************
