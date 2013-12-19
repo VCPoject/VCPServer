@@ -5,9 +5,8 @@ package clientServer;
 // license found at www.lloseng.com 
 
 import java.io.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.sql.Time;
+import java.util.*;
 
 import client.*;
 import common.*;
@@ -29,7 +28,7 @@ public class ClientConsole implements ClientIF {
 	 * The default port to connect on.
 	 */
 	final public static int DEFAULT_PORT = 5555;
-
+	private ArrayList<Object> result = null;
 	// Instance variables **********************************************
 
 	/**
@@ -66,7 +65,6 @@ public class ClientConsole implements ClientIF {
 	public void accept(Object[] msg) {
 		try {
 			Object[] message;
-
 			while (true) {
 				message = msg;
 				Thread.sleep(10);
@@ -76,7 +74,10 @@ public class ClientConsole implements ClientIF {
 
 			}
 		} catch (Exception ex) {
-			getResult("Unexpected error while reading from console!");
+			ArrayList<Object> error = new ArrayList<Object>();
+			String errMsg = "Unexpected error while reading from console! error: " + ex.getMessage();
+			error.add(errMsg);
+			setResult(error);
 		}
 	}
 
@@ -87,14 +88,28 @@ public class ClientConsole implements ClientIF {
 	 * @param message
 	 *            The string to be displayed.
 	 */
-	public void display(String message) {
+	public void display(String msg) {
+		ArrayList<Object> message = new ArrayList<Object>();
+		message.add(msg);
+		display(message);
+	}
+	
+	public void display(ArrayList<Object> message) {
 		System.out.println("> " + message);
-		getResult(message);
+		setResult(message);
 	}
 
-	public void getResult(Object msg) {
+	private void setResult(ArrayList<Object> message) {
+		this.result = message;
+	}
+	
+	public ArrayList<Object> getResult() {
+		ArrayList<Object> copyResult = new ArrayList<Object>();
+		Collections.copy(this.result, copyResult);
+		result = null;
+		return copyResult;
 	}
 
 	// Class methods ***************************************************
 }
-// End of ConsoleChat class
+// End of ClientConsole class

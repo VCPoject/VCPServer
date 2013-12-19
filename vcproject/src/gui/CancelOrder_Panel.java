@@ -21,7 +21,6 @@ public class CancelOrder_Panel extends JPanel {
 	private JLabel lblCarNumber ;
 	private JLabel lblIdNumber;
 	private JButton btnSubmit;
-	private JPanel panelDetails;
 	private JTextField textFieldIdNumber;
 	private JFormattedTextField textFieldCarNumber;
 	private JTextField textField;
@@ -92,9 +91,6 @@ public class CancelOrder_Panel extends JPanel {
 			lblThisAmountOf.setFont(new Font("Tahoma", Font.BOLD, 12));
 			lblThisAmountOf.setBounds(238, 379, 292, 15);
 			add(lblThisAmountOf);
-			
-			
-			
 		 
 	}
 	
