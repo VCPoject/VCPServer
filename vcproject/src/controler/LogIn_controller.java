@@ -20,12 +20,14 @@ public class LogIn_controller   implements Controller{
 	public LogIn_controller(String username,String password){
 		this.username=username;
 		this.password=password;
-	    c=new ClientConsole()
+	    c=new ClientConsole("localhost",5555);
 		checkValidity();
 	}
 	
 	public void checkValidity(){
-		 
+		 c.accept("SELECT e.username,e.password FROM employ e where e.username="+this.username+"and "
+		 		+ "e.password="+ this.password);
+		 c.getResult(msg);
 		  if(username.equals("gal") && password.equals("1234")){
 			 
 			  if(checkedIfAlreadyLoggedIn()==false){
