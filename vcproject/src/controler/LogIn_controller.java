@@ -5,11 +5,14 @@ import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import clientServer.ClientConsole;
+
 public class LogIn_controller   implements Controller{
 	
 	private String username;
 	private String password;
 	HashMap<String,Integer> loggedin=new HashMap<String,Integer>();
+	private ClientConsole c;
 		
 	public LogIn_controller(String username,String password){
 		this.username=username;
@@ -70,5 +73,11 @@ public class LogIn_controller   implements Controller{
 	public void updateAsLoggedIn(){
 		  loggedin.put(this.username,1);
 		  //System.out.println(loggedin.get(this.username));
+	}
+
+	@Override
+	public void ClientSideConnection(Object[] msg) {
+		// TODO Auto-generated method stub
+		
 	}
 }
