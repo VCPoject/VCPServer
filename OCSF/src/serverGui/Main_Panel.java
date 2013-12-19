@@ -1,4 +1,4 @@
-package serverGui;
+package serverGui; 
 
 import java.awt.SystemColor;
 import javax.swing.JPanel;
@@ -15,6 +15,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.swing.JPasswordField;
 
 public class Main_Panel extends JPanel {
 	/**
@@ -32,6 +33,14 @@ public class Main_Panel extends JPanel {
 	private JScrollPane scrollPaneClientConnected;
 	private JPanel panelClientConnected;
 	private JScrollPane scrollPaneConsol;
+	private JLabel lblDbServerIp;
+	private JTextField textFieldServerIP;
+	private JLabel lblDbUsername;
+	private JTextField textFieldDBusername;
+	private JLabel lblDbPassword;
+	private JButton btnChangeDB;
+	private JPasswordField passwordField;
+	private JPanel panelDB;
 
 	public Main_Panel() {
 		super();
@@ -53,17 +62,17 @@ public class Main_Panel extends JPanel {
 		add(btnExit);
 
 		btnStartServer = new JButton("Start Server");
-		btnStartServer.setBounds(200, 65, 148, 102);
+		btnStartServer.setBounds(216, 65, 110, 50);
 		add(btnStartServer);
 
 		btnStopServer = new JButton("Stop Server");
 		btnStopServer.setEnabled(false);
-		btnStopServer.setBounds(441, 65, 148, 102);
+		btnStopServer.setBounds(441, 65, 110, 50);
 		add(btnStopServer);
 
 		lblNumberOfConnections = new JLabel("Number of Connections:");
 		lblNumberOfConnections.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblNumberOfConnections.setBounds(200, 178, 220, 22);
+		lblNumberOfConnections.setBounds(200, 126, 220, 22);
 		add(lblNumberOfConnections);
 
 		textFieldNumberOfConnections = new JTextField();
@@ -72,20 +81,20 @@ public class Main_Panel extends JPanel {
 				.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldNumberOfConnections.setFont(new Font("Tahoma", Font.BOLD, 11));
 		textFieldNumberOfConnections.setText("-1");
-		textFieldNumberOfConnections.setBounds(503, 178, 86, 22);
+		textFieldNumberOfConnections.setBounds(503, 126, 86, 22);
 		add(textFieldNumberOfConnections);
 		textFieldNumberOfConnections.setColumns(10);
 
 		JLabel lblServerStatus = new JLabel("Server status:");
 		lblServerStatus.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblServerStatus.setBounds(200, 228, 126, 22);
+		lblServerStatus.setBounds(200, 159, 126, 22);
 		add(lblServerStatus);
 
 		txtStatus = new JTextField();
 		txtStatus.setHorizontalAlignment(SwingConstants.CENTER);
 		txtStatus.setEditable(false);
 		txtStatus.setText("Disconnected");
-		txtStatus.setBounds(503, 228, 86, 20);
+		txtStatus.setBounds(503, 159, 86, 20);
 		add(txtStatus);
 		txtStatus.setColumns(10);
 
@@ -94,7 +103,7 @@ public class Main_Panel extends JPanel {
 		panelConsole.setBorder(new TitledBorder(UIManager
 				.getBorder("TitledBorder.border"), "Console",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelConsole.setBounds(10, 295, 527, 190);
+		panelConsole.setBounds(10, 192, 527, 190);
 		add(panelConsole);
 		panelConsole.setLayout(null);
 
@@ -114,13 +123,56 @@ public class Main_Panel extends JPanel {
 			panelClientConnected.setBorder(new TitledBorder(UIManager
 					.getBorder("TitledBorder.border"), "Connected Client",
 					TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panelClientConnected.setBounds(547, 295, 228, 190);
+			panelClientConnected.setBounds(547, 192, 228, 190);
 			add(panelClientConnected);
 			panelClientConnected.setLayout(null);
 
 			scrollPaneClientConnected = new JScrollPane();
 			scrollPaneClientConnected.setBounds(10, 16, 208, 163);
 			panelClientConnected.add(scrollPaneClientConnected);
+			
+			panelDB = new JPanel();
+			panelDB.setBackground(SystemColor.activeCaption);
+			panelDB.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Database Managment", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			panelDB.setBounds(257, 393, 270, 162);
+			add(panelDB);
+			panelDB.setLayout(null);
+			
+			lblDbServerIp = new JLabel("DB Server IP:");
+			lblDbServerIp.setBounds(6, 16, 123, 22);
+			panelDB.add(lblDbServerIp);
+			lblDbServerIp.setFont(new Font("Tahoma", Font.BOLD, 18));
+			
+			textFieldServerIP = new JTextField();
+			textFieldServerIP.setText("localhost");
+			textFieldServerIP.setBounds(146, 16, 118, 20);
+			panelDB.add(textFieldServerIP);
+			textFieldServerIP.setColumns(10);
+			
+			lblDbUsername = new JLabel("DB Username:");
+			lblDbUsername.setBounds(6, 49, 130, 22);
+			panelDB.add(lblDbUsername);
+			lblDbUsername.setFont(new Font("Tahoma", Font.BOLD, 18));
+			
+			textFieldDBusername = new JTextField();
+			textFieldDBusername.setText("root");
+			textFieldDBusername.setBounds(146, 49, 118, 20);
+			panelDB.add(textFieldDBusername);
+			textFieldDBusername.setColumns(10);
+			
+			lblDbPassword = new JLabel("DB Password:");
+			lblDbPassword.setBounds(6, 82, 125, 22);
+			panelDB.add(lblDbPassword);
+			lblDbPassword.setFont(new Font("Tahoma", Font.BOLD, 18));
+			
+			btnChangeDB = new JButton("Change DB");
+			btnChangeDB.setBounds(85, 126, 93, 29);
+			panelDB.add(btnChangeDB);
+			
+			passwordField = new JPasswordField();
+			passwordField.setBounds(146, 82, 118, 20);
+			panelDB.add(passwordField);
+			passwordField.setText("Braude");
 
 			tableClientConnected = new JTable();
 		} catch (IOException e) {
@@ -161,5 +213,17 @@ public class Main_Panel extends JPanel {
 		this.tableClientConnected = tableClientConnected;
 		this.tableClientConnected.setSurrendersFocusOnKeystroke(true);
 		scrollPaneClientConnected.setViewportView(this.tableClientConnected);
+	}
+
+	public String getTextFieldServerIP() {
+		return textFieldServerIP.getText();
+	}
+
+	public String getTextFieldDBusername() {
+		return textFieldDBusername.getText();
+	}
+
+	public String getPasswordField() {
+		return passwordField.getText();
 	}
 }

@@ -63,12 +63,12 @@ public class ClientConsole implements ClientIF {
 	 */
 	public void accept(Object[] msg) {
 		try {
-			Object[] message;
+			Object[] message = msg;
 			while (true) {
-				message = msg;
 				Thread.sleep(10);
 				if (message != null) {
 					client.handleMessageFromClientUI(message);
+					message = null;
 				}
 
 			}
