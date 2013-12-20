@@ -68,13 +68,11 @@ public class ClientConsole implements ClientIF {
 			result = null;
 			Object[] message = msg;
 			message = msg;
-			flag=0;
 			
-				if (message != null) {
-					client.handleMessageFromClientUI(message);
-					message = null;
-				}
-				
+			if (message != null) {
+				client.handleMessageFromClientUI(message);
+				message = null;
+			}
 				
 				System.out.println(flag);
 			
@@ -102,6 +100,11 @@ public class ClientConsole implements ClientIF {
 		setResult(message);
 		
 	}	
+		if (message != null) {
+			setResult(message);
+			System.out.println(message);
+		}
+	}
 
 	private void setResult(ArrayList<Object> message) {
 			flag=1;

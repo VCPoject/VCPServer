@@ -4,6 +4,8 @@ import gui.VCP_Main_Frame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -17,12 +19,13 @@ public class LogIn_controller implements Controller {
 	private String password;
 	private ClientConsole c;
 	private VCP_Main_Frame v;
+	private ArrayList<Object> resultCopy;
 
 	public LogIn_controller(String username, String password) {
 		this.username = username;
 		this.password = password;
 		v = new VCP_Main_Frame();
-		checkValidity();
+		//checkValidity();
 	}
 
 	public void checkValidity() {
@@ -31,10 +34,15 @@ public class LogIn_controller implements Controller {
 				this.username, this.password };
 		c = new ClientConsole(v.host, 5555);
 		c.accept(sqlsMsg);
-		ArrayList<Object> resultCopy = null;
-		System.out.println("1");
-		while((resultCopy = c.getResult())==null){}
+		resultCopy = null;
 		
+		while((resultCopy = c.getResult()) == null){
+			try {
+				Thread.sleep(0);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 		if (username.equals(resultCopy.get(0).toString())
 				&& password.equals(resultCopy.get(1).toString())) {
 
