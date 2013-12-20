@@ -22,8 +22,6 @@ public class LogIn_controller implements Controller {
 		this.username = username;
 		this.password = password;
 		v = new VCP_Main_Frame();
-		c = new ClientConsole(v.host, 5555);
-
 		checkValidity();
 	}
 
@@ -31,11 +29,12 @@ public class LogIn_controller implements Controller {
 		Object[] sqlsMsg = {
 				"SELECT e.username,e.password, e.login FROM vcp_employ.employ e WHERE e.username=? OR e.password = ?;",
 				this.username, this.password };
+		c = new ClientConsole(v.host, 5555);
 		c.accept(sqlsMsg);
 		ArrayList<Object> resultCopy = null;
 		System.out.println("1");
-		while ((resultCopy = c.getResult()) == null) {
-		}
+		while((resultCopy = c.getResult())==null){}
+		
 		if (username.equals(resultCopy.get(0).toString())
 				&& password.equals(resultCopy.get(1).toString())) {
 
@@ -48,15 +47,8 @@ public class LogIn_controller implements Controller {
 			else
 				showSeccussesMsg("You are already loggedin");
 		}
-
-		if (!password.equals("1234") && username.equals("gal"))
-			showWarningMsg("Invalid password");
-
-		if (!username.equals("gal") && password.equals("1234"))
-			showWarningMsg("Invalid username");
-
-		if (!username.equals("gal") && !password.equals("1234"))
-			showWarningMsg("Invalid username and password");
+		if (!username.equals(resultCopy.get(0).toString()) || !password.equals(resultCopy.get(1).toString()))
+			showWarningMsg("Invalid username or password");
 	}
 
 	public void showWarningMsg(String msg) {
@@ -78,6 +70,8 @@ public class LogIn_controller implements Controller {
 
 		return true;
 	}
+	
+	
 
 	public void updateAsLoggedIn() {
 		Object[] sqlsMsg = { "UPDATE  vcp_employ"
