@@ -67,11 +67,9 @@ public class ClientConsole implements ClientIF {
 			result = null;
 			Object[] message = msg;
 			message = msg;
-			while (true) {
-				if (message != null) {
-					client.handleMessageFromClientUI(message);
-					message = null;
-				}
+			if (message != null) {
+				client.handleMessageFromClientUI(message);
+				message = null;
 			}
 		} catch (Exception ex) {
 			ArrayList<Object> error = new ArrayList<Object>();
