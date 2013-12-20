@@ -4,6 +4,7 @@ import ocsf.client.*;
 import common.*;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class Client extends AbstractClient {
 
@@ -35,8 +36,13 @@ public class Client extends AbstractClient {
 	 * @param msg
 	 *            The message from the server.
 	 */
-	public void handleMessageFromServer(Object msg) {
-		clientUI.display(msg.toString());
+	public void handleMessageFromServer(ArrayList<Object> msg) {
+		clientUI.display(msg);
+	}
+	
+	@Override
+	protected void handleMessageFromServer(Object msg) {
+		clientUI.display((ArrayList<Object>)msg);
 	}
 
 	/**

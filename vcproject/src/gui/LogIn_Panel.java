@@ -27,11 +27,13 @@ public class LogIn_Panel extends JPanel{
 		setLayout(null);
 		
 		usertxtfieled = new JTextField();
+		usertxtfieled.setText("sapir");
 		usertxtfieled.setBounds(136, 132, 228, 20);
 		add(usertxtfieled);
 		usertxtfieled.setColumns(10);
 		
 		 pswdtxtfield = new JTextField();
+		 pswdtxtfield.setText("1234");
 		 pswdtxtfield.setBounds(136, 217, 228, 20);
 		 add( pswdtxtfield);
 		 pswdtxtfield.setColumns(10);

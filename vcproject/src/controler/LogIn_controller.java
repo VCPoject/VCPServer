@@ -23,6 +23,7 @@ public class LogIn_controller implements Controller {
 		this.password = password;
 		v = new VCP_Main_Frame();
 		c = new ClientConsole(v.host, 5555);
+
 		checkValidity();
 	}
 
@@ -32,16 +33,15 @@ public class LogIn_controller implements Controller {
 				this.username, this.password };
 		c.accept(sqlsMsg);
 		ArrayList<Object> resultCopy = null;
-		while ((resultCopy = c.getResult()) == null){
-			System.out.println("a");
+		System.out.println("1");
+		while ((resultCopy = c.getResult()) == null) {
 		}
-		
 		if (username.equals(resultCopy.get(0).toString())
 				&& password.equals(resultCopy.get(1).toString())) {
 
 			if (checkedIfAlreadyLoggedIn((String) resultCopy.get(2)) == false) {
 
-				//updateAsLoggedIn();
+				// updateAsLoggedIn();
 				showSeccussesMsg("Login was seccessfully acomplished");
 			}
 
@@ -85,9 +85,4 @@ public class LogIn_controller implements Controller {
 		c.accept(sqlsMsg);
 	}
 
-	@Override
-	public void ClientSideConnection(Object[] msg) {
-		// TODO Auto-generated method stub
-
-	}
 }

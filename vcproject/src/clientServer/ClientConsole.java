@@ -28,7 +28,7 @@ public class ClientConsole implements ClientIF {
 	 * The default port to connect on.
 	 */
 	final public static int DEFAULT_PORT = 5555;
-	private ArrayList<Object> result = new ArrayList<Object>();
+	private ArrayList<Object> result = null;
 	// Instance variables **********************************************
 
 	/**
@@ -64,19 +64,19 @@ public class ClientConsole implements ClientIF {
 	 */
 	public void accept(Object[] msg) {
 		try {
+			result = null;
 			Object[] message = msg;
-			message=msg;
-			//while (true) {
-				Thread.sleep(10);
+			message = msg;
+			while (true) {
 				if (message != null) {
 					client.handleMessageFromClientUI(message);
-					message=null;
+					message = null;
 				}
-
-			//}
+			}
 		} catch (Exception ex) {
 			ArrayList<Object> error = new ArrayList<Object>();
-			String errMsg = "Unexpected error while reading from console! error: " + ex.getMessage();
+			String errMsg = "Unexpected error while reading from console! error: "
+					+ ex.getMessage();
 			error.add(errMsg);
 			setResult(error);
 		}
@@ -90,26 +90,28 @@ public class ClientConsole implements ClientIF {
 	 *            The string to be displayed.
 	 */
 	public void display(String msg) {
-		ArrayList<Object> message = new ArrayList<Object>();
-		message.add(msg);
-		display(message);
 	}
-	
+
 	public void display(ArrayList<Object> message) {
-		System.out.println("> " + message);
-		setResult(message);
+		if (message != null) {
+			setResult(message);
+			System.out.println(message);
+		}
 	}
 
 	private void setResult(ArrayList<Object> message) {
-		this.result = message;
+		if (message != null) {
+			this.result = message;
+		} else
+			result = null;
 	}
-	
+
 	public ArrayList<Object> getResult() {
-		//ArrayList<Object> resultCopy = new ArrayList<Object>();
-		//Collections.copy(this.result, resultCopy);
-		//result = null;
-		//System.out.println(result.get(0).toString());
-		return result;
+		if (result != null) {
+			System.out.println("get: " + result);
+			return result;
+		}
+		return null;
 	}
 
 	// Class methods ***************************************************
