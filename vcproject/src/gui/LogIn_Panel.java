@@ -10,8 +10,9 @@ public class LogIn_Panel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private JTextField usertxtfieled;
 	private JTextField pswdtxtfield;
-	private JButton btnreturn;
+	private JButton btnexit;
 	private JButton btnsubmmit;
+	
 	
 
 	public LogIn_Panel(){
@@ -21,27 +22,29 @@ public class LogIn_Panel extends JPanel{
 	}
 	
 	private void initialize(){
-		this.setSize(300, 200);
+		this.setBounds(10, 11, 455, 342);
 		setBackground(Color.LIGHT_GRAY);
 		setLayout(null);
 		
 		usertxtfieled = new JTextField();
-		usertxtfieled.setBounds(136, 132, 342, 20);
+		usertxtfieled.setText("sapir");
+		usertxtfieled.setBounds(136, 132, 228, 20);
 		add(usertxtfieled);
 		usertxtfieled.setColumns(10);
 		
 		 pswdtxtfield = new JTextField();
-		 pswdtxtfield.setBounds(136, 217, 342, 20);
+		 pswdtxtfield.setText("1234");
+		 pswdtxtfield.setBounds(136, 217, 228, 20);
 		 add( pswdtxtfield);
 		 pswdtxtfield.setColumns(10);
 		
 		btnsubmmit = new JButton("Submmit");
-		btnsubmmit.setBounds(478, 366, 138, 56);
+		btnsubmmit.setBounds(307, 274, 138, 56);
 		add(btnsubmmit);
 		
-		btnreturn= new JButton("Return");
-		btnreturn.setBounds(32, 366, 138, 56);
-		add(btnreturn);
+		btnexit= new JButton("Exit\r\n");
+		btnexit.setBounds(10, 274, 138, 56);
+		add(btnexit);
 		
 		
 		
@@ -57,7 +60,7 @@ public class LogIn_Panel extends JPanel{
 		
 		JLabel lblLogIn = new JLabel("Log In");
 		lblLogIn.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 36));
-		lblLogIn.setBounds(323, 39, 138, 46);
+		lblLogIn.setBounds(158, 39, 138, 46);
 		add(lblLogIn);
 		
 	}
@@ -69,8 +72,8 @@ public class LogIn_Panel extends JPanel{
 		return btnsubmmit;
 	}
 	
-	public JButton getBtnReturn(){
-		return btnreturn;
+	public JButton getBtnExit(){
+		return btnexit;
 	}
 	
 	public JTextField getPswdText(){
