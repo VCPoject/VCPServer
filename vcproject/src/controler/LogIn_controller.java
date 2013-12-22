@@ -1,16 +1,8 @@
 package controler;
 
 import gui.VCP_Main_Frame;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import sun.awt.windows.ThemeReader;
+import javax.swing.*;
 import clientServer.ClientConsole;
 
 public class LogIn_controller implements Controller {
@@ -28,10 +20,10 @@ public class LogIn_controller implements Controller {
 		//checkValidity();
 	}
 
-	public void checkValidity() {
+	public boolean checkValidity() {
 		Object[] sqlsMsg = {
-				"SELECT e.username,e.password, e.login FROM vcp_employ.employ e WHERE e.username=? OR e.password = ?;",
-				this.username, this.password };
+				"SELECT username,password, login FROM vcp_employ.employ WHERE username=? ;",
+				this.username };
 		c = new ClientConsole(v.host, 5555);
 		c.accept(sqlsMsg);
 		resultCopy = null;
@@ -42,21 +34,26 @@ public class LogIn_controller implements Controller {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
 
 		if (username.equals(resultCopy.get(0).toString())
 				&& password.equals(resultCopy.get(1).toString())) {
 
 			if (checkedIfAlreadyLoggedIn((String) resultCopy.get(2)) == false) {
 
-				// updateAsLoggedIn();
+				updateAsLoggedIn();
 				showSeccussesMsg("Login was seccessfully acomplished");
+				return true;
 			}
 
 			else
 				showSeccussesMsg("You are already loggedin");
 		}
+		
 		if (!username.equals(resultCopy.get(0).toString()) || !password.equals(resultCopy.get(1).toString()))
 			showWarningMsg("Invalid username or password");
+		
+		return false;
 	}
 
 	public void showWarningMsg(String msg) {
@@ -82,8 +79,14 @@ public class LogIn_controller implements Controller {
 	
 
 	public void updateAsLoggedIn() {
-		Object[] sqlsMsg = { "UPDATE  vcp_employ"
-				+ "FROM employ e WHERE e.username=? AND e.password = ?;" };
+		Object[] sqlsMsg = { "UPDATE  vcp_employ.employ SET login=? WHERE username=?;" ,
+				"YES",this.username};
+		c.accept(sqlsMsg);
+	}
+	
+	public void updateAsNotLoggedIn() {
+		Object[] sqlsMsg = { "UPDATE  vcp_employ.employ SET login=? WHERE username=?;" ,
+				"NO",this.username};
 		c.accept(sqlsMsg);
 	}
 

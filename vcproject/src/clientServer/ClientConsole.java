@@ -74,8 +74,6 @@ public class ClientConsole implements ClientIF {
 				message = null;
 			}
 				
-				System.out.println(flag);
-			
 		} catch (Exception ex) {
 			ArrayList<Object> error = new ArrayList<Object>();
 			String errMsg = "Unexpected error while reading from console! error: "
@@ -96,19 +94,10 @@ public class ClientConsole implements ClientIF {
 	}
 
 	public void display(ArrayList<Object> message) {
-		
 		setResult(message);
-		
-	}	
-		if (message != null) {
-			setResult(message);
-			System.out.println(message);
-		}
 	}
 
 	private void setResult(ArrayList<Object> message) {
-			flag=1;
-			System.out.println(flag);
 			this.result = message;
 	}
 
