@@ -41,7 +41,6 @@ public class MySqlConnection {
 	}
 
 	public void update(Connection conn, Object[] msg) {
-
 		String command = (String) msg[0];
 		try {
 			if (command.contains("SELECT")) {
@@ -116,6 +115,7 @@ public class MySqlConnection {
 			}
 			updataData.executeUpdate();
 			con.commit();
+			setResult("done");
 		} catch (Exception e) {
 			System.out.println("updateDB error:" + e.getMessage());
 			setResult("updateDB error:" + e.getMessage());
@@ -134,11 +134,18 @@ public class MySqlConnection {
 			}
 			updataData.executeUpdate();
 			con.commit();
+			Thread.sleep(10);
+			setResult("done");
 		} catch (Exception e) {
 			System.out.println("insertDB error:" + e.getMessage());
 			setResult("insertDB error:" + e.getMessage());
 		}
 
+	}
+	
+	public void resultReset()
+	{
+		result = new ArrayList<Object>();
 	}
 
 	private void setResult(Object result) {

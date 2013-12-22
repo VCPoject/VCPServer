@@ -1,5 +1,5 @@
 package gui;
-
+ 
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
@@ -12,7 +12,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import controler.Reminder;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
+ 
 
 public class LogIn_Frame extends JFrame{
 

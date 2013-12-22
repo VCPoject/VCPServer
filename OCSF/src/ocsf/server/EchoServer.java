@@ -76,6 +76,7 @@ public class EchoServer extends AbstractServer {
 			MySqlConnection toDB = new MySqlConnection();
 			toDB.update(toDB.getConn(), msg);
 			this.sendToAllClients(toDB.getResult());
+			toDB.resultReset();
 		} catch (Exception e) {
 			System.out.println("handleMessageFromClient error:"
 					+ e.getMessage());
