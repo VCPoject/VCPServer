@@ -5,7 +5,7 @@ import common.*;
 
 import java.io.*;
 import java.util.ArrayList;
-
+ 
 public class Client extends AbstractClient {
 
 	ClientIF clientUI;

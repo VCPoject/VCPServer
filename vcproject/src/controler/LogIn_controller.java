@@ -3,17 +3,11 @@ package controler;
 import gui.VCP_Main_Frame;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
-import sun.awt.windows.ThemeReader;
 import clientServer.ClientConsole;
 
-public class LogIn_controller implements Controller {
+public class LogIn_controller{
 
 	private String username;
 	private String password;
@@ -25,6 +19,7 @@ public class LogIn_controller implements Controller {
 		this.username = username;
 		this.password = password;
 		v = new VCP_Main_Frame();
+		checkValidity();
 		//checkValidity();
 	}
 
@@ -35,13 +30,8 @@ public class LogIn_controller implements Controller {
 		c = new ClientConsole(v.host, 5555);
 		c.accept(sqlsMsg);
 		resultCopy = null;
-		
 		while((resultCopy = c.getResult()) == null){
-			try {
-				Thread.sleep(0);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			threadSleep();
 
 		if (username.equals(resultCopy.get(0).toString())
 				&& password.equals(resultCopy.get(1).toString())) {
@@ -85,6 +75,14 @@ public class LogIn_controller implements Controller {
 		Object[] sqlsMsg = { "UPDATE  vcp_employ"
 				+ "FROM employ e WHERE e.username=? AND e.password = ?;" };
 		c.accept(sqlsMsg);
+	}
+	
+	public void threadSleep(){
+		try {
+			Thread.sleep(0);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -25,7 +25,6 @@ public class VCP_Main_Frame extends JFrame {
 	 */
 	final public int DEFAULT_PORT = 5555;
 	public String host = null;
-	public int port = 0;
 	private static final long serialVersionUID = 1L;
 	private Main_Panel mainPanel;
 	private LogIn_Frame loginframe;
@@ -43,19 +42,12 @@ public class VCP_Main_Frame extends JFrame {
 		super();
 
 		try {
-
 			host = args[0];
 		}
 
 		catch (Exception e) {
 			this.host = "localhost";
 		}
-
-		// if(args[1] == null)
-		// port = DEFAULT_PORT;
-		// else
-		// port = Integer.parseInt(args[1]);
-
 		initialize();
 	}
 
@@ -143,7 +135,6 @@ public class VCP_Main_Frame extends JFrame {
 									public void actionPerformed(ActionEvent e) {
 
 										getLogincontroller();
-										getLogincontroller().checkValidity();
 									}
 
 								});
@@ -173,20 +164,18 @@ public class VCP_Main_Frame extends JFrame {
 				new ActionListener() {/* Main Panel Make Order Button Listener */
 					public void actionPerformed(ActionEvent e) {
 						setContentPane(getOrderPanel());
+						getOrderPanel().getBtnReturn().addActionListener(
+								new ActionListener() {/*
+													 * Order Return Button
+													 * Listener
+													 */
+									public void actionPerformed(ActionEvent e) {
+										setContentPane(getMainPanel());
+									}
+								});
 					}
 
 				});
-
-		getOrderPanel().getBtnReturn().addActionListener(new ActionListener() {/*
-																				 * Order
-																				 * Return
-																				 * Button
-																				 * Listener
-																				 */
-			public void actionPerformed(ActionEvent e) {
-				setContentPane(getMainPanel());
-			}
-		});
 
 		mainPanel.getBtnRegister().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -294,7 +283,7 @@ public class VCP_Main_Frame extends JFrame {
 
 	private Order_Panel getOrderPanel() {
 		if (orderPanel == null) {
-			orderPanel = new Order_Panel();
+			orderPanel = new Order_Panel(this.host, DEFAULT_PORT);
 		}
 		return orderPanel;
 	}
@@ -337,5 +326,9 @@ public class VCP_Main_Frame extends JFrame {
 					.getLogIn_Panel().getUserText().getText(), getLogIn_Frame()
 					.getLogIn_Panel().getPswdText().getText());
 		return logincontroller;
+	}
+
+	public String getHost() {
+		return host;
 	}
 }

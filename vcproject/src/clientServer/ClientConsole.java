@@ -1,5 +1,5 @@
 package clientServer;
-
+ 
 // This file contains material supporting section 3.7 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
@@ -50,6 +50,7 @@ public class ClientConsole implements ClientIF {
 	public ClientConsole(String host, int port) {
 		try {
 			client = new Client(host, port, this);
+			result = null;
 		} catch (IOException exception) {
 			System.out.println("Error: Can't setup connection!"
 					+ " Terminating client.");
@@ -115,6 +116,14 @@ public class ClientConsole implements ClientIF {
 	public ArrayList<Object> getResult() {
 	
 		return this.result;
+	}
+	
+	public boolean isConnected(){
+		return client.isConnected();
+	}
+
+	public Client getClient() {
+		return client;
 	}
 
 	// Class methods ***************************************************
