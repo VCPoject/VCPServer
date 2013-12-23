@@ -35,7 +35,7 @@ public class VCP_Main_Frame extends JFrame {
 	private CancelOrder_Panel cancelOrder;
 	private LogIn_controller logincontroller;
 	private Employee_Panel employee_panel;
-	private ParkingLot_Panel p;
+	//private ParkingLot_Panel p;
 	
 	public VCP_Main_Frame() {
 	}
@@ -87,7 +87,7 @@ public class VCP_Main_Frame extends JFrame {
 						"Exit Application", JOptionPane.YES_NO_OPTION);
 
 				if (result == JOptionPane.YES_OPTION) {
-					//getLogincontroller().updateAsNotLoggedIn();
+					
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					closeMainFrame();
 					System.exit(0);
@@ -123,6 +123,7 @@ public class VCP_Main_Frame extends JFrame {
 														JOptionPane.YES_NO_OPTION);
 
 										if (result == JOptionPane.YES_OPTION) {
+											getLogincontroller().updateAsNotLoggedIn();
 											frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 											getLogIn_Frame().closeLoginFrame();
 											logincontroller = null;
@@ -140,7 +141,7 @@ public class VCP_Main_Frame extends JFrame {
 										getLogincontroller();
 										if(getLogincontroller().checkValidity()==true){
 											getLogIn_Frame().closeLoginFrame();
-											setContentPane(getParkingLot_Panel());
+											setContentPane(getEmployeePanel());
 										}
 											
 									}
@@ -342,9 +343,9 @@ public class VCP_Main_Frame extends JFrame {
 		return logincontroller;
 	}
 	
-	public ParkingLot_Panel getParkingLot_Panel(){
+	/*public ParkingLot_Panel getParkingLot_Panel(){
 		if(p==null)
 			p=new ParkingLot_Panel(4);
 		return p;
-	}
+	}*/
 }
