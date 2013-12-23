@@ -44,7 +44,7 @@ public class LogIn_Frame extends JFrame{
 		this.setContentPane(getLogIn_Panel());
 		r=new Reminder(120,this);
 	}
-	
+	 
 	public LogIn_Panel getLogIn_Panel() {
 		
 		if(loginpanel==null)
