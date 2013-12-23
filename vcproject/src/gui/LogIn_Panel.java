@@ -44,7 +44,7 @@ public class LogIn_Panel extends JPanel{
 		
 		btnexit= new JButton("Exit\r\n");
 		btnexit.setBounds(10, 274, 138, 56);
-		add(btnexit);
+		add(btnexit); 
 		
 		
 		
