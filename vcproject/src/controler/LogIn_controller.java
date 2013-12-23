@@ -14,7 +14,7 @@ public class LogIn_controller{
 	private ClientConsole c;
 	private VCP_Main_Frame v;
 	private ArrayList<Object> resultCopy;
-
+	
 	public LogIn_controller(String username, String password) {
 		this.username = username;
 		this.password = password;
