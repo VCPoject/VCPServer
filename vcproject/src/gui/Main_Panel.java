@@ -1,12 +1,9 @@
 package gui;
 
 import javax.swing.JPanel;
-
 import java.awt.SystemColor;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
-
 import java.awt.Font;
 
 public class Main_Panel extends JPanel {
@@ -21,6 +18,8 @@ public class Main_Panel extends JPanel {
 	private JButton btnCheckIn;
 	private JButton btnCheckOut;
 	private JButton cancelOrder;
+	private JButton btnComplain;
+	private JButton btnComplainFu;
 	
 	public Main_Panel() {
 		super();
@@ -46,24 +45,32 @@ public class Main_Panel extends JPanel {
 		add(btnEmploeyLogin);
 		
 		btnMakeOrder = new JButton("Make order");
-		btnMakeOrder.setBounds(516, 121, 110, 35);
+		btnMakeOrder.setBounds(499, 121, 127, 35);
 		add(btnMakeOrder);
 		
 		btnRegister = new JButton("Register");
-		btnRegister.setBounds(516, 213, 110, 35);
+		btnRegister.setBounds(499, 213, 127, 35);
 		add(btnRegister);
 		
 		btnCheckIn = new JButton("Check in");
-		btnCheckIn.setBounds(217, 121, 110, 35);
+		btnCheckIn.setBounds(217, 121, 127, 35);
 		add(btnCheckIn);
 		
 		btnCheckOut = new JButton("Check out");
-		btnCheckOut.setBounds(217, 167, 110, 35);
+		btnCheckOut.setBounds(217, 167, 127, 35);
 		add(btnCheckOut);
 		
 		cancelOrder = new JButton("Cancel order");
-		cancelOrder.setBounds(516, 167, 110, 35);
+		cancelOrder.setBounds(499, 167, 127, 35);
 		add(cancelOrder);
+		
+		btnComplain = new JButton("Complain");
+		btnComplain.setBounds(217, 213, 127, 35);
+		add(btnComplain);
+		
+		btnComplainFu = new JButton("Complain Follow Up");
+		btnComplainFu.setBounds(217, 259, 127, 35);
+		add(btnComplainFu);
 	}
 
 	public JButton getBtnExit() {
@@ -91,5 +98,12 @@ public class Main_Panel extends JPanel {
 	}
 	public JButton getBtnCancelOrder() {
 		return cancelOrder;
+	}
+	public JButton getBtnComplain() {
+		return btnComplain;
+	}
+	
+	public JButton getBtnComplainFu() {
+		return btnComplainFu;
 	}
 }

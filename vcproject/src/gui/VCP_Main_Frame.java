@@ -15,9 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import controler.LogIn_controller;
 import controler.Reminder;
-
 public class VCP_Main_Frame extends JFrame {
 
 	/**
@@ -27,13 +25,14 @@ public class VCP_Main_Frame extends JFrame {
 	public String host = null;
 	private static final long serialVersionUID = 1L;
 	private Main_Panel mainPanel;
-	private LogIn_Frame loginframe;
+	private LogIn_Panel loginpanel;
 	private Order_Panel orderPanel;
 	private Register_Panel registerPanel;
 	private Payment_Frame paymentFrame;
 	private CheckInOut_Frame CheckInOutFrame;
 	private CancelOrder_Panel cancelOrder;
-	private LogIn_controller logincontroller;
+	private Complain_Panel complain;
+	private ComplainFu_Panel complainFu;
 
 	public VCP_Main_Frame() {
 	}
@@ -96,10 +95,10 @@ public class VCP_Main_Frame extends JFrame {
 		getMainPanel().getBtnEmploeyLogin().addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						getLogIn_Frame();
-						getLogIn_Frame().setVisible(true);
-
-						getLogIn_Frame().addWindowListener(new WindowAdapter() {
+				getLogIn_Frame();
+				getLogIn_Frame().setVisible(true);
+			
+				loginframe.getLogIn_Panel().getBtnReturn().addActionListener(new ActionListener(){
 
 							public void windowClosed(WindowEvent arg0) {
 								loginframe = null;
@@ -108,10 +107,10 @@ public class VCP_Main_Frame extends JFrame {
 
 						getLogIn_Frame().getLogIn_Panel().getBtnExit()
 								.addActionListener(new ActionListener() {
-
-									public void actionPerformed(ActionEvent e) {
-										JFrame frame = new JFrame();
-
+					
+					public void actionPerformed(ActionEvent e) {
+						loginframe.dispose();
+						enableMainFrame();
 										int result = JOptionPane
 												.showConfirmDialog(
 														frame,
@@ -124,40 +123,39 @@ public class VCP_Main_Frame extends JFrame {
 											getLogIn_Frame().closeLoginFrame();
 											logincontroller = null;
 										}
-									}
-
-								});
-
-						getLogIn_Frame().getLogIn_Panel().getBtnSubmit()
-								.addActionListener(new ActionListener() {
-
-									@Override
-									public void actionPerformed(ActionEvent e) {
-
-										getLogincontroller();
-									}
-
-								});
-
-						getLogIn_Frame().getLogIn_Panel().getPswdText()
-								.addKeyListener(new KeyAdapter() {
-									public void keyPressed(KeyEvent e) {
-										if (e.getKeyCode() == KeyEvent.VK_ENTER)
-											getLogIn_Frame().getLogIn_Panel()
-													.getBtnSubmit().doClick();
-
-									}
-								});
-
-						getLogIn_Frame().getLogIn_Panel().getUserText()
-								.addKeyListener(new KeyAdapter() {
-									public void keyPressed(KeyEvent e) {
-										if (e.getKeyCode() == KeyEvent.VK_ENTER)
-											getLogIn_Frame().getLogIn_Panel()
-													.getBtnSubmit().doClick();
-									}
-								});
 					}
+					
+				});
+				
+				loginframe.getLogIn_Panel().getBtnSubmit().addActionListener(new ActionListener(){
+								.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						 
+						String username=loginframe.getLogIn_Panel().getUserText().getText();
+					}
+					
+				});
+				
+				loginframe.getLogIn_Panel().getPswdText().addKeyListener(new KeyAdapter(){
+								.addKeyListener(new KeyAdapter() {
+					public void keyPressed(KeyEvent e){
+				        if (e.getKeyCode() == KeyEvent.VK_ENTER)
+				        	loginframe.getLogIn_Panel().getBtnSubmit().doClick();
+													.getBtnSubmit().doClick();
+				        
+				     }
+				 });
+
+				loginframe.getLogIn_Panel().getUserText().addKeyListener(new KeyAdapter(){
+								.addKeyListener(new KeyAdapter() {
+					public void keyPressed(KeyEvent e){
+				        if (e.getKeyCode() == KeyEvent.VK_ENTER)
+				        	loginframe.getLogIn_Panel().getBtnSubmit().doClick();
+													.getBtnSubmit().doClick();
+				    }
+				 });
+			}
 				});
 
 		getMainPanel().getBtnMakeOrder().addActionListener(
@@ -206,6 +204,41 @@ public class VCP_Main_Frame extends JFrame {
 					}
 				});
 
+		getLogIn_Panel().getBtnReturn().addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getMainPanel());
+				
+			}
+			
+		});
+		
+		getLogIn_Panel().getBtnSubmit().addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 
+				
+				System.out.println(getLogIn_Panel().getPswdText().getText());
+				 System.out.println(getLogIn_Panel().getUserText().getText());
+			}
+			
+		});
+		
+		getLogIn_Panel().getPswdText().addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent e){
+		        if (e.getKeyCode() == KeyEvent.VK_ENTER)
+		        	getLogIn_Panel().getBtnSubmit().doClick();
+		        
+		     }
+		 });
+		
+		getLogIn_Panel().getUserText().addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent e){
+		        if (e.getKeyCode() == KeyEvent.VK_ENTER)
+		        	getLogIn_Panel().getBtnSubmit().doClick();
+		    }
+		 });
 		mainPanel.getBtnCheckIn().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				getCheckInFrame(true);
@@ -250,8 +283,48 @@ public class VCP_Main_Frame extends JFrame {
 						setContentPane(getMainPanel());
 					}
 				});
+		
+		mainPanel.getBtnComplain().addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+			setContentPane(getComplainPanel());
+		}
+		});
+		
+		getComplainPanel().getBtnReturn().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getMainPanel());
+			}
+		});
+		
+		mainPanel.getBtnComplainFu().addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+			setContentPane(getComplainPanelFu());
+		}
+		});
+		
+		getComplainPanelFu().getBtnReturn().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getMainPanel());
+			}
+		});
 	}
+	
 
+	public   Complain_Panel getComplainPanel() {
+		if (complain == null) {
+			complain = new Complain_Panel();
+		}
+		return complain;
+		
+	}
+	
+	public   ComplainFu_Panel getComplainPanelFu() {
+		if (complainFu == null) {
+			complainFu = new ComplainFu_Panel();
+		}
+		return complainFu;
+		
+	}
 	private void closeMainFrame() {
 		this.setVisible(false);
 		this.dispose();
@@ -273,12 +346,12 @@ public class VCP_Main_Frame extends JFrame {
 		return cancelOrder;
 	}
 
-	public LogIn_Frame getLogIn_Frame() {
+	public LogIn_Panel getLogIn_Panel() {
 
-		if (loginframe == null)
-			loginframe = new LogIn_Frame();
+		if(loginpanel==null)
+			loginpanel=new LogIn_Panel();
 
-		return loginframe;
+		return loginpanel; 
 	}
 
 	private Order_Panel getOrderPanel() {
