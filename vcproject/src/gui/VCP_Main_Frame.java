@@ -286,6 +286,12 @@ public class VCP_Main_Frame extends JFrame {
 				
 			}
 		});
+		
+		getMainPanel().getBtnDofek().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getParkingLot_Panel());
+			}
+		});
 	}
 
 	private void closeMainFrame() {
@@ -372,7 +378,7 @@ public class VCP_Main_Frame extends JFrame {
 	
 	public ParkingLot_Panel getParkingLot_Panel(){
 		if(parkingLotPanel==null)
-			parkingLotPanel=new ParkingLot_Panel(4);
+			parkingLotPanel=new ParkingLot_Panel(8);
 		return parkingLotPanel;
 	}
 	

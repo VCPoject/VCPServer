@@ -30,7 +30,7 @@ public abstract class Controller {
 				.showMessageDialog(frame, msg, "", JOptionPane.PLAIN_MESSAGE);
 	}
 
-	public void sendQueryToServer(Object[] msg) {
+	public void sendQueryToServer(Object[] msg) { 
 		openConnection();
 		server.accept(msg);
 	}
