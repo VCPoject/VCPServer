@@ -29,6 +29,7 @@ public class ClientConsole implements ClientIF {
 	 */
 	final public static int DEFAULT_PORT = 5555;
 	private ArrayList<Object> result = null;
+	private int flag;
 	// Instance variables **********************************************
 
 	/**
@@ -68,10 +69,12 @@ public class ClientConsole implements ClientIF {
 			result = null;
 			Object[] message = msg;
 			message = msg;
+			
 			if (message != null) {
 				client.handleMessageFromClientUI(message);
 				message = null;
 			}
+				
 		} catch (Exception ex) {
 			ArrayList<Object> error = new ArrayList<Object>();
 			String errMsg = "Unexpected error while reading from console! error: "
@@ -92,25 +95,16 @@ public class ClientConsole implements ClientIF {
 	}
 
 	public void display(ArrayList<Object> message) {
-		if (message != null) {
-			setResult(message);
-			System.out.println(message);
-		}
+		setResult(message);
 	}
 
 	private void setResult(ArrayList<Object> message) {
-		if (message != null) {
 			this.result = message;
-		} else
-			result = null;
 	}
 
 	public ArrayList<Object> getResult() {
-		if (result != null) {
-			System.out.println("get: " + result);
-			return result;
-		}
-		return null;
+	
+		return this.result;
 	}
 	
 	public boolean isConnected(){
