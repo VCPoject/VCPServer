@@ -36,6 +36,8 @@ public class VCP_Main_Frame extends JFrame {
 	private LogIn_controller logincontroller;
 	private Employee_Panel employee_panel;
 	private ParkingLot_Panel parkingLotPanel;
+	private Complain_Panel complainPanel;
+	private ComplainFu_Panel complainFuPanel;
 	
 	public VCP_Main_Frame() {
 	}
@@ -249,15 +251,41 @@ public class VCP_Main_Frame extends JFrame {
 		mainPanel.getBtnCancelOrder().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setContentPane(getCancelOrderPanel());
+				getCancelOrderPanel().getBtnReturn().addActionListener(
+						new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								setContentPane(getMainPanel());
+							}
+						});
 			}
 		});
 
-		getCancelOrderPanel().getBtnReturn().addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						setContentPane(getMainPanel());
-					}
-				});
+
+		
+		mainPanel.getBtnComplain().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setContentPane(getComplain_Panel());
+				getComplain_Panel().getBtnReturn().addActionListener(
+						new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								setContentPane(getMainPanel());
+							}
+						});
+			}
+		});
+		
+		mainPanel.getBtnComplainFu().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setContentPane(getComplainFu_Panel());
+				getComplainFu_Panel().getBtnReturn().addActionListener(
+						new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								setContentPane(getMainPanel());
+							}
+						});
+				
+			}
+		});
 	}
 
 	private void closeMainFrame() {
@@ -346,5 +374,19 @@ public class VCP_Main_Frame extends JFrame {
 		if(parkingLotPanel==null)
 			parkingLotPanel=new ParkingLot_Panel(4);
 		return parkingLotPanel;
+	}
+	
+	public Complain_Panel getComplain_Panel() {
+		if (complainPanel == null) {
+			complainPanel = new Complain_Panel();
+		}
+		return complainPanel;
+	}
+	
+	public ComplainFu_Panel getComplainFu_Panel() {
+		if (complainFuPanel == null) {
+			complainFuPanel = new ComplainFu_Panel();
+		}
+		return complainFuPanel;
 	}
 }

@@ -78,6 +78,7 @@ public class CancelOrder_Panel extends JPanel {
 			add(btnSubmit);
 			
 			textField = new JTextField();
+			textField.setEditable(false);
 			textField.setBounds(441, 339, 137, 29);
 			add(textField);
 			textField.setColumns(10);

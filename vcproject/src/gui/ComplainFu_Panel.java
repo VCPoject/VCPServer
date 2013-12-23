@@ -91,6 +91,7 @@ public class ComplainFu_Panel extends JPanel {
 			add(lblRefound);
 			
 			textField_1 = new JTextField();
+			textField_1.setEditable(false);
 			textField_1.setBounds(455, 473, 138, 22);
 			add(textField_1);
 			textField_1.setColumns(10);
