@@ -35,7 +35,7 @@ public class VCP_Main_Frame extends JFrame {
 	private CancelOrder_Panel cancelOrder;
 	private LogIn_controller logincontroller;
 	private Employee_Panel employee_panel;
-	private ParkingLot_Panel p;
+	private ParkingLot_Panel parkingLotPanel;
 	
 	public VCP_Main_Frame() {
 	}
@@ -343,8 +343,8 @@ public class VCP_Main_Frame extends JFrame {
 	}
 	
 	public ParkingLot_Panel getParkingLot_Panel(){
-		if(p==null)
-			p=new ParkingLot_Panel(4);
-		return p;
+		if(parkingLotPanel==null)
+			parkingLotPanel=new ParkingLot_Panel(4);
+		return parkingLotPanel;
 	}
 }
