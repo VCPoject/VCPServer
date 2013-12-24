@@ -14,9 +14,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import controler.LogIn_controller;
-import controler.Reminder;
+
 
 public class VCP_Main_Frame extends JFrame {
 
@@ -35,9 +34,9 @@ public class VCP_Main_Frame extends JFrame {
 	private CancelOrder_Panel cancelOrder;
 	private LogIn_controller logincontroller;
 	private Employee_Panel employee_panel;
-	//private ParkingLot_Panel p;
 	private Complain_Panel complainPanel;
 	private ComplainFu_Panel complainFuPanel;
+	private SavingParkingPlace_Panel savingparkingplace;
 	
 	public VCP_Main_Frame() {
 	}
@@ -137,7 +136,7 @@ public class VCP_Main_Frame extends JFrame {
 						getLogIn_Frame().getLogIn_Panel().getBtnSubmit()
 								.addActionListener(new ActionListener() {
 
-									@Override
+									
 									public void actionPerformed(ActionEvent e) {
 
 										getLogincontroller();
@@ -287,6 +286,15 @@ public class VCP_Main_Frame extends JFrame {
 				
 			}
 		});
+		
+		getEmployeePanel().getbtnSaveParkin().addActionListener(new ActionListener(){
+				
+			public void actionPerformed(ActionEvent e){
+				setContentPane(getSavingParkingPlace_Panel());
+				
+			}
+			
+		});
 	}
 
 	private void closeMainFrame() {
@@ -371,11 +379,7 @@ public class VCP_Main_Frame extends JFrame {
 		return logincontroller;
 	}
 	
-	/*public ParkingLot_Panel getParkingLot_Panel(){
-		if(parkingLotPanel==null)
-			parkingLotPanel=new ParkingLot_Panel(4);
-		return parkingLotPanel;
-	}*/
+	
 	
 	public Complain_Panel getComplain_Panel() {
 		if (complainPanel == null) {
@@ -389,4 +393,12 @@ public class VCP_Main_Frame extends JFrame {
 			complainFuPanel = new ComplainFu_Panel();
 		}
 		return complainFuPanel;
+	}
+	
+	public SavingParkingPlace_Panel getSavingParkingPlace_Panel(){
+		if(savingparkingplace==null)
+			savingparkingplace=new SavingParkingPlace_Panel();
+		
+		return savingparkingplace;
+	}
 }

@@ -19,8 +19,6 @@ public class LogIn_controller{
 		this.username = username;
 		this.password = password;
 		v = new VCP_Main_Frame();
-		checkValidity();
-		//checkValidity();
 	}
 
 	public boolean checkValidity() {
@@ -33,7 +31,7 @@ public class LogIn_controller{
 		while((resultCopy = c.getResult()) == null){
 			threadSleep();
 		}
-
+		
 		if (username.equals(resultCopy.get(0).toString())
 				&& password.equals(resultCopy.get(1).toString())) {
 

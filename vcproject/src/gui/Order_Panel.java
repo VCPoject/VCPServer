@@ -341,14 +341,7 @@ public class Order_Panel extends JPanel {
 		return btnReturn;
 	}
 
-	public void threadSleep() {
-		try {
-			Thread.sleep(0);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	private MakeOrderController getMakeOrderController() {
 		if(makeOrderController == null || !makeOrderController.isConnected()){
 			makeOrderController = new MakeOrderController(host,port);
