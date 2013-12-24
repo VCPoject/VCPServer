@@ -5,16 +5,15 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
-
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 import javax.swing.JTextArea;
+import controler.ComplainController;
 
 public class Complain_Panel extends JPanel {
 
@@ -25,11 +24,16 @@ public class Complain_Panel extends JPanel {
 	private JButton btnSubmit;
 	private JTextField textFieldIdNumber;
 	private JFormattedTextField textFieldCarNumber;
-	private JTextField textField;
+	private JTextArea textArea;
+	private String host;
+	private int port = 5555;
+	private ComplainController complainController;
 	
 	
-	public Complain_Panel() {
+	public Complain_Panel(String host, int port) {
 		super();
+		this.host = host;
+		this.port = port;
 		initialize();
 		listners();
 	}
@@ -79,7 +83,7 @@ public class Complain_Panel extends JPanel {
 			btnSubmit.setBounds(366, 386, 103, 38);
 			add(btnSubmit);
 			
-			JTextArea textArea = new JTextArea();
+			textArea = new JTextArea();
 			textArea.setBounds(352, 233, 228, 130);
 			add(textArea);
 			
@@ -96,7 +100,21 @@ public class Complain_Panel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-	}
+		
+		
+		getBtnSubmit().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int idnum = Integer.parseInt(textFieldIdNumber.getText());
+				int carnum = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
+				String complain = textArea.getText();
+				if(getComplainController().checkValidity(idnum,carnum,complain))
+				{
+				complainController.sendAck(idnum,complain);
+				}
+			}
+		});	
+			
+	  }
 	
 	public JButton getBtnReturn() {
 		return btnReturn;
@@ -104,5 +122,13 @@ public class Complain_Panel extends JPanel {
 	
 	public JButton getBtnSubmit() {
 		return btnSubmit;
+	}
+	
+	private ComplainController getComplainController() {
+		if(complainController == null || !complainController.isConnected()){
+			complainController = new ComplainController(host,port);
+		}
+			
+		return complainController;
 	}
 }
