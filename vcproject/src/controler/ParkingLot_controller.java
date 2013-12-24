@@ -15,9 +15,9 @@ public class ParkingLot_controller extends Controller{
 		Parking_Places p=new Parking_Places();
 		p.setIdparkinglot(Integer.parseInt(result.get(0).toString()));
 		p.setIdorder(Integer.parseInt(result.get(1).toString()));
-		p.setFloor(Integer.parseInt(result.get(2).toString()));
-		p.setLine(Integer.parseInt(result.get(3).toString()));
-		p.setparkingNum(Integer.parseInt(result.get(3).toString()));
+		p.setFloor((Integer.parseInt(result.get(2).toString())));
+		p.setRow(Integer.parseInt(result.get(3).toString()));
+		p.setColumn(Integer.parseInt(result.get(3).toString()));
 		p.setStatus(result.get(3).toString());
 		parkingPlacesList.add(p);
 	}

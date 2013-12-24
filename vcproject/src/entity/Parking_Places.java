@@ -1,15 +1,15 @@
 package entity;
 
-public class Parking_Places {
+public class Parking_Places implements Entity {
 	private int idparkinglot;
 	private int floor;
-	private int line;
-	private int parkingNum;
+	private int row;
+	private int column;
 	private int idorder;
 	private String status;
+	private String query; 
 	
 	public Parking_Places(){
-		
 	}
 
 	public String getStatus() {
@@ -36,20 +36,20 @@ public class Parking_Places {
 		this.floor = floor;
 	}
 
-	public int getLine() {
-		return line;
+	public int getRow() {
+		return row;
 	}
 
-	public void setLine(int line) {
-		this.line = line;
+	public void setRow(int row) {
+		this.row = row;
 	}
 
-	public int getparkingNum() {
-		return parkingNum;
+	public int getColumn() {
+		return column;
 	}
 
-	public void setparkingNum(int parkingNum) {
-		this.parkingNum = parkingNum;
+	public void setColumn(int column) {
+		this.column = column;
 	}
 
 	public int getIdparkinglot() {
@@ -58,5 +58,21 @@ public class Parking_Places {
 
 	public void setIdparkinglot(int idparkinglot) {
 		this.idparkinglot = idparkinglot;
+	}
+
+	@Override
+	public String getQuery() {
+		return query;
+	}
+
+	@Override
+	public void setQuery(String command) {
+		this.query = command;
+	}
+
+	@Override
+	public Object[] toObject() {
+		Object[] toSend = {getQuery(),getIdorder(),getFloor(),getRow(),getColumn(),getStatus()};
+		return toSend;
 	}
 }

@@ -1,11 +1,11 @@
 package gui;
  
+import java.awt.Color;
+import java.awt.Font;
+
 import javax.swing.*;
 
 import controler.LogIn_controller;
-
-import java.awt.Color;
-import java.awt.Font;
 
 public class LogIn_Panel extends JPanel{
 	
@@ -65,7 +65,7 @@ public class LogIn_Panel extends JPanel{
 		lblLogIn.setBounds(158, 39, 138, 46);
 		add(lblLogIn);
 		
-		logIncontroller = new LogIn_controller(this.host);
+		getLogincontroller();
 		
 	}
 	
@@ -94,6 +94,15 @@ public class LogIn_Panel extends JPanel{
 	
 	public boolean checkValidity() {
 		return logIncontroller.checkValidity(getUserText(),getPswdText());
+	}
+	
+	public LogIn_controller getLogincontroller(){
+		if(logIncontroller == null)
+		{
+			logIncontroller = new LogIn_controller(this.host);
+		}
+		return logIncontroller;
+		
 	}
 
 }

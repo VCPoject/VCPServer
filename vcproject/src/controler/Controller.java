@@ -2,24 +2,23 @@ package controler;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
 import clientServer.ClientConsole;
+import entity.Parking_Places;
 
 public abstract class Controller {
 	final public static int DEFAULT_PORT = 5555;
 	private ClientConsole server;
 	private String host;
 	private int port;
-	
+
 	public Controller() {
-		this("localhost",DEFAULT_PORT);
+		this("localhost", DEFAULT_PORT);
 	}
-	
+
 	public Controller(String host) {
-		this(host,DEFAULT_PORT);
+		this(host, DEFAULT_PORT);
 	}
 
 	public Controller(String host, int port) {
@@ -39,13 +38,21 @@ public abstract class Controller {
 				.showMessageDialog(frame, msg, "", JOptionPane.PLAIN_MESSAGE);
 	}
 
-	public void sendQueryToServer(Object[] msg) { 
+	public void sendQueryToServer(Object entity) {
 		openConnection();
-		server.accept(msg);
+		Object[] toServer = { null };
+		if (entity instanceof Parking_Places) {
+			Parking_Places pp = (Parking_Places) entity;
+			toServer = pp.toObject();
+			server.accept(toServer);
+		} else if (entity instanceof Object[]) {
+			server.accept((Object[]) entity);
+		}
+
 	}
 
 	private void openConnection() {
-		if(server == null || !server.isConnected())
+		if (server == null || !server.isConnected())
 			server = new ClientConsole(this.host, this.port);
 	}
 
@@ -72,12 +79,11 @@ public abstract class Controller {
 		try {
 			server.getClient().closeConnection();
 		} catch (IOException e) {
-			showWarningMsg("error while closing connection: "+e.getMessage());
+			showWarningMsg("error while closing connection: " + e.getMessage());
 		}
 	}
-	
-	public boolean isConnected()
-	{
+
+	public boolean isConnected() {
 		return server.isConnected();
 	}
 

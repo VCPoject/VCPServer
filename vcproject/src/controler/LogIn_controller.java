@@ -1,20 +1,20 @@
 package controler;
 
 import java.util.ArrayList;
-import javax.swing.*;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import clientServer.ClientConsole;
 
 public class LogIn_controller extends Controller{
 
 	private ArrayList<Object> resultCopy;
+	private String username;
+	private String password;
 
 	public LogIn_controller(String host) {
 		super(host);
 	}
 	
 	public boolean checkValidity(String username,String password) {
+		setUsername(username);
+		setPassword(password);
 		Object[] sqlsMsg = {
 				"SELECT username,password, login FROM vcp_employ.employ WHERE username= ? AND password = ? ;",
 				username, password};
@@ -49,18 +49,32 @@ public class LogIn_controller extends Controller{
 		return true;
 	}
 	
-	
-
 	public void updateAsLoggedIn(String username) {
 		Object[] sqlsMsg = { "UPDATE  vcp_employ.employ SET login=? WHERE username=?;" ,
 				"YES",username};
 		sendQueryToServer(sqlsMsg);
 	}
 	
-	public void updateAsNotLoggedIn(String username) {
+	public void updateAsNotLoggedIn() {
 		Object[] sqlsMsg = { "UPDATE  vcp_employ.employ SET login=? WHERE username=?;" ,
-				"NO",username};
+				"NO",getUsername()};
 		sendQueryToServer(sqlsMsg);
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }
