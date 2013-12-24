@@ -107,7 +107,10 @@ public class Complain_Panel extends JPanel {
 				int idnum = Integer.parseInt(textFieldIdNumber.getText());
 				int carnum = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
 				String complain = textArea.getText();
-				getComplainController().checkValidity(idnum,carnum,complain);
+				if(getComplainController().checkValidity(idnum,carnum,complain))
+				{
+				complainController.sendAck(idnum,complain);
+				}
 			}
 		});	
 			

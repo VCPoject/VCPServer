@@ -9,6 +9,8 @@ import java.text.ParseException;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 
+import controler.ComplainFuController;
+
 
 
 public class ComplainFu_Panel extends JPanel {
@@ -22,10 +24,15 @@ public class ComplainFu_Panel extends JPanel {
 	private JLabel lblRefound;
 	private JTextField textField_1;
 	private JTextArea textArea;
-	private JComboBox complains;
+	private JComboBox<String> complains;
+	private String host;
+	private int port = 5555;
+	private ComplainFuController complainController;
 	
-	public ComplainFu_Panel() {
+	public ComplainFu_Panel(String host, int port) {
 		super();
+		this.host = host;
+		this.port = port;
 		initialize();
 		listners();
 	}
@@ -102,7 +109,7 @@ public class ComplainFu_Panel extends JPanel {
 			textArea.setBounds(578, 350, 197, 93);
 			add(textArea);
 			
-			complains = new JComboBox();
+			complains = new JComboBox<String>();
 			complains.setBounds(25, 402, 211, 20);
 			add(complains);
 			
@@ -118,8 +125,19 @@ public class ComplainFu_Panel extends JPanel {
 		
 		getBtnSubmit().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int idnum = Integer.parseInt(textFieldIdNumber.getText());
+				int carnum = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
+				if(getComplainController().checkValidity(idnum,carnum))
+				{
+					String[] comp = complainController.getComplains(idnum);
+					complains.setEnabled(true);
+					for(int i=0;i<comp.length;i++)
+					complains.addItem(comp[i]);
+				}
 			}
 		});
+		
+		
 	}
 	
 	public JButton getBtnReturn() {
@@ -128,5 +146,13 @@ public class ComplainFu_Panel extends JPanel {
 	
 	public JButton getBtnSubmit() {
 		return btnSubmit;
+	}
+	
+	private ComplainFuController getComplainController() {
+		if(complainController == null || !complainController.isConnected()){
+			complainController = new ComplainFuController(host,port);
+		}
+			
+		return complainController;
 	}
 }
