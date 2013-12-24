@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
@@ -16,6 +15,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import controler.LogIn_controller;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class VCP_Main_Frame extends JFrame {
 
@@ -23,7 +24,7 @@ public class VCP_Main_Frame extends JFrame {
 	 * 
 	 */
 	final public int DEFAULT_PORT = 5555;
-	public String host = null;
+	final public String host;
 	private static final long serialVersionUID = 1L;
 	private Main_Panel mainPanel;
 	private LogIn_Frame loginframe;
@@ -36,21 +37,12 @@ public class VCP_Main_Frame extends JFrame {
 	private Employee_Panel employee_panel;
 	private Complain_Panel complainPanel;
 	private ComplainFu_Panel complainFuPanel;
+	private ParkingLot_Panel parkingLotPanel;
 	private SavingParkingPlace_Panel savingparkingplace;
-	
-	public VCP_Main_Frame() {
-	}
 
-	public VCP_Main_Frame(String[] args) {
+	public VCP_Main_Frame(String host) {
 		super();
-
-		try {
-			host = args[0];
-		}
-
-		catch (Exception e) {
-			this.host = "localhost";
-		}
+		this.host = host;
 		initialize();
 	}
 
@@ -63,6 +55,7 @@ public class VCP_Main_Frame extends JFrame {
 					"setLookAndFeel error: " + e.getMessage(),
 					"setLookAndFeel ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setContentPane(getMainPanel());
 		getContentPane().setBackground(SystemColor.activeCaption);
 		this.setSize(800, 600);
@@ -74,7 +67,7 @@ public class VCP_Main_Frame extends JFrame {
 	}
 
 	private void listners() {
-
+		
 		getMainPanel().getBtnExit().addActionListener(new ActionListener() {/*
 																			 * Exit
 																			 * Button
@@ -88,7 +81,7 @@ public class VCP_Main_Frame extends JFrame {
 						"Exit Application", JOptionPane.YES_NO_OPTION);
 
 				if (result == JOptionPane.YES_OPTION) {
-					
+					// getLogincontroller().updateAsNotLoggedIn();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					closeMainFrame();
 					System.exit(0);
@@ -102,69 +95,38 @@ public class VCP_Main_Frame extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						getLogIn_Frame();
 						getLogIn_Frame().setVisible(true);
-
 						getLogIn_Frame().addWindowListener(new WindowAdapter() {
-
 							public void windowClosed(WindowEvent arg0) {
 								loginframe = null;
 							}
 						});
-
 						getLogIn_Frame().getLogIn_Panel().getBtnExit()
 								.addActionListener(new ActionListener() {
-
 									public void actionPerformed(ActionEvent e) {
 										JFrame frame = new JFrame();
-
 										int result = JOptionPane
 												.showConfirmDialog(
 														frame,
 														"Are you sure you want to exit the application?",
 														"Exit Application",
 														JOptionPane.YES_NO_OPTION);
-
 										if (result == JOptionPane.YES_OPTION) {
-											getLogincontroller().updateAsNotLoggedIn();
+											//getLogincontroller().updateAsNotLoggedIn();
 											frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 											getLogIn_Frame().closeLoginFrame();
 											logincontroller = null;
 										}
 									}
-
 								});
 
 						getLogIn_Frame().getLogIn_Panel().getBtnSubmit()
 								.addActionListener(new ActionListener() {
-
 									
 									public void actionPerformed(ActionEvent e) {
-
-										getLogincontroller();
-										if(getLogincontroller().checkValidity()==true){
+										if (getLogIn_Frame().getLogIn_Panel().checkValidity()) {
 											getLogIn_Frame().closeLoginFrame();
 											setContentPane(getEmployeePanel());
 										}
-											
-									}
-
-								});
-
-						getLogIn_Frame().getLogIn_Panel().getPswdText()
-								.addKeyListener(new KeyAdapter() {
-									public void keyPressed(KeyEvent e) {
-										if (e.getKeyCode() == KeyEvent.VK_ENTER)
-											getLogIn_Frame().getLogIn_Panel()
-													.getBtnSubmit().doClick();
-
-									}
-								});
-
-						getLogIn_Frame().getLogIn_Panel().getUserText()
-								.addKeyListener(new KeyAdapter() {
-									public void keyPressed(KeyEvent e) {
-										if (e.getKeyCode() == KeyEvent.VK_ENTER)
-											getLogIn_Frame().getLogIn_Panel()
-													.getBtnSubmit().doClick();
 									}
 								});
 					}
@@ -187,7 +149,7 @@ public class VCP_Main_Frame extends JFrame {
 
 				});
 
-		mainPanel.getBtnRegister().addActionListener(new ActionListener() {
+		getMainPanel().getBtnRegister().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setContentPane(getRegisterPanel());
 				getRegisterPanel().getBtnReturn().addActionListener(
@@ -196,25 +158,24 @@ public class VCP_Main_Frame extends JFrame {
 								setContentPane(getMainPanel());
 							}
 						});
+				getRegisterPanel().getBtnSubmit().addActionListener(
+						new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								getPaymentFrame();
+								getPaymentFrame().setVisible(true);
+								disableMainFrame();
+							}
+						});
+
+				getPaymentFrame().getBtnReturn().addActionListener(
+						new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								getPaymentFrame().dispose();
+								enableMainFrame();
+							}
+						});
 			}
 		});
-
-		getRegisterPanel().getBtnSubmit().addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						getPaymentFrame();
-						getPaymentFrame().setVisible(true);
-						disableMainFrame();
-					}
-				});
-
-		getPaymentFrame().getBtnReturn().addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						getPaymentFrame().dispose();
-						enableMainFrame();
-					}
-				});
 
 		mainPanel.getBtnCheckIn().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -260,8 +221,6 @@ public class VCP_Main_Frame extends JFrame {
 			}
 		});
 
-
-		
 		mainPanel.getBtnComplain().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setContentPane(getComplain_Panel());
@@ -273,7 +232,7 @@ public class VCP_Main_Frame extends JFrame {
 						});
 			}
 		});
-		
+
 		mainPanel.getBtnComplainFu().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setContentPane(getComplainFu_Panel());
@@ -283,18 +242,26 @@ public class VCP_Main_Frame extends JFrame {
 								setContentPane(getMainPanel());
 							}
 						});
-				
+
 			}
 		});
-		
-		getEmployeePanel().getbtnSaveParkin().addActionListener(new ActionListener(){
-				
-			public void actionPerformed(ActionEvent e){
+		getEmployeePanel().getbtnSaveParkin().addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent arg0) {
 				setContentPane(getSavingParkingPlace_Panel());
 				
 			}
 			
 		});
+		
+		getMainPanel().getBtnDofek().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getParkingLot_Panel());
+			}
+		});
+			
+			
+		
 	}
 
 	private void closeMainFrame() {
@@ -321,7 +288,7 @@ public class VCP_Main_Frame extends JFrame {
 	public LogIn_Frame getLogIn_Frame() {
 
 		if (loginframe == null)
-			loginframe = new LogIn_Frame();
+			loginframe = new LogIn_Frame(host);
 
 		return loginframe;
 	}
@@ -352,10 +319,10 @@ public class VCP_Main_Frame extends JFrame {
 			CheckInOutFrame = new CheckInOut_Frame(isCheckIn);
 		return CheckInOutFrame;
 	}
-	
-	public Employee_Panel getEmployeePanel(){
-		if(employee_panel==null)
-			employee_panel=new Employee_Panel();
+
+	public Employee_Panel getEmployeePanel() {
+		if (employee_panel == null)
+			employee_panel = new Employee_Panel();
 		return employee_panel;
 	}
 
@@ -371,26 +338,22 @@ public class VCP_Main_Frame extends JFrame {
 		this.setVisible(true);
 	}
 
-	public LogIn_controller getLogincontroller() {
-		if (logincontroller == null)
-			logincontroller = new LogIn_controller(getLogIn_Frame()
-					.getLogIn_Panel().getUserText().getText(), getLogIn_Frame()
-					.getLogIn_Panel().getPswdText().getText());
-		return logincontroller;
+	public ParkingLot_Panel getParkingLot_Panel() {
+		if (parkingLotPanel == null)
+			parkingLotPanel = new ParkingLot_Panel(8);
+		return parkingLotPanel;
 	}
-	
-	
-	
+
 	public Complain_Panel getComplain_Panel() {
 		if (complainPanel == null) {
-			complainPanel = new Complain_Panel();
+			complainPanel = new Complain_Panel(this.host, DEFAULT_PORT);
 		}
 		return complainPanel;
 	}
-	
+
 	public ComplainFu_Panel getComplainFu_Panel() {
 		if (complainFuPanel == null) {
-			complainFuPanel = new ComplainFu_Panel();
+			complainFuPanel = new ComplainFu_Panel(this.host, DEFAULT_PORT);
 		}
 		return complainFuPanel;
 	}

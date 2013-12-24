@@ -30,14 +30,15 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private JComboBox <String> comboBoxLine;
 	private JComboBox <String> comboBoxParkingPlace;
 	private ParkingLot_controller parkinglotcontroller;
-	
-	
+	private int parkinglotId;
+	private int floorNum;
 	private static final long serialVersionUID = 1L;
 	
 	public SavingParkingPlace_Panel() {
 		super();
 		initialize();
 		setLayout(null);
+		listners();
 	}
 	
 	private void initialize() {
@@ -50,25 +51,21 @@ public class SavingParkingPlace_Panel extends JPanel {
 		
 		rdbtnParkinLot = new JRadioButton("parking lot");
 		rdbtnParkinLot.setBounds(51, 150, 109, 23);
-		rdbtnParkinLot.setSelected(true);
 		buttonGroup.add(rdbtnParkinLot);
 		add(rdbtnParkinLot);
 		
 		rdbtnFloor = new JRadioButton("floor");
 		rdbtnFloor.setBounds(51, 200, 109, 23);
-		rdbtnFloor.setSelected(true);
 		buttonGroup.add(rdbtnFloor);
 		add(rdbtnFloor);
 		
 		rdbtnLine = new JRadioButton("line");
 		rdbtnLine.setBounds(51, 260, 109, 23);
-		rdbtnLine.setSelected(true);
 		buttonGroup.add(rdbtnLine);
 		add(rdbtnLine);
 		
 		rdbtnParkingPlaceNo = new JRadioButton("parking place no.");
 		rdbtnParkingPlaceNo.setBounds(51, 323, 109, 23);
-		rdbtnParkingPlaceNo.setSelected(true);
 		buttonGroup.add(rdbtnParkingPlaceNo);
 		add(rdbtnParkingPlaceNo);
 		
@@ -121,7 +118,6 @@ public class SavingParkingPlace_Panel extends JPanel {
 		
 		rdbtnParkingPlaceNo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int parkinglotId = Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
 				int num=getParkingLot_controller().getNumOfParkingPlaces(parkinglotId);
 				fillParkingPlacecombox(num);
 			}
@@ -135,10 +131,30 @@ public class SavingParkingPlace_Panel extends JPanel {
 		
 		rdbtnParkinLot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//getNumOfParkingPlaces();
+				parkinglotId =Integer.parseInt(comboBoxFloor.getSelectedItem().toString());
 			}
+		});
+		
+		rdbtnFloor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				floorNum =Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
+				
+			}
+		});
+		
 
-			
+		rdbtnFloor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				floorNum =Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
+				
+			}
+		});
+		
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				floorNum =Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
+				
+			}
 		});
 
 	}

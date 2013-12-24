@@ -1,6 +1,6 @@
 package entity;
 
-public class Parking_Places {
+public class Parking_Lot {
 	private int idparkinglot;
 	private int floor;
 	private int line;
@@ -8,7 +8,7 @@ public class Parking_Places {
 	private int idorder;
 	private String status;
 	
-	public Parking_Places(){
+	public Parking_Lot(){
 		
 	}
 
