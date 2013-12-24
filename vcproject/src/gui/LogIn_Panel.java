@@ -2,21 +2,25 @@ package gui;
  
 import javax.swing.*;
 
+import controler.LogIn_controller;
+
 import java.awt.Color;
 import java.awt.Font;
 
 public class LogIn_Panel extends JPanel{
 	
 	private static final long serialVersionUID = 1L;
+	private String host;
 	private JTextField usertxtfieled;
 	private JTextField pswdtxtfield;
 	private JButton btnexit;
 	private JButton btnsubmmit;
-	
+	private LogIn_controller logIncontroller;
 	
 
-	public LogIn_Panel(){
+	public LogIn_Panel(String host){
 		super();
+		this.host = host;
 		initialize();
 		listners();
 	}
@@ -46,8 +50,6 @@ public class LogIn_Panel extends JPanel{
 		btnexit.setBounds(10, 274, 138, 56);
 		add(btnexit); 
 		
-		
-		
 		JLabel lblUserName = new JLabel("Username\r\n");
 		lblUserName.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 18));
 		lblUserName.setBounds(22, 123, 104, 33);
@@ -63,6 +65,8 @@ public class LogIn_Panel extends JPanel{
 		lblLogIn.setBounds(158, 39, 138, 46);
 		add(lblLogIn);
 		
+		logIncontroller = new LogIn_controller(this.host);
+		
 	}
 	
 	public void listners(){
@@ -76,12 +80,20 @@ public class LogIn_Panel extends JPanel{
 		return btnexit;
 	}
 	
-	public JTextField getPswdText(){
-		return pswdtxtfield;
+	public String getPswdText(){
+		return pswdtxtfield.getText();
 	}
 	
-	public JTextField getUserText(){
+	public String getUserText(){
+		return usertxtfieled.getText();
+	}
+
+	public JTextField getUsertxtfieled() {
 		return usertxtfieled;
+	}
+	
+	public boolean checkValidity() {
+		return logIncontroller.checkValidity(getUserText(),getPswdText());
 	}
 
 }
