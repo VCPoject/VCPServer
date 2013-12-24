@@ -389,4 +389,5 @@ public class VCP_Main_Frame extends JFrame {
 			complainFuPanel = new ComplainFu_Panel(this.host, DEFAULT_PORT);
 		}
 		return complainFuPanel;
+ }
 }

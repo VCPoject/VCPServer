@@ -330,7 +330,7 @@ public class Order_Panel extends JPanel {
 				getMakeOrderController().closeConnection();
 			}
 		});
-
+ 
 	}
 
 	public JButton getBtnSubmit() {
