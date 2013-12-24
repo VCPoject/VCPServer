@@ -19,9 +19,11 @@ public class LogIn_Frame extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private LogIn_Panel loginpanel;
 	private Reminder r;
+	private String host;
 	
-	public LogIn_Frame(){
+	public LogIn_Frame(String host){
 		super();
+		this.host = host;
 		initialize();
 	}
 	
@@ -45,11 +47,10 @@ public class LogIn_Frame extends JFrame{
 		r=new Reminder(120,this);
 	}
 	 
-	public LogIn_Panel getLogIn_Panel() {
+	public LogIn_Panel getLogIn_Panel() { 
 		
 		if(loginpanel==null)
-			loginpanel=new LogIn_Panel();
-		
+			loginpanel=new LogIn_Panel(host);
 		return loginpanel; 
 	}
 	

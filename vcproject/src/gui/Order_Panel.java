@@ -1,4 +1,4 @@
-package gui; 
+package gui;
 
 import java.awt.SystemColor;
 
@@ -297,6 +297,7 @@ public class Order_Panel extends JPanel {
 		getBtnSubmit().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<Object> result = null;
+				String status = "didn't checked in yet";
 				int idnum = Integer.parseInt(textFieldIdNumber.getText());
 				int carnum = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
 				int parkId;
@@ -308,19 +309,14 @@ public class Order_Panel extends JPanel {
 				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 				Date date = new Date();
 				String[] dateAndTime = dateFormat.format(date).split("\\s");
-				Object[] addNewClient = {"INSERT INTO `vcp_db`.`client` (`idclient`, `email`) VALUES(?,?);",
-																							idnum, email };
-				getMakeOrderController().sendQueryToServer(addNewClient);
-				Object[] addNewCar = {"INSERT INTO `vcp_db`.`car` (`carNum`, `idclient`) VALUES (?,?);",
-						carnum, idnum };
-				getMakeOrderController().sendQueryToServer(addNewCar);
+
+				getMakeOrderController().addNewClient(idnum,email);
+				getMakeOrderController().addCarToDB(carnum,idnum);
+				
 				
 				if (rdbtnTempClient.isSelected()) {
-					Object[] addOrderMsg = {
-							"INSERT INTO `vcp_db`.`order`(`carNum`,`idparking`,`startDate`,`startTime`,`status`) VALUES (?,?,?,?,?);",
-							carnum, parkId, dateAndTime[0], dateAndTime[1],
-							rdbtnTempClient.getText() };
-					getMakeOrderController().sendQueryToServer(addOrderMsg);
+					Object[] orderInfo = {carnum, parkId, dateAndTime[0], dateAndTime[1],status,rdbtnTempClient.getText()};
+					getMakeOrderController().addNewOrder(orderInfo);
 					result = getMakeOrderController().getResult();
 				}
 				

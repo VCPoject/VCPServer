@@ -23,7 +23,7 @@ public class MySqlConnection {
 
 		try {
 			conn = (Connection) DriverManager.getConnection(
-					"jdbc:mysql://localhost/vcp_db", "root", "Braude");
+					"jdbc:mysql://localhost/vcp_db", "root", "Op8448060");
 			conn.setAutoCommit(false);
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {/* handle any errors */

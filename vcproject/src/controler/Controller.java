@@ -1,4 +1,4 @@
-package controler;  
+package controler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,9 +9,18 @@ import javax.swing.JOptionPane;
 import clientServer.ClientConsole;
 
 public abstract class Controller {
+	final public static int DEFAULT_PORT = 5555;
 	private ClientConsole server;
 	private String host;
 	private int port;
+	
+	public Controller() {
+		this("localhost",DEFAULT_PORT);
+	}
+	
+	public Controller(String host) {
+		this(host,DEFAULT_PORT);
+	}
 
 	public Controller(String host, int port) {
 		this.host = host;
@@ -30,7 +39,7 @@ public abstract class Controller {
 				.showMessageDialog(frame, msg, "", JOptionPane.PLAIN_MESSAGE);
 	}
 
-	public void sendQueryToServer(Object[] msg) {
+	public void sendQueryToServer(Object[] msg) { 
 		openConnection();
 		server.accept(msg);
 	}
