@@ -379,14 +379,14 @@ public class VCP_Main_Frame extends JFrame {
 	
 	public Complain_Panel getComplain_Panel() {
 		if (complainPanel == null) {
-			complainPanel = new Complain_Panel();
+			complainPanel = new Complain_Panel(this.host, DEFAULT_PORT);
 		}
 		return complainPanel;
 	}
 	
 	public ComplainFu_Panel getComplainFu_Panel() {
 		if (complainFuPanel == null) {
-			complainFuPanel = new ComplainFu_Panel();
+			complainFuPanel = new ComplainFu_Panel(this.host, DEFAULT_PORT);
 		}
 		return complainFuPanel;
 }
