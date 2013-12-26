@@ -1,4 +1,4 @@
-package gui;
+package gui; 
  
 
 import java.awt.Dimension;
@@ -10,7 +10,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import controler.LogIn_controller;
 import controler.Reminder;
- 
 
 public class LogIn_Frame extends JFrame{
 
@@ -21,6 +20,7 @@ public class LogIn_Frame extends JFrame{
 	
 	public LogIn_Frame(String host){
 		super();
+		
 		this.host = host;
 		initialize();
 	}
@@ -62,6 +62,5 @@ public class LogIn_Frame extends JFrame{
 		return getLogIn_Panel().getLogincontroller();
 		
 	}
-	
 	
 }
