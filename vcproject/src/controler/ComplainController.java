@@ -32,11 +32,18 @@ public class ComplainController extends Controller {
 	}
 
 	public void sendAck(int idnum, String complain) {
-		Object[] Msg = {"SELECT `complain`.`complainNum`, FROM `vcp_db`.`complain` WHERE "
-				+ " `complain`.`idclient`= ? AND `complain`.`description` = ? AND `complain`.`status` = ?"
+		Object[] Msg = {"SELECT `complain`.`complainNum` FROM `vcp_db`.`complain` WHERE "
+				+ " `complain`.`idclient`= ? AND `complain`.`description` = ? AND `complain`.`status` = ?;"
 				, idnum, complain,this.open};
-sendQueryToServer(Msg);
+		sendQueryToServer(Msg);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 idFromTable=getResult().get(0).toString();
+
 showSeccussesMsg("Your Complain ID is: "  + idFromTable + "  , "
 		+ " Please save to view the Complain progress.\n"
 		+ " you can view the progress in the 'Complain Follow UP' screen "
