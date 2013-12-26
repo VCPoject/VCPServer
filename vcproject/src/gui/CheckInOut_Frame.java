@@ -3,7 +3,6 @@ package gui;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
