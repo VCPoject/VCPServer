@@ -1,27 +1,27 @@
-package gui;
+package gui; 
  
+
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
+import controler.LogIn_controller;
 import controler.Reminder;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
- 
 
 public class LogIn_Frame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private LogIn_Panel loginpanel;
 	private Reminder r;
+	private String host;
 	
-	public LogIn_Frame(){
+	public LogIn_Frame(String host){
 		super();
+		
+		this.host = host;
 		initialize();
 	}
 	
@@ -45,11 +45,10 @@ public class LogIn_Frame extends JFrame{
 		r=new Reminder(120,this);
 	}
 	 
-	public LogIn_Panel getLogIn_Panel() {
+	public LogIn_Panel getLogIn_Panel() { 
 		
 		if(loginpanel==null)
-			loginpanel=new LogIn_Panel();
-		
+			loginpanel=new LogIn_Panel(host);
 		return loginpanel; 
 	}
 	
@@ -58,4 +57,10 @@ public class LogIn_Frame extends JFrame{
 		this.dispose();
 		r.timer.cancel();
 	}
+	
+	public LogIn_controller getLogincontroller(){
+		return getLogIn_Panel().getLogincontroller();
+		
+	}
+	
 }

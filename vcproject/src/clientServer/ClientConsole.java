@@ -107,7 +107,7 @@ public class ClientConsole implements ClientIF {
 		return this.result;
 	}
 	
-	public boolean isConnected(){
+	public boolean isConnected(){ 
 		return client.isConnected();
 	}
 

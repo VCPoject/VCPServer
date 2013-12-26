@@ -14,7 +14,7 @@ public class MySqlConnection {
 	private Connection conn;
 	private ResultSet rs = null;
 
-	public MySqlConnection() {
+	public MySqlConnection(String dbIp, String dbUser, String dbPassword) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		} catch (Exception ex) {/* handle the error */
@@ -23,7 +23,7 @@ public class MySqlConnection {
 
 		try {
 			conn = (Connection) DriverManager.getConnection(
-					"jdbc:mysql://localhost/vcp_db", "root", "Braude");
+					"jdbc:mysql://"+dbIp+"/vcp_db", dbUser, dbPassword);
 			conn.setAutoCommit(false);
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {/* handle any errors */
