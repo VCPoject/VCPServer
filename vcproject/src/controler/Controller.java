@@ -2,9 +2,15 @@ package controler;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
 import clientServer.ClientConsole;
+import entity.Car;
+import entity.ClientEntity;
+import entity.Employee;
+import entity.Order;
 import entity.Parking_Places;
 
 public abstract class Controller {
@@ -42,12 +48,20 @@ public abstract class Controller {
 		openConnection();
 		Object[] toServer = { null };
 		if (entity instanceof Parking_Places) {
-			Parking_Places pp = (Parking_Places) entity;
-			toServer = pp.toObject();
-			server.accept(toServer);
+			toServer = ((Parking_Places) entity).toObject();
+		} else if (entity instanceof ClientEntity) {
+			toServer = ((ClientEntity) entity).toObject();
+		} else if (entity instanceof Car) {
+			toServer = ((Car) entity).toObject();
+		} else if (entity instanceof Order) {
+			toServer = ((Order) entity).toObject();
+		}else if (entity instanceof Employee) {
+			toServer = ((Employee) entity).toObject();
 		} else if (entity instanceof Object[]) {
-			server.accept((Object[]) entity);
+			toServer = (Object[]) entity;
 		}
+
+		server.accept(toServer);
 
 	}
 

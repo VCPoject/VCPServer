@@ -2,6 +2,7 @@ package ocsf.server;
 
 import java.util.ArrayList;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -68,6 +69,8 @@ public class MySqlConnection {
 					selectData.setString(i, (String) getStatment[i]);
 				else if (getStatment[i] instanceof Integer)
 					selectData.setInt(i, (Integer) getStatment[i]);
+				else if(getStatment[i] instanceof Date)
+					selectData.setDate(i, (Date) getStatment[i]);
 			}
 			rs = selectData.executeQuery();
 			ArrayList<Object> list = new ArrayList<Object>();

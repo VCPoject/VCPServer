@@ -154,7 +154,7 @@ public class Main_Frame extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						String dbIp = getMainPanel().getTextFieldServerIP().getText();
 						String dbUser = getMainPanel().getTextFieldDBusername().getText();
-						String dbPassword = getMainPanel().getPasswordField().getPassword().toString();
+						String dbPassword = new String(getMainPanel().getPasswordField().getPassword());
 						setConnection(port,dbIp,dbUser,dbPassword);
 						getMainPanel().getBtnStopServer().setEnabled(true);
 						getMainPanel().getBtnStartServer().setEnabled(false);

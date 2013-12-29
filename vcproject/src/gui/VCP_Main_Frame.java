@@ -139,6 +139,7 @@ public class VCP_Main_Frame extends JFrame {
 													 */
 									public void actionPerformed(ActionEvent e) {
 										setContentPane(getMainPanel());
+										orderPanel = null;
 									}
 								});
 					}

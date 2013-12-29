@@ -3,14 +3,12 @@ package entity;
 public class Car implements Entity {
 
 	private int carNum;
-	private int idClient;
+	private ClientEntity client;
 	private String query;
 	
 	
-	public Car(int carNum, int idClient) {
+	public Car() {
 		super();
-		this.carNum = carNum;
-		this.idClient = idClient;
 	}
 	
 	public int getCarNum() {
@@ -21,12 +19,12 @@ public class Car implements Entity {
 		this.carNum = carNum;
 	}
 
-	public int getIdClient() {
-		return idClient;
+	public ClientEntity getClient() {
+		return this.client;
 	}
 
-	public void setIdClient(int idClient) {
-		this.idClient = idClient;
+	public void setClient(ClientEntity client) {
+		this.client = client;
 	}
 
 	@Override
@@ -42,8 +40,8 @@ public class Car implements Entity {
 
 	@Override
 	public Object[] toObject() {
-		// TODO Auto-generated method stub
-		return null;
+		Object[] obj = {getQuery(),getCarNum(),getClient().getIdClient()};
+		return obj;
 	}
 
 }
