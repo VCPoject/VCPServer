@@ -1,9 +1,6 @@
 package gui;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import controler.ParkingLot_controller;
 
@@ -15,6 +12,8 @@ import java.util.ArrayList;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+
+import entity.Parking_Places;
 
 public class SavingParkingPlace_Panel extends JPanel {
 	
@@ -32,11 +31,18 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private ParkingLot_controller parkinglotcontroller;
 	private int parkinglotId;
 	private int floorNum;
+	private int lineNum;
+	private int parkingplaceNum;
+	private String host;
+	private int port;
+	private ArrayList<Parking_Places> parking_places=new ArrayList<Parking_Places>();
 	private static final long serialVersionUID = 1L;
 	
-	public SavingParkingPlace_Panel() {
+	public SavingParkingPlace_Panel(String host, int port) {
 		super();
 		initialize();
+		this.host=host;
+		this.port=port;
 		setLayout(null);
 		listners();
 	}
@@ -80,16 +86,20 @@ public class SavingParkingPlace_Panel extends JPanel {
 		comboBoxParkinglot = new JComboBox<String> ();
 		comboBoxParkinglot.setBounds(166, 151, 373, 20);
 		add(comboBoxParkinglot);
+		comboBoxParkinglot.addItem(" ");
 		fillParkinglotcombobox();
 		
 		comboBoxFloor = new JComboBox<String> ();
-		comboBoxFloor.setBounds(166, 201, 373, 20);
+		comboBoxFloor.setBounds(166, 201, 373, 20);		
 		add(comboBoxFloor);
+		comboBoxFloor.addItem(" ");
 		fillFloorcomboBox();
 		
 		comboBoxLine = new JComboBox<String> ();
 		comboBoxLine.setBounds(166, 261, 373, 20);
 		add(comboBoxLine);
+		comboBoxLine.addItem(" ");
+		fillLinecomboBox();
 		
 		comboBoxParkingPlace = new JComboBox<String>();
 		comboBoxParkingPlace.setBounds(166, 324, 373, 20);
@@ -110,61 +120,98 @@ public class SavingParkingPlace_Panel extends JPanel {
 	
 	public void fillLinecomboBox(){
 		for(Integer i=1;i<4;i++)
-			comboBoxFloor.addItem(i.toString());
+			comboBoxLine.addItem(i.toString());
 	}
 	
 	
 	public void listners(){
 		
-		rdbtnParkingPlaceNo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int num=getParkingLot_controller().getNumOfParkingPlaces(parkinglotId);
-				fillParkingPlacecombox(num);
-			}
-
-
-			public void fillParkingPlacecombox(int num){
-				for(Integer i=1;i<(num*3)+1;i++)
-						comboBoxParkingPlace.addItem(i.toString());
-			}
-		});
+		
 		
 		rdbtnParkinLot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				parkinglotId =Integer.parseInt(comboBoxFloor.getSelectedItem().toString());
+				
+				comboBoxParkinglot.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						parkinglotId =Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
+						parking_places=getParkingLot_controller().getVaccantParkingPlaces(parkinglotId);
+						
+					}
+				});
 			}
 		});
 		
 		rdbtnFloor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				floorNum =Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
 				
+				comboBoxFloor.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						floorNum =Integer.parseInt(comboBoxFloor.getSelectedItem().toString());
+					}
+				});
 			}
 		});
 		
 
-		rdbtnFloor.addActionListener(new ActionListener() {
+		rdbtnLine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				floorNum =Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
-				
+			
+				comboBoxLine.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						lineNum =Integer.parseInt(comboBoxLine.getSelectedItem().toString());
+							fillParkingPlacecombox();
+							
+					}
+					
+					
+				});
 			}
 		});
 		
-		btnSave.addActionListener(new ActionListener() {
+		rdbtnParkingPlaceNo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				floorNum =Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
 				
+				
+				comboBoxParkingPlace.addActionListener(new ActionListener(){
+					
+					public void actionPerformed(ActionEvent e) {
+						try{
+							parkingplaceNum=Integer.parseInt(comboBoxParkingPlace.getSelectedItem().toString());
+						}
+						
+						catch(Exception e1){}
+					}
+				});
 			}
 		});
-
+		
+		btnSave.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+			getParkingLot_controller().saveParkingPlace(parkinglotId,floorNum,lineNum,parkingplaceNum);
+			}
+		});
 	}
 	
+	public void fillParkingPlacecombox(){
 	
+		comboBoxParkingPlace.removeAllItems();
+		comboBoxParkingPlace.addItem(" ");
+			for(Parking_Places parking_place: parking_places)
+				if(parking_place.getFloor()==floorNum && parking_place.getRow()==lineNum)
+					comboBoxParkingPlace.addItem((Integer.toString(parking_place.getColumn())));
+	}
+			
 	
 	public ParkingLot_controller getParkingLot_controller(){
 		if(parkinglotcontroller==null)
-			parkinglotcontroller=new ParkingLot_controller("localhost",5555);
+			parkinglotcontroller=new ParkingLot_controller(this.host,this.port);
 		
 		return  parkinglotcontroller;
 	}
+	
+	public JButton getBtnExit(){
+		return btnExit;
+	}
+
+
 }

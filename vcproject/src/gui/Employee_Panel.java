@@ -22,12 +22,11 @@ public class Employee_Panel extends JPanel{
 	private JButton btnExit;
 	private JButton btnSaveParkin;
 	
-	Employee_Panel() {
+	
+	public Employee_Panel() {
 		super();
 		initialize();
 		setLayout(null);
-		
-		
 	}
 	
 	public void initialize(){

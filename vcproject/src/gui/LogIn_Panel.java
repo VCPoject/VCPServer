@@ -64,9 +64,7 @@ public class LogIn_Panel extends JPanel{
 		lblLogIn.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 36));
 		lblLogIn.setBounds(158, 39, 138, 46);
 		add(lblLogIn);
-		
 		getLogincontroller();
-		
 	}
 	
 	public void listners(){
@@ -88,10 +86,6 @@ public class LogIn_Panel extends JPanel{
 		return usertxtfieled.getText();
 	}
 
-	public JTextField getUsertxtfieled() {
-		return usertxtfieled;
-	}
-	
 	public boolean checkValidity() {
 		return logIncontroller.checkValidity(getUserText(),getPswdText());
 	}

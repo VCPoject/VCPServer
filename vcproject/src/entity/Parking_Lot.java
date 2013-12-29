@@ -2,9 +2,9 @@ package entity;
 
 public class Parking_Lot {
 	private int idparkinglot;
-	private int floor;
-	private int line;
-	private int parkingNum;
+	private int width;
+	private int depth;
+	private int hight;
 	private int idorder;
 	private String status;
 	
@@ -28,29 +28,6 @@ public class Parking_Lot {
 		this.idorder = idorder;
 	}
 
-	public int getFloor() {
-		return floor;
-	}
-
-	public void setFloor(int floor) {
-		this.floor = floor;
-	}
-
-	public int getLine() {
-		return line;
-	}
-
-	public void setLine(int line) {
-		this.line = line;
-	}
-
-	public int getparkingNum() {
-		return parkingNum;
-	}
-
-	public void setparkingNum(int parkingNum) {
-		this.parkingNum = parkingNum;
-	}
 
 	public int getIdparkinglot() {
 		return idparkinglot;
@@ -58,5 +35,19 @@ public class Parking_Lot {
 
 	public void setIdparkinglot(int idparkinglot) {
 		this.idparkinglot = idparkinglot;
+	}
+
+	public void setDepth(int depth) {
+		this.depth= depth;
+		
+	}
+	
+	public void setWidth(int width){
+		this.width=width;
+	}
+
+	public void setHight(int hight) {
+		this.hight=hight;
+		
 	}
 }

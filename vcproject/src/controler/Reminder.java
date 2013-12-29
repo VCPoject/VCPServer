@@ -5,11 +5,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.*;
 
-public class Reminder {
+public class Reminder extends Controller{
 	
 	Toolkit toolkit;
 	public Timer timer;
 	private JFrame frame;
+	 
 	
 	  public Reminder(int seconds,JFrame frame) {
 		this.frame=frame;
@@ -19,15 +20,13 @@ public class Reminder {
 	
 	  }
 	  
-	  
-	  class RemindTask extends TimerTask {
+	 class RemindTask extends TimerTask {
 	    public void run() {
-	      System.out.println("Time's up!");
 	      toolkit.beep();
+	      showWarningMsg("Time's up");
 	      frame.dispose();
 	      frame=null;
-	      timer.cancel(); //Not necessary because we call System.exit
-	     // System.exit(0); //Stops the AWT thread (and everything else)
+	      timer.cancel(); 
 	    }
 	  }
 }

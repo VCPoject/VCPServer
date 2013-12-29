@@ -82,10 +82,5 @@ public class ParkingLot_Panel extends JPanel {
 		lblParkingLot.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblParkingLot.setBounds(326, 0, 137, 29);
 		add(lblParkingLot);
-		
-		
-		
-
-		
 	}
 }

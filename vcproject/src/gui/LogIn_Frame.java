@@ -4,12 +4,18 @@ package gui;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
 import controler.LogIn_controller;
 import controler.Reminder;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
  
 
 public class LogIn_Frame extends JFrame{
@@ -42,7 +48,7 @@ public class LogIn_Frame extends JFrame{
 		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
 				/ 2 - this.getSize().height / 2);
 		this.setContentPane(getLogIn_Panel());
-		r=new Reminder(120,this);
+		r=new Reminder(10,this);
 	}
 	 
 	public LogIn_Panel getLogIn_Panel() { 

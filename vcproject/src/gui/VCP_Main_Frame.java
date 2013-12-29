@@ -9,18 +9,19 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import controler.LogIn_controller;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowListener;
 
 public class VCP_Main_Frame extends JFrame {
 
-	/**
-	 * 
-	 */
 	final public int DEFAULT_PORT = 5555;
 	final public String host;
 	private static final long serialVersionUID = 1L;
@@ -31,7 +32,6 @@ public class VCP_Main_Frame extends JFrame {
 	private Payment_Frame paymentFrame;
 	private CheckInOut_Frame CheckInOutFrame;
 	private CancelOrder_Panel cancelOrder;
-	private LogIn_controller logincontroller;
 	private Employee_Panel employee_panel;
 	private Complain_Panel complainPanel;
 	private ComplainFu_Panel complainFuPanel;
@@ -79,7 +79,6 @@ public class VCP_Main_Frame extends JFrame {
 						"Exit Application", JOptionPane.YES_NO_OPTION);
 
 				if (result == JOptionPane.YES_OPTION) {
-					// getLogincontroller().updateAsNotLoggedIn();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					closeMainFrame();
 					System.exit(0);
@@ -94,10 +93,11 @@ public class VCP_Main_Frame extends JFrame {
 						getLogIn_Frame();
 						getLogIn_Frame().setVisible(true);
 						getLogIn_Frame().addWindowListener(new WindowAdapter() {
-							public void windowClosed(WindowEvent arg0) {
-								loginframe = null;
+							public void windowClosing(WindowEvent e) {
+								loginframe=null;
 							}
 						});
+					
 						getLogIn_Frame().getLogIn_Panel().getBtnExit()
 								.addActionListener(new ActionListener() {
 									public void actionPerformed(ActionEvent e) {
@@ -109,24 +109,30 @@ public class VCP_Main_Frame extends JFrame {
 														"Exit Application",
 														JOptionPane.YES_NO_OPTION);
 										if (result == JOptionPane.YES_OPTION) {
-											//getLogincontroller().updateAsNotLoggedIn();
+											getLogIn_Frame().getLogincontroller().updateAsNotLoggedIn();
 											frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 											getLogIn_Frame().closeLoginFrame();
-											logincontroller = null;
+											loginframe = null;
+											
 										}
 									}
 								});
-
+						
 						getLogIn_Frame().getLogIn_Panel().getBtnSubmit()
-								.addActionListener(new ActionListener() {
+						.addActionListener(new ActionListener() {
+							
+							public void actionPerformed(ActionEvent e) {
+								
+								
+								if (getLogIn_Frame().getLogIn_Panel().checkValidity()){
+									getLogIn_Frame().closeLoginFrame();
+									setContentPane(getEmployeePanel());
 									
-									public void actionPerformed(ActionEvent e) {
-										if (getLogIn_Frame().getLogIn_Panel().checkValidity()) {
-											getLogIn_Frame().closeLoginFrame();
-											setContentPane(getEmployeePanel());
-										}
-									}
-								});
+								}
+							}
+						});
+
+						
 					}
 				});
 
@@ -243,10 +249,46 @@ public class VCP_Main_Frame extends JFrame {
 
 			}
 		});
+		
 		getEmployeePanel().getbtnSaveParkin().addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				setContentPane(getParkingLot_Panel());
+				setContentPane(getSavingParkingPlace_Panel());
+				
+				getSavingParkingPlace_Panel().getBtnExit().addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						JFrame frame = new JFrame();
+						int result = JOptionPane
+								.showConfirmDialog(
+										frame,
+										"Are you sure you want to exit the application?",
+										"Exit Application",
+										JOptionPane.YES_NO_OPTION);
+							if (result == JOptionPane.YES_OPTION) {
+								setContentPane(getEmployeePanel());
+							
+							}
+						}
+				});
+				
+				
+			}
+			
+		});
+		
+		getEmployeePanel(). getbtnExit().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame frame = new JFrame();
+				int result = JOptionPane
+						.showConfirmDialog(
+								frame,
+								"Are you sure you want to exit the application?",
+								"Exit Application",
+								JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION) {
+					setContentPane(getMainPanel());
+					
+				}
 			}
 		});
 		
@@ -334,6 +376,7 @@ public class VCP_Main_Frame extends JFrame {
 		this.setVisible(true);
 	}
 
+	
 	public ParkingLot_Panel getParkingLot_Panel() {
 		if (parkingLotPanel == null)
 			parkingLotPanel = new ParkingLot_Panel(8);
@@ -356,7 +399,7 @@ public class VCP_Main_Frame extends JFrame {
 	
 	public SavingParkingPlace_Panel getSavingParkingPlace_Panel(){
 		if(savingparkingplace==null)
-			savingparkingplace=new SavingParkingPlace_Panel();
+			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT);
 		
 		return savingparkingplace;
 	}

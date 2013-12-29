@@ -23,7 +23,7 @@ public class LogIn_controller extends Controller{
 
 		if (username.equals(resultCopy.get(0).toString())
 				&& password.equals(resultCopy.get(1).toString())) {
-
+			
 			if (checkedIfAlreadyLoggedIn((String) resultCopy.get(2)) == false) {
 
 				updateAsLoggedIn(username);
