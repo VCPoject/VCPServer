@@ -88,8 +88,8 @@ public class Main_Frame extends JFrame {
 
 	}
 
-	private void setConnection(int port) {
-		sv = new EchoServer(port);
+	private void setConnection(int port, String dbIp, String dbUser, String dbPassword) {
+		sv = new EchoServer(port,dbIp,dbUser,dbPassword);
 
 		try {
 			sv.listen(); // Start listening for connections
@@ -152,9 +152,16 @@ public class Main_Frame extends JFrame {
 		getMainPanel().getBtnStartServer().addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						setConnection(port);
+						String dbIp = getMainPanel().getTextFieldServerIP().getText();
+						String dbUser = getMainPanel().getTextFieldDBusername().getText();
+						String dbPassword = new String(getMainPanel().getPasswordField().getPassword());
+						setConnection(port,dbIp,dbUser,dbPassword);
 						getMainPanel().getBtnStopServer().setEnabled(true);
 						getMainPanel().getBtnStartServer().setEnabled(false);
+						getMainPanel().getBtnChangeDB().setEnabled(false);
+						getMainPanel().getTextFieldServerIP().setEditable(false);
+						getMainPanel().getTextFieldDBusername().setEditable(false);
+						getMainPanel().getPasswordField().setEditable(false);
 					}
 				});
 
@@ -165,6 +172,10 @@ public class Main_Frame extends JFrame {
 							sv.close();
 							getMainPanel().getBtnStopServer().setEnabled(false);
 							getMainPanel().getBtnStartServer().setEnabled(true);
+							getMainPanel().getBtnChangeDB().setEnabled(true);
+							getMainPanel().getTextFieldServerIP().setEditable(true);
+							getMainPanel().getTextFieldDBusername().setEditable(true);
+							getMainPanel().getPasswordField().setEditable(true);
 							Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 							String[] columnNames = { "Client IP", "Client port" };
 							int len = columnNames.length;

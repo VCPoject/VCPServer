@@ -3,6 +3,10 @@ package gui;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,12 +20,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import controler.LogIn_controller;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowListener;
 
 public class VCP_Main_Frame extends JFrame {
 
+	/**
+	 * 
+	 */
 	final public int DEFAULT_PORT = 5555;
 	final public String host;
 	private static final long serialVersionUID = 1L;
@@ -32,6 +41,7 @@ public class VCP_Main_Frame extends JFrame {
 	private Payment_Frame paymentFrame;
 	private CheckInOut_Frame CheckInOutFrame;
 	private CancelOrder_Panel cancelOrder;
+	private LogIn_controller logincontroller;
 	private Employee_Panel employee_panel;
 	private Complain_Panel complainPanel;
 	private ComplainFu_Panel complainFuPanel;
@@ -79,6 +89,7 @@ public class VCP_Main_Frame extends JFrame {
 						"Exit Application", JOptionPane.YES_NO_OPTION);
 
 				if (result == JOptionPane.YES_OPTION) {
+					// getLogincontroller().updateAsNotLoggedIn();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					closeMainFrame();
 					System.exit(0);
@@ -147,6 +158,7 @@ public class VCP_Main_Frame extends JFrame {
 													 */
 									public void actionPerformed(ActionEvent e) {
 										setContentPane(getMainPanel());
+										orderPanel = null;
 									}
 								});
 					}

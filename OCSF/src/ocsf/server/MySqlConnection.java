@@ -2,6 +2,7 @@ package ocsf.server;
 
 import java.util.ArrayList;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +15,7 @@ public class MySqlConnection {
 	private Connection conn;
 	private ResultSet rs = null;
 
-	public MySqlConnection() {
+	public MySqlConnection(String dbIp, String dbUser, String dbPassword) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		} catch (Exception ex) {/* handle the error */
@@ -23,7 +24,7 @@ public class MySqlConnection {
 
 		try {
 			conn = (Connection) DriverManager.getConnection(
-					"jdbc:mysql://localhost/vcp_db", "root", "shiva09");
+					"jdbc:mysql://"+dbIp+"/vcp_db", dbUser, dbPassword);
 			conn.setAutoCommit(false);
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {/* handle any errors */
@@ -68,6 +69,8 @@ public class MySqlConnection {
 					selectData.setString(i, (String) getStatment[i]);
 				else if (getStatment[i] instanceof Integer)
 					selectData.setInt(i, (Integer) getStatment[i]);
+				else if(getStatment[i] instanceof Date)
+					selectData.setDate(i, (Date) getStatment[i]);
 			}
 			rs = selectData.executeQuery();
 			ArrayList<Object> list = new ArrayList<Object>();

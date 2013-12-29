@@ -17,6 +17,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.text.DateFormat;
@@ -24,9 +25,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.swing.SwingConstants;
+
+import client.Client;
+
 import com.toedter.calendar.JDateChooser;
+
 import controler.MakeOrderController;
+import entity.Car;
+import entity.ClientEntity;
+import entity.Order;
 
 public class Order_Panel extends JPanel {
 
@@ -40,8 +49,6 @@ public class Order_Panel extends JPanel {
 	private JTextField textFieldIdNumber;
 	private JFormattedTextField textFieldCarNumber;
 	private JTextField textFieldEmail;
-	private JFormattedTextField textFieldDeparturTime;
-	private JFormattedTextField textFieldArrivalTime;
 	private JPanel panelSelction;
 	private JRadioButton rdbtnOneTimeClient;
 	private JRadioButton rdbtnTempClient;
@@ -58,8 +65,14 @@ public class Order_Panel extends JPanel {
 	private JLabel lblTimeOfArrival;
 	private JButton btnReturn;
 	private JLabel lblArrivalDay;
-	private JDateChooser dateChooser;
+	private JDateChooser dateChooserArrival;
 	private MakeOrderController makeOrderController;
+	private JDateChooser dateChooserDeparture;
+	private JLabel lblDepartureDay;
+	private JComboBox<String> comboBoxArrivalHour;
+	private JComboBox<String> comboBoxArrivalMin;
+	private JComboBox<String> comboBoxDepartureHour;
+	private JComboBox<String> comboBoxDepartureMin;
 
 	public Order_Panel(String host, int port) {
 		super();
@@ -110,7 +123,7 @@ public class Order_Panel extends JPanel {
 		panelDetails.setBorder(new TitledBorder(UIManager
 				.getBorder("TitledBorder.border"), "Insert details",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelDetails.setBounds(211, 178, 364, 313);
+		panelDetails.setBounds(211, 178, 364, 329);
 		add(panelDetails);
 		panelDetails.setLayout(null);
 
@@ -154,7 +167,7 @@ public class Order_Panel extends JPanel {
 		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 18));
 
 		btnSubmit = new JButton("Submit");
-		btnSubmit.setBounds(247, 264, 103, 38);
+		btnSubmit.setBounds(247, 280, 103, 38);
 		panelDetails.add(btnSubmit);
 
 		lblTimeOfDeparture = new JLabel("Time of departure:");
@@ -164,27 +177,21 @@ public class Order_Panel extends JPanel {
 		try {
 			MaskFormatter formatterDeparturTime = new MaskFormatter("##:##");
 			formatterDeparturTime.setValidCharacters("0123456789");
-			textFieldDeparturTime = new JFormattedTextField(
-					formatterDeparturTime);
-			textFieldDeparturTime.setHorizontalAlignment(SwingConstants.CENTER);
-			textFieldDeparturTime.setText("Hh:Mm");
 		} catch (ParseException e) {
 			JOptionPane.showMessageDialog(this,
 					"Formatter error: " + e.getMessage(), "Formatter ERRORE",
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-		panelDetails.add(textFieldDeparturTime);
-		textFieldDeparturTime.setColumns(10);
 
 		lblParkingLot = new JLabel("Parking lot:");
 		lblParkingLot.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblParkingLot.setBounds(6, 148, 197, 22);
+		lblParkingLot.setBounds(6, 117, 197, 22);
 		panelDetails.add(lblParkingLot);
 		lblParkingLot.setVisible(false);
 
 		comboBoxParkLot = new JComboBox<String>();
-		comboBoxParkLot.setBounds(213, 148, 137, 24);
+		comboBoxParkLot.setBounds(213, 117, 137, 24);
 		panelDetails.add(comboBoxParkLot);
 		getComboBoxParkLot().addItem("Select parking lot");
 		fillComboBoxParkLot();
@@ -197,10 +204,6 @@ public class Order_Panel extends JPanel {
 		try {
 			MaskFormatter formatterDeparturTime = new MaskFormatter("##:##");
 			formatterDeparturTime.setValidCharacters("0123456789");
-			textFieldArrivalTime = new JFormattedTextField(
-					formatterDeparturTime);
-			textFieldArrivalTime.setHorizontalAlignment(SwingConstants.CENTER);
-			textFieldArrivalTime.setText("Hh:Mm");
 		} catch (ParseException e) {
 			JOptionPane.showMessageDialog(this,
 					"Formatter error: " + e.getMessage(), "Formatter ERRORE",
@@ -208,18 +211,64 @@ public class Order_Panel extends JPanel {
 			e.printStackTrace();
 		}
 
-		panelDetails.add(textFieldArrivalTime);
-		textFieldArrivalTime.setColumns(10);
-
 		lblArrivalDay = new JLabel("Arrival day");
 		lblArrivalDay.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblArrivalDay.setBounds(6, 115, 96, 22);
+		lblArrivalDay.setBounds(6, 150, 96, 22);
+		lblArrivalDay.setVisible(false);
 		panelDetails.add(lblArrivalDay);
 
-		dateChooser = new JDateChooser();
-		dateChooser.setBounds(213, 115, 137, 24);
-		panelDetails.add(dateChooser);
-		dateChooser.setVisible(false);
+		dateChooserArrival = new JDateChooser();
+		dateChooserArrival.setBounds(213, 150, 137, 24);
+		panelDetails.add(dateChooserArrival);
+
+		lblDepartureDay = new JLabel("Departure day:");
+		lblDepartureDay.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblDepartureDay.setBounds(6, 216, 137, 22);
+		panelDetails.add(lblDepartureDay);
+
+		dateChooserDeparture = new JDateChooser();
+		dateChooserDeparture.setBounds(213, 216, 137, 24);
+		panelDetails.add(dateChooserDeparture);
+
+		comboBoxArrivalHour = new JComboBox<String>();
+		comboBoxArrivalHour.setBounds(213, 183, 65, 24);
+		panelDetails.add(comboBoxArrivalHour);
+
+		comboBoxArrivalMin = new JComboBox<String>();
+		comboBoxArrivalMin.setBounds(283, 183, 65, 24);
+		panelDetails.add(comboBoxArrivalMin);
+
+		comboBoxDepartureHour = new JComboBox<String>();
+		comboBoxDepartureHour.setBounds(213, 249, 65, 24);
+		panelDetails.add(comboBoxDepartureHour);
+
+		comboBoxDepartureMin = new JComboBox<String>();
+		comboBoxDepartureMin.setBounds(283, 249, 65, 24);
+		panelDetails.add(comboBoxDepartureMin);
+
+		comboBoxArrivalHour.addItem("Hour");
+		comboBoxDepartureHour.addItem("Hour");
+		for (Integer i = 0; i < 25; i++) {
+			if (i <= 9) {
+				comboBoxArrivalHour.addItem("0" + i.toString());
+				comboBoxDepartureHour.addItem("0" + i.toString());
+			} else {
+				comboBoxArrivalHour.addItem(i.toString());
+				comboBoxDepartureHour.addItem(i.toString());
+			}
+		}
+
+		comboBoxArrivalMin.addItem("Min");
+		comboBoxDepartureMin.addItem("Min");
+		for (Integer i = 0; i < 60; i++) {
+			if (i <= 9) {
+				comboBoxArrivalMin.addItem("0" + i.toString());
+				comboBoxDepartureMin.addItem("0" + i.toString());
+			} else {
+				comboBoxArrivalMin.addItem(i.toString());
+				comboBoxDepartureMin.addItem(i.toString());
+			}
+		}
 
 		btnReturn = new JButton("Return");
 		btnReturn.setBounds(10, 519, 93, 35);
@@ -242,42 +291,50 @@ public class Order_Panel extends JPanel {
 	}
 
 	private void oneTime() {
-		dateChooser.setVisible(true);
+		dateChooserArrival.setVisible(true);
+		dateChooserDeparture.setVisible(true);
 
 		lblArrivalDay.setVisible(true);
+		lblDepartureDay.setVisible(true);
 
-		lblTimeOfArrival.setBounds(6, 214, 197, 22);
+		lblTimeOfArrival.setBounds(6, 183, 197, 22);
 		lblTimeOfArrival.setVisible(true);
 
-		textFieldArrivalTime.setBounds(213, 214, 52, 20);
-		textFieldArrivalTime.setVisible(true);
+		comboBoxDepartureHour.setVisible(true);
+		comboBoxArrivalHour.setVisible(true);
+
+		comboBoxArrivalMin.setVisible(true);
+		comboBoxDepartureMin.setVisible(true);
 
 		lblParkingLot.setVisible(true);
 		comboBoxParkLot.setVisible(true);
 
 		lblTimeOfDeparture.setVisible(false);
 		lblTimeOfDeparture.setVisible(true);
-		lblTimeOfDeparture.setBounds(6, 181, 197, 22);
-
-		textFieldDeparturTime.setBounds(213, 181, 52, 24);
+		lblTimeOfDeparture.setBounds(6, 249, 197, 22);
 		lblTimeOfDeparture.setVisible(true);
-		textFieldDeparturTime.setVisible(true);
+
+		comboBoxDepartureHour.setBounds(213, 249, 65, 24);
+		comboBoxDepartureMin.setBounds(283, 249, 65, 24);
 
 	}
 
 	private void TempClient() {
-		dateChooser.setVisible(false);
+		dateChooserArrival.setVisible(false);
+		dateChooserDeparture.setVisible(false);
 		lblArrivalDay.setVisible(false);
 		lblTimeOfArrival.setVisible(false);
-		textFieldArrivalTime.setVisible(false);
+		lblDepartureDay.setVisible(false);
 		lblParkingLot.setVisible(false);
 		comboBoxParkLot.setVisible(false);
-		textFieldDeparturTime.setVisible(false);
-		lblTimeOfDeparture.setVisible(false);
-		lblTimeOfArrival.setBounds(6, 153, 197, 22);
-		textFieldArrivalTime.setBounds(213, 152, 52, 24);
-		lblTimeOfDeparture.setBounds(6, 119, 197, 22);
-		textFieldDeparturTime.setBounds(213, 115, 52, 20);
+		lblTimeOfDeparture.setVisible(true);
+		comboBoxDepartureHour.setVisible(true);
+		comboBoxDepartureMin.setVisible(true);
+		comboBoxArrivalMin.setVisible(false);
+		comboBoxArrivalHour.setVisible(false);
+		comboBoxDepartureHour.setBounds(213, 115, 65, 24);
+		comboBoxDepartureMin.setBounds(283, 115, 65, 24);
+		lblTimeOfDeparture.setBounds(6, 115, 197, 22);
 	}
 
 	private void listners() {
@@ -296,37 +353,160 @@ public class Order_Panel extends JPanel {
 
 		getBtnSubmit().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<Object> result = null;
-				String status = "didn't checked in yet";
-				int idnum = Integer.parseInt(textFieldIdNumber.getText());
-				int carnum = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
-				int parkId;
-				if (comboBoxParkLot.getSelectedItem().toString().equals("Select parking lot"))
-					parkId = 1;
-				else
-					parkId = Integer.parseInt(comboBoxParkLot.getSelectedItem().toString());
-				String email = textFieldEmail.getText();
-				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-				Date date = new Date();
-				String[] dateAndTime = dateFormat.format(date).split("\\s");
+				try {
+					ClientEntity client = new ClientEntity();
+					Car car = new Car();
+					Order order = new Order();
 
-				getMakeOrderController().addNewClient(idnum,email);
-				getMakeOrderController().addCarToDB(carnum,idnum);
-				
-				
-				if (rdbtnTempClient.isSelected()) {
-					Object[] orderInfo = {carnum, parkId, dateAndTime[0], dateAndTime[1],status,rdbtnTempClient.getText()};
-					getMakeOrderController().addNewOrder(orderInfo);
+					ArrayList<Object> result = null;
+					String status = "did not checked in yet";
+
+					client.setIdClient(Integer.parseInt(textFieldIdNumber
+							.getText()));
+					client.setEmail(textFieldEmail.getText());
+
+					car.setCarNum(Integer.parseInt(textFieldCarNumber.getText()
+							.replaceAll("-", "")));
+					car.setClient(client);
+
+					int parkId;
+					if (comboBoxParkLot.getSelectedItem().toString()
+							.equals("Select parking lot"))
+						parkId = 1;
+					else
+						parkId = Integer.parseInt(comboBoxParkLot
+								.getSelectedItem().toString());
+
+					DateFormat dateFormat = new SimpleDateFormat(
+							"yyyy-MM-dd HH:mm:ss");
+
+					order.setCar(car);
+					order.setClient(client);
+					order.setIdparking(parkId);
+					order.setStatus(status);
+
+					if (rdbtnTempClient.isSelected()) {
+						// get current date time with Date()
+						Date date = new Date();
+						String[] dateAndTime = dateFormat.format(date).split(
+								"\\s");
+						order.setArrivalDate(dateAndTime[0]);
+						order.setArrivalTime(dateAndTime[1]);
+						order.setType("temp");
+						String addOrderQuery = "INSERT INTO `vcp_db`.`order`"
+								+ "(`carNum`,`idclient`,`idparking`,`arrivalDate`,`arrivalTime`,`departureTime`,`status`,`type`) "
+								+ "VALUES(?,?,?,?,?,?,?,?);";
+						order.setQuery(addOrderQuery);
+						String timeDeparture = comboBoxDepartureHour
+								.getSelectedItem().toString()
+								+ ":"
+								+ comboBoxDepartureMin.getSelectedItem()
+										.toString() + ":00";
+						if (timeDeparture.contains("Hours")
+								|| timeDeparture.contains("Min"))
+							order.setDepartureTime("00:00:00");
+						else
+							order.setDepartureTime(timeDeparture);
+					} else if (rdbtnOneTimeClient.isSelected()) {
+
+						String timeArrival = null;
+						String dateDeparture = null;
+
+						String arrivalHour = comboBoxArrivalHour
+								.getSelectedItem().toString();
+						String arrivalMin = comboBoxArrivalMin
+								.getSelectedItem().toString();
+						if (!arrivalHour.equals("Hour")
+								|| !arrivalMin.equals("Min")) {
+							timeArrival = comboBoxArrivalHour.getSelectedItem()
+									.toString()
+									+ ":"
+									+ comboBoxArrivalMin.getSelectedItem()
+											.toString() + ":00";
+
+						} else {
+							throw new Exception(
+									"You didn`t select arrivel time");
+						}
+						Date departureDate = dateChooserDeparture.getDate();
+						DateFormat formatDate = new SimpleDateFormat(
+								"yyyy-MM-dd");
+						dateDeparture = formatDate.format(departureDate);
+
+						Date arrivalDate = dateChooserArrival.getDate();
+
+						String dateArrival = formatDate.format(arrivalDate);
+						order.setArrivalDate(dateArrival);
+						order.setArrivalTime(timeArrival);
+						order.setDepartureDate(dateDeparture);
+
+						order.setType("one time");
+						String addOrderQuery = "INSERT INTO `vcp_db`.`order`"
+								+ "(`carNum`,`idclient`,`idparking`,`arrivalDate`,`arrivalTime`,`departureDate`,`departureTime`,status,`type`)"
+								+ "VALUES(?,?,?,?,?,?,?,?,?);";
+						order.setQuery(addOrderQuery);
+					}
+					if (!checkIfClientExists(client)) {
+						getMakeOrderController().addNewClient(client);
+					}
 					result = getMakeOrderController().getResult();
+					if (result.get(0) != null)
+						if (!checkIfCarExist(car)) {
+							result = null;
+							getMakeOrderController().addCarToDB(car);
+						}
+					result = getMakeOrderController().getResult();
+					if (result.get(0) != null) {
+						getMakeOrderController().addNewOrder(order);
+						result = getMakeOrderController().getResult();
+					}
+
+					if (result.get(0).equals("done")) {
+						getMakeOrderController().showSeccussesMsg("Order done");
+						getBtnReturn().doClick();
+					} else {
+						getMakeOrderController().showWarningMsg(result.get(0).toString());
+
+					}
+				} catch (Exception e2) {
+					getMakeOrderController().showWarningMsg("Error in submit: " + e2.getMessage());
+				} finally {
+					getMakeOrderController().closeConnection();
 				}
-				
-				if (result.get(0).equals("done")) {
-					getMakeOrderController().showSeccussesMsg("Order done");
-				}
-				getMakeOrderController().closeConnection();
+
 			}
 		});
- 
+
+	}
+
+	protected boolean checkIfCarExist(Car car) {
+		Object[] isCarExists = {
+				"SELECT count(`car`.`carNum`) FROM `vcp_db`.`car` WHERE carNum = ? AND idclient = ?;",
+				car.getCarNum(), car.getClient().getIdClient() };
+		getMakeOrderController().searchCar(isCarExists);
+		ArrayList<Object> result = getMakeOrderController().getResult();
+		if (result.get(0).toString().equals("0")) {
+			String addCarQuery = "INSERT INTO `vcp_db`.`car`(`carNum`,`idclient`)VALUES(?,?);";
+			car.setQuery(addCarQuery);
+			return false;
+		}
+
+		return true;
+	}
+
+	protected boolean checkIfClientExists(ClientEntity client) {
+		Object[] isClientExists = {
+				"SELECT count(`client`.`idclient`) FROM `vcp_db`.`client` WHERE idclient = ?;",
+				client.getIdClient() };
+		getMakeOrderController().searchClient(isClientExists);
+		ArrayList<Object> result = getMakeOrderController().getResult();
+		if (result.get(0).toString().equals("0")) {
+			String addClientQuery = "INSERT INTO `vcp_db`.`client`(`idclient`,`email`) VALUES(?,?);";
+			client.setQuery(addClientQuery);
+			return false;
+		}
+
+		return true;
 	}
 
 	public JButton getBtnSubmit() {
@@ -337,12 +517,11 @@ public class Order_Panel extends JPanel {
 		return btnReturn;
 	}
 
-	
 	private MakeOrderController getMakeOrderController() {
-		if(makeOrderController == null || !makeOrderController.isConnected()){
-			makeOrderController = new MakeOrderController(host,port);
+		if (makeOrderController == null || !makeOrderController.isConnected()) {
+			makeOrderController = new MakeOrderController(host, port);
 		}
-			
+
 		return makeOrderController;
 	}
 }

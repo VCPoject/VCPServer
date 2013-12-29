@@ -1,17 +1,7 @@
 package ocsf.server; 
 
-// This file contains material supporting section 3.7 of the textbook:
-// "Object Oriented Software Engineering" and is issued under the open-source
+// This file contains material supporting section 3.7 of the textbook:// "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
-
-import java.io.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import ocsf.server.*;
-import serverGui.Main_Frame;
-import sun.security.jca.GetInstance.Instance;
 
 /**
  * This class overrides some of the methods in the abstract superclass in order
@@ -38,9 +28,19 @@ public class EchoServer extends AbstractServer {
 	 * 
 	 * @param port
 	 *            The port number to connect on.
+	 * @param dbPassword 
+	 * @param dbUser 
+	 * @param dbIp 
 	 */
-	public EchoServer(int port) {
+	
+	private String dbIp;
+	private String dbUser;
+	private String dbPassword;
+	public EchoServer(int port, String dbIp, String dbUser, String dbPassword) {
 		super(port);
+		this.dbIp = dbIp;
+		this.dbUser = dbUser;
+		this.dbPassword = dbPassword;
 	}
 
 	
@@ -61,7 +61,7 @@ public class EchoServer extends AbstractServer {
 
 	public void handleMessageFromClient(Object msg, ConnectionToClient client) {
 		try {
-			MySqlConnection toDB = new MySqlConnection();
+			MySqlConnection toDB = new MySqlConnection(dbIp,dbUser,dbPassword);
 			toDB.update(toDB.getConn(), (Object[]) msg);
 			this.sendToAllClients(toDB.getResult());
 		} catch (Exception e) {
@@ -73,7 +73,7 @@ public class EchoServer extends AbstractServer {
 
 	public void handleMessageFromClient(Object[] msg, ConnectionToClient client) {
 		try {
-			MySqlConnection toDB = new MySqlConnection();
+			MySqlConnection toDB = new MySqlConnection(dbIp,dbUser,dbPassword);
 			toDB.update(toDB.getConn(), msg);
 			this.sendToAllClients(toDB.getResult());
 			toDB.resultReset();

@@ -1,4 +1,4 @@
-package gui;
+package gui; 
  
 
 import java.awt.Dimension;
@@ -17,7 +17,6 @@ import controler.Reminder;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
  
-
 public class LogIn_Frame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
@@ -27,6 +26,7 @@ public class LogIn_Frame extends JFrame{
 	
 	public LogIn_Frame(String host){
 		super();
+		
 		this.host = host;
 		initialize();
 	}
@@ -68,6 +68,5 @@ public class LogIn_Frame extends JFrame{
 		return getLogIn_Panel().getLogincontroller();
 		
 	}
-	
 	
 }
