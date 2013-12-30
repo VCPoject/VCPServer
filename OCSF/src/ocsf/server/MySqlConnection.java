@@ -1,4 +1,4 @@
-package ocsf.server; 
+package ocsf.server;
 
 import java.util.ArrayList;
 import java.sql.Connection;
@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.ResultSetMetaData;
+import java.sql.Time;
 
 public class MySqlConnection {
 
@@ -23,8 +24,8 @@ public class MySqlConnection {
 		}
 
 		try {
-			conn = (Connection) DriverManager.getConnection(
-					"jdbc:mysql://"+dbIp+"/vcp_db", dbUser, dbPassword);
+			conn = (Connection) DriverManager.getConnection("jdbc:mysql://"
+					+ dbIp + "/vcp_db", dbUser, dbPassword);
 			conn.setAutoCommit(false);
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {/* handle any errors */
@@ -46,15 +47,16 @@ public class MySqlConnection {
 		try {
 			if (command.contains("SELECT")) {
 				readDB(conn, msg);
-			}
-			else if (command.contains("UPDATE")) {
+			} else if (command.contains("UPDATE")) {
 				updateDB(conn, msg);
 			} else if (command.contains("INSERT")) {
 				insertDB(conn, msg);
+			} else if (command.contains("INSERT")) {
+				deleteDB(conn, msg);
 			}
 			conn.close();
 		} catch (Exception e) {
-			setResult("update error:" + e.getMessage());
+			setResult("Database error:" + e.getMessage());
 		}
 
 	}
@@ -69,7 +71,7 @@ public class MySqlConnection {
 					selectData.setString(i, (String) getStatment[i]);
 				else if (getStatment[i] instanceof Integer)
 					selectData.setInt(i, (Integer) getStatment[i]);
-				else if(getStatment[i] instanceof Date)
+				else if (getStatment[i] instanceof Date)
 					selectData.setDate(i, (Date) getStatment[i]);
 			}
 			rs = selectData.executeQuery();
@@ -77,20 +79,24 @@ public class MySqlConnection {
 			ResultSetMetaData metadata = rs.getMetaData();
 			int numberOfColumns = metadata.getColumnCount();
 			while (rs.next()) {
-				for (int i = 1; i <= numberOfColumns; i++){
+				for (int i = 1; i <= numberOfColumns; i++) {
 					Object obj = rs.getObject(i);
-					if(obj == null)
+					if (obj == null)
 						obj = "no value".toString();
-					if(obj instanceof String)
-						list.add((String)obj);
+					if (obj instanceof String)
+						list.add((String) obj);
 					else if (obj instanceof Integer)
-						list.add((Integer)obj);
+						list.add((Integer) obj);
 					else if (obj instanceof Long)
-						list.add((Long)obj);
+						list.add((Long) obj);
 					else if (obj instanceof Double)
-						list.add((Double)obj);
+						list.add((Double) obj);
 					else if (obj instanceof Float)
-						list.add((Float)obj);
+						list.add((Float) obj);
+					else if (obj instanceof Date)
+						list.add((Date) obj);
+					else if (obj instanceof Time)
+						list.add((Time) obj);
 				}
 				thereIsRslt = true;
 			}
@@ -119,7 +125,7 @@ public class MySqlConnection {
 					updataData.setString(i, (String) getStatment[i]);
 				else if (getStatment[i] instanceof Integer)
 					updataData.setInt(i, (Integer) getStatment[i]);
-				else if(getStatment[i] instanceof Date)
+				else if (getStatment[i] instanceof Date)
 					updataData.setDate(i, (Date) getStatment[i]);
 			}
 			updataData.executeUpdate();
@@ -143,7 +149,6 @@ public class MySqlConnection {
 			}
 			updataData.executeUpdate();
 			con.commit();
-			Thread.sleep(10);
 			setResult("done");
 		} catch (Exception e) {
 			System.out.println("insertDB error:" + e.getMessage());
@@ -151,9 +156,28 @@ public class MySqlConnection {
 		}
 
 	}
-	
-	public void resultReset()
-	{
+
+	private void deleteDB(Connection con, Object[] getStatment) {
+		try {
+			PreparedStatement deleteData = con
+					.prepareStatement((String) getStatment[0]);
+			for (int i = 1; i < getStatment.length; i++) {
+				if (getStatment[i] instanceof String)
+					deleteData.setString(i, (String) getStatment[i]);
+				else if (getStatment[i] instanceof Integer)
+					deleteData.setInt(i, (Integer) getStatment[i]);
+			}
+			deleteData.executeUpdate();
+			con.commit();
+			setResult("done");
+		} catch (Exception e) {
+			System.out.println("insertDB error:" + e.getMessage());
+			setResult("insertDB error:" + e.getMessage());
+		}
+
+	}
+
+	public void resultReset() {
 		result = new ArrayList<Object>();
 	}
 

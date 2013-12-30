@@ -52,7 +52,7 @@ public class Pricing implements Entity {
 	@Override
 	public Object[] toObject() {
 		Object[] obj = {getQuery(),getOccasional(),getOneTime()};
-		return null;
+		return obj;
 	}
 
 }
