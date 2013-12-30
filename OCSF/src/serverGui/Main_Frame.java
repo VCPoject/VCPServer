@@ -66,14 +66,15 @@ public class Main_Frame extends JFrame {
 										.getRemoteSocketAddress().toString();
 								clientIp = clientIp.replace("/", "");
 								String[] clientIpAndPort = clientIp.split(":");
-								row.add(clientIpAndPort[0]);//ip
-								row.add(clientIpAndPort[1]);//port
+								row.add(clientIpAndPort[0]);// ip
+								row.add(clientIpAndPort[1]);// port
 							}
 							data.add(row);
 							row = new Vector<Object>(len);
 						}
 						JTable table = new JTable(data, cols) {
 							private static final long serialVersionUID = 1L;
+
 							public boolean isCellEditable(int data,
 									int columnNames) {
 								return false;
@@ -88,8 +89,9 @@ public class Main_Frame extends JFrame {
 
 	}
 
-	private void setConnection(int port, String dbIp, String dbUser, String dbPassword) {
-		sv = new EchoServer(port,dbIp,dbUser,dbPassword);
+	private void setConnection(int port, String dbIp, String dbUser,
+			String dbPassword) {
+		sv = new EchoServer(port, dbIp, dbUser, dbPassword);
 
 		try {
 			
@@ -114,7 +116,8 @@ public class Main_Frame extends JFrame {
 		this.setSize(800, 600);
 		this.setResizable(false);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
+				/ 2 - this.getSize().height / 2);
 	}
 
 	private void listners() {
@@ -146,15 +149,20 @@ public class Main_Frame extends JFrame {
 		getMainPanel().getBtnStartServer().addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						String dbIp = getMainPanel().getTextFieldServerIP().getText();
-						String dbUser = getMainPanel().getTextFieldDBusername().getText();
-						String dbPassword = new String(getMainPanel().getPasswordField().getPassword());
-						setConnection(port,dbIp,dbUser,dbPassword);
+						String dbIp = getMainPanel().getTextFieldServerIP()
+								.getText();
+						String dbUser = getMainPanel().getTextFieldDBusername()
+								.getText();
+						String dbPassword = new String(getMainPanel()
+								.getPasswordField().getPassword());
+						setConnection(port, dbIp, dbUser, dbPassword);
 						getMainPanel().getBtnStopServer().setEnabled(true);
 						getMainPanel().getBtnStartServer().setEnabled(false);
 						getMainPanel().getBtnChangeDB().setEnabled(false);
-						getMainPanel().getTextFieldServerIP().setEditable(false);
-						getMainPanel().getTextFieldDBusername().setEditable(false);
+						getMainPanel().getTextFieldServerIP()
+								.setEditable(false);
+						getMainPanel().getTextFieldDBusername().setEditable(
+								false);
 						getMainPanel().getPasswordField().setEditable(false);
 					}
 				});
@@ -167,8 +175,10 @@ public class Main_Frame extends JFrame {
 							getMainPanel().getBtnStopServer().setEnabled(false);
 							getMainPanel().getBtnStartServer().setEnabled(true);
 							getMainPanel().getBtnChangeDB().setEnabled(true);
-							getMainPanel().getTextFieldServerIP().setEditable(true);
-							getMainPanel().getTextFieldDBusername().setEditable(true);
+							getMainPanel().getTextFieldServerIP().setEditable(
+									true);
+							getMainPanel().getTextFieldDBusername()
+									.setEditable(true);
 							getMainPanel().getPasswordField().setEditable(true);
 							Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 							String[] columnNames = { "Client IP", "Client port" };
@@ -178,6 +188,7 @@ public class Main_Frame extends JFrame {
 								cols.add(columnNames[i]);
 							JTable table = new JTable(data, cols) {
 								private static final long serialVersionUID = 1L;
+
 								public boolean isCellEditable(int data,
 										int columnNames) {
 									return false;

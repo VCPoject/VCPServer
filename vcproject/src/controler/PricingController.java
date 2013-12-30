@@ -15,7 +15,7 @@ public class PricingController extends Controller {
 		super(host);
 	}
 	public Float getOccasional() {
-		if(occasional==null){
+		if(occasional == null){
 			Object[] getPriceOccasional = {"SELECT `pricing`.`occasional` FROM `vcp_db`.`pricing`;"};
 			sendQueryToServer(getPriceOccasional);
 			Object result = getResult().get(0);
@@ -29,7 +29,7 @@ public class PricingController extends Controller {
 		this.occasional = occasional;
 	}
 	public Float getOneTime() {
-		if(oneTime ==null){
+		if(oneTime == null){
 			Object[] getPriceOneTime = {"SELECT `pricing`.`oneTime` FROM `vcp_db`.`pricing`;"};
 			sendQueryToServer(getPriceOneTime);
 			Object result = getResult().get(0);

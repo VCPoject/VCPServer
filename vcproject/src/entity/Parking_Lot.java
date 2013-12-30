@@ -1,10 +1,11 @@
 package entity; 
 
 public class Parking_Lot  {
-	private int idparkinglot;
-	private int width;
-	private int depth;
-	private int hight;
+	private Integer idparkinglot;
+	private Integer width;
+	private Integer depth;
+	private Integer hight;
+	private Integer idorder;
 	private String status;
 	
 	public Parking_Lot(){
@@ -19,7 +20,7 @@ public class Parking_Lot  {
 		this.status = status;
 	}
 
-	
+	public Integer getIdparkinglot() {
 	public int getIdparkinglot() {
 		return idparkinglot;
 	}
