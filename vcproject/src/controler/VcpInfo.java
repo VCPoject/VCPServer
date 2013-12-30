@@ -18,7 +18,7 @@ public class VcpInfo extends Controller {
 		closeConnection();
 	}
 
-	private Pricing getParkingPricingInfo() {
+	public Pricing getParkingPricingInfo() {
 		if(pricing == null){
 		PricingController pricingController = new PricingController();
 		Pricing newPricing = new Pricing();

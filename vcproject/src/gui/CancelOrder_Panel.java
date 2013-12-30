@@ -11,26 +11,36 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 import controler.CancelOrderController;
+import entity.Pricing;
+import entity.CancelOrderEntity;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.util.ArrayList;
+
+import javax.swing.JComboBox;
 
 public class CancelOrder_Panel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JButton btnReturn;
 	private JLabel lblCarNumber ;
 	private JLabel lblIdNumber;
+	private Pricing pricing;
 	private JButton btnSubmit;
+	private JButton btnSubmit_1;
 	private JTextField textFieldIdNumber;
 	private JFormattedTextField textFieldCarNumber;
 	private JTextField textField;
 	private String host;
 	private int port = 5555;
 	private CancelOrderController cController;
+	private JComboBox<String> comboBox;
+	private CancelOrderEntity coEntity;
 
-	public CancelOrder_Panel() {
+
+	public CancelOrder_Panel(String host,int port,Pricing p) {
 		super();
 		initialize();
 		listners();
@@ -84,19 +94,33 @@ public class CancelOrder_Panel extends JPanel {
 			
 			textField = new JTextField();
 			textField.setEditable(false);
-			textField.setBounds(441, 339, 137, 29);
+			textField.setBounds(441, 470, 137, 29);
 			add(textField);
 			textField.setColumns(10);
 			
 			JLabel lblAmountOfCredit = new JLabel("Amount of Credit");
 			lblAmountOfCredit.setFont(new Font("Tahoma", Font.BOLD, 18));
-			lblAmountOfCredit.setBounds(205, 339, 190, 29);
+			lblAmountOfCredit.setBounds(202, 470, 190, 29);
 			add(lblAmountOfCredit);
 			
 			JLabel lblThisAmountOf = new JLabel("The cradit will be add to the user money card");
 			lblThisAmountOf.setFont(new Font("Tahoma", Font.BOLD, 12));
-			lblThisAmountOf.setBounds(238, 379, 292, 15);
+			lblThisAmountOf.setBounds(234, 510, 292, 15);
 			add(lblThisAmountOf);
+			
+			comboBox = new JComboBox<String>();
+			comboBox.setBounds(389, 306, 292, 20);
+			add(comboBox);
+			
+			btnSubmit_1 = new JButton("Submit");
+			btnSubmit_1.setEnabled(false);
+			btnSubmit_1.setBounds(441, 369, 89, 23);
+			add(btnSubmit_1);
+			
+			JLabel lblPleaseChooseOrder = new JLabel("Please Choose Order :");
+			lblPleaseChooseOrder.setFont(new Font("Tahoma", Font.BOLD, 13));
+			lblPleaseChooseOrder.setBounds(143, 304, 190, 22);
+			add(lblPleaseChooseOrder);
 		 
 	}
 	
@@ -106,10 +130,33 @@ public class CancelOrder_Panel extends JPanel {
 		
 		getBtnSubmit().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int idnum = Integer.parseInt(textFieldIdNumber.getText());
-				int carnum = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
-				String s = getCancelOrderController().calculatePrice(idnum, carnum);
-			}
+				comboBox.removeAllItems();
+				coEntity = new CancelOrderEntity();
+				coEntity.setUserid(Integer.parseInt(textFieldIdNumber.getText()));
+				coEntity.setCarid(Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", "")));
+				if(getCancelOrderController().checkID(coEntity.getUserid(),coEntity.getCarid()))
+				{
+					ArrayList<String> orders = cController.getOrders(coEntity.getUserid());
+					comboBox.setEnabled(true);
+					for(int i=0;i<orders.size();i++)
+					comboBox.addItem(orders.get(i));
+				}
+				getBtnSubmit_1().setEnabled(true);
+				}
+		});
+		
+		getBtnSubmit_1().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s =cController.calculatePrice((String)comboBox.getSelectedItem());
+						if(s!="done"){
+							textField.setText(s);
+							cController.showSeccussesMsg("Your order has deleted and your money has been refound");
+						}
+						else
+							cController.showWarningMsg("There was an error in you input");
+						comboBox.removeAllItems();
+				}
+							
 		});
 	}
 	
@@ -119,10 +166,13 @@ public class CancelOrder_Panel extends JPanel {
 	public JButton getBtnSubmit() {
 		return btnSubmit;
 	}
+	public JButton getBtnSubmit_1() {
+		return btnSubmit_1;
+	}
 	
 	private CancelOrderController getCancelOrderController() {
 		if(cController == null || !cController.isConnected()){
-			cController = new CancelOrderController(host,port);
+			cController = new CancelOrderController(host,port,pricing,coEntity);
 		}
 			
 		return cController;
