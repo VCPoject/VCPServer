@@ -1,4 +1,4 @@
-package entity;
+package entity; 
 
 public class Parking_Lot {
 	private int idparkinglot;

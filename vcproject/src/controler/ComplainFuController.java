@@ -1,7 +1,11 @@
 package controler;
 
+import entity.ComplainFuEntity;
+
 public class ComplainFuController extends Controller {
 
+	private ComplainFuEntity complainEntity;
+	
 	public ComplainFuController(String host, int port) {
 		super(host, port);
 		// TODO Auto-generated constructor stub
@@ -23,6 +27,8 @@ public class ComplainFuController extends Controller {
 	}
 
 	public String[] getComplains(int idnum) {
+		complainEntity = new ComplainFuEntity();
+		complainEntity.getQuery();
 		Object[] sqlsMsg = {"SELECT `complain`.`complainNum` FROM `vcp_db`.`complain` WHERE "
 				+ " `complain`.`idclient`= ?  AND `complain`.`status` = 'open'",idnum };
 		sendQueryToServer(sqlsMsg);
@@ -39,6 +45,12 @@ public class ComplainFuController extends Controller {
 			}
 			return pickedString;
 		}
+	}
+
+	public void getSelectedItem(String selectedItem) {
+		
+		// TODO need customer service Table in DB
+		
 	}
 	
 	
