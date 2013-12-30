@@ -87,6 +87,10 @@ public class MySqlConnection {
 						list.add((Integer)obj);
 					else if (obj instanceof Long)
 						list.add((Long)obj);
+					else if (obj instanceof Double)
+						list.add((Double)obj);
+					else if (obj instanceof Float)
+						list.add((Float)obj);
 				}
 				thereIsRslt = true;
 			}
@@ -115,6 +119,8 @@ public class MySqlConnection {
 					updataData.setString(i, (String) getStatment[i]);
 				else if (getStatment[i] instanceof Integer)
 					updataData.setInt(i, (Integer) getStatment[i]);
+				else if(getStatment[i] instanceof Date)
+					updataData.setDate(i, (Date) getStatment[i]);
 			}
 			updataData.executeUpdate();
 			con.commit();
