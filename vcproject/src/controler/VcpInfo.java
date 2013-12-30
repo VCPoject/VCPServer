@@ -66,7 +66,7 @@ public class VcpInfo extends Controller {
 				pLot.setDepth(Integer.parseInt(result.get(i++).toString()));
 				pLot.setHight(Integer.parseInt(result.get(i++).toString()));
 				pLot.setWidth(Integer.parseInt(result.get(i++).toString()));
-				pLot.setStatus(result.get(i++).toString());
+				pLot.setStatus(result.get(i).toString());
 				tempLot.add(pLot);
 			}
 			setParkingLot(tempLot);

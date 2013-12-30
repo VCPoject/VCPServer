@@ -51,7 +51,7 @@ public class MySqlConnection {
 				updateDB(conn, msg);
 			} else if (command.contains("INSERT")) {
 				insertDB(conn, msg);
-			} else if (command.contains("INSERT")) {
+			} else if (command.contains("DELETE")) {
 				deleteDB(conn, msg);
 			}
 			conn.close();
