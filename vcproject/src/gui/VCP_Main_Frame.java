@@ -15,6 +15,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import controler.LogIn_controller;
+import controler.VcpInfo;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +23,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import controler.LogIn_controller;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowListener;
@@ -47,10 +49,12 @@ public class VCP_Main_Frame extends JFrame {
 	private ComplainFu_Panel complainFuPanel;
 	private ParkingLot_Panel parkingLotPanel;
 	private SavingParkingPlace_Panel savingparkingplace;
+	private VcpInfo vcpInfo;
 
 	public VCP_Main_Frame(String host) {
 		super();
 		this.host = host;
+		getVcpInfo();
 		initialize();
 	}
 
@@ -352,7 +356,7 @@ public class VCP_Main_Frame extends JFrame {
 
 	public Register_Panel getRegisterPanel() {
 		if (registerPanel == null) {
-			registerPanel = new Register_Panel();
+			registerPanel = new Register_Panel(getVcpInfo().getParkingLot());
 		}
 		return registerPanel;
 	}
@@ -414,5 +418,11 @@ public class VCP_Main_Frame extends JFrame {
 			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT);
 		
 		return savingparkingplace;
+	}
+
+	public VcpInfo getVcpInfo() {
+		if(vcpInfo == null)
+			vcpInfo = new VcpInfo(host);
+		return vcpInfo;
 	}
 }
