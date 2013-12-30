@@ -349,7 +349,7 @@ public class VCP_Main_Frame extends JFrame {
 
 	private Order_Panel getOrderPanel() {
 		if (orderPanel == null) {
-			orderPanel = new Order_Panel(this.host, DEFAULT_PORT);
+			orderPanel = new Order_Panel(this.host, DEFAULT_PORT,getVcpInfo());
 		}
 		return orderPanel;
 	}

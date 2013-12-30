@@ -31,6 +31,7 @@ import javax.swing.SwingConstants;
 import com.toedter.calendar.JDateChooser;
 
 import controler.MakeOrderController;
+import controler.VcpInfo;
 import entity.*;
 
 public class Order_Panel extends JPanel {
@@ -69,11 +70,15 @@ public class Order_Panel extends JPanel {
 	private JComboBox<String> comboBoxArrivalMin;
 	private JComboBox<String> comboBoxDepartureHour;
 	private JComboBox<String> comboBoxDepartureMin;
+	private JTextField textFieldPayment;
+	private JLabel lblPayment;
+	private VcpInfo vcpInfo;
 
-	public Order_Panel(String host, int port) {
+	public Order_Panel(String host, int port,VcpInfo vcpInfo) {
 		super();
 		this.host = host;
 		this.port = port;
+		this.vcpInfo = vcpInfo;
 		initialize();/* initilize panel gui */
 		TempClient();/* change panel gui to adapt for temp client */
 		listners();/* panel listeners */
@@ -119,7 +124,7 @@ public class Order_Panel extends JPanel {
 		panelDetails.setBorder(new TitledBorder(UIManager
 				.getBorder("TitledBorder.border"), "Insert details",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelDetails.setBounds(211, 178, 364, 329);
+		panelDetails.setBounds(211, 154, 364, 376);
 		add(panelDetails);
 		panelDetails.setLayout(null);
 
@@ -148,7 +153,7 @@ public class Order_Panel extends JPanel {
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-		// //////////////////////////////////////////
+		/////////////////////////////////////////////
 		textFieldCarNumber.setBounds(213, 49, 137, 24);
 		panelDetails.add(textFieldCarNumber);
 		textFieldCarNumber.setColumns(10);
@@ -164,7 +169,7 @@ public class Order_Panel extends JPanel {
 		lblEmail.setFont(new Font("Tahoma", Font.BOLD, 18));
 
 		btnSubmit = new JButton("Submit");
-		btnSubmit.setBounds(247, 280, 103, 38);
+		btnSubmit.setBounds(247, 327, 103, 38);
 		panelDetails.add(btnSubmit);
 
 		lblTimeOfDeparture = new JLabel("Time of departure:");
@@ -222,6 +227,16 @@ public class Order_Panel extends JPanel {
 		comboBoxDepartureMin = new JComboBox<String>();
 		comboBoxDepartureMin.setBounds(283, 249, 65, 24);
 		panelDetails.add(comboBoxDepartureMin);
+		
+		lblPayment = new JLabel("Payment:");
+		lblPayment.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblPayment.setBounds(6, 282, 87, 22);
+		panelDetails.add(lblPayment);
+		
+		textFieldPayment = new JTextField();
+		textFieldPayment.setBounds(213, 282, 137, 24);
+		panelDetails.add(textFieldPayment);
+		textFieldPayment.setColumns(10);
 
 		/* setting valid hours for user to chose */
 		comboBoxArrivalHour.addItem("Hour");
@@ -260,12 +275,10 @@ public class Order_Panel extends JPanel {
 	}
 
 	private void fillComboBoxParkLot() {/* set into comboBox all the parking lot */
-		Object[] sqlMsg = { "SELECT idparking FROM vcp_db.parking_lot" };
-		getMakeOrderController().sendQueryToServer(sqlMsg);
-		ArrayList<Object> result = null;
-		result = getMakeOrderController().getResult();
-		for (Object obj : result) {
-			getComboBoxParkLot().addItem(obj.toString());
+		ArrayList<Parking_Lot> result = vcpInfo.getParkingLot();
+		for (Parking_Lot pLot : result) {
+			Integer pLotNum = pLot.getIdparkinglot();
+			getComboBoxParkLot().addItem(pLotNum.toString());
 		}
 
 	}
@@ -273,9 +286,12 @@ public class Order_Panel extends JPanel {
 	private void oneTime() {/* set panel gui to adapt one time client */
 		dateChooserArrival.setVisible(true);
 		dateChooserDeparture.setVisible(true);
+		
+		textFieldPayment.setVisible(true);
 
 		lblArrivalDay.setVisible(true);
 		lblDepartureDay.setVisible(true);
+		lblPayment.setVisible(true);
 
 		lblTimeOfArrival.setBounds(6, 183, 197, 22);
 		lblTimeOfArrival.setVisible(true);
@@ -315,6 +331,8 @@ public class Order_Panel extends JPanel {
 		comboBoxDepartureHour.setBounds(213, 115, 65, 24);
 		comboBoxDepartureMin.setBounds(283, 115, 65, 24);
 		lblTimeOfDeparture.setBounds(6, 115, 197, 22);
+		textFieldPayment.setVisible(false);
+		lblPayment.setVisible(false);
 	}
 
 	private void listners() {
@@ -407,6 +425,7 @@ public class Order_Panel extends JPanel {
 							order.setDepartureTime("00:00:00");
 						else
 							order.setDepartureTime(timeDeparture);
+						/* Check if OneTime client is selected */
 					} else if (rdbtnOneTimeClient.isSelected()) {
 
 						String timeArrival = null;
@@ -442,7 +461,8 @@ public class Order_Panel extends JPanel {
 
 						order.setType("one time");
 						String addOrderQuery = "INSERT INTO `vcp_db`.`order`"
-								+ "(`carNum`,`idclient`,`idparking`,`arrivalDate`,`arrivalTime`,`departureDate`,`departureTime`,status,`type`)"
+								+ "(`carNum`,`idclient`,`idparking`,`arrivalDate`,`arrivalTime`,"
+								+ "`departureDate`,`departureTime`,status,`type`)"
 								+ "VALUES(?,?,?,?,?,?,?,?,?);";
 						order.setQuery(addOrderQuery);
 					}
@@ -525,5 +545,9 @@ public class Order_Panel extends JPanel {
 		}
 
 		return makeOrderController;
+	}
+
+	public VcpInfo getVcpInfo() {
+		return vcpInfo;
 	}
 }
