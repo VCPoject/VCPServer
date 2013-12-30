@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
+import controler.CancelOrderController;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +26,9 @@ public class CancelOrder_Panel extends JPanel {
 	private JTextField textFieldIdNumber;
 	private JFormattedTextField textFieldCarNumber;
 	private JTextField textField;
+	private String host;
+	private int port = 5555;
+	private CancelOrderController cController;
 
 	public CancelOrder_Panel() {
 		super();
@@ -101,6 +106,9 @@ public class CancelOrder_Panel extends JPanel {
 		
 		getBtnSubmit().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int idnum = Integer.parseInt(textFieldIdNumber.getText());
+				int carnum = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
+				String s = getCancelOrderController().calculatePrice(idnum, carnum);
 			}
 		});
 	}
@@ -110,5 +118,13 @@ public class CancelOrder_Panel extends JPanel {
 	}
 	public JButton getBtnSubmit() {
 		return btnSubmit;
+	}
+	
+	private CancelOrderController getCancelOrderController() {
+		if(cController == null || !cController.isConnected()){
+			cController = new CancelOrderController(host,port);
+		}
+			
+		return cController;
 	}
 }

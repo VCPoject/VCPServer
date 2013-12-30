@@ -28,7 +28,6 @@ public class ComplainFuController extends Controller {
 
 	public String[] getComplains(int idnum) {
 		complainEntity = new ComplainFuEntity();
-		complainEntity.getQuery();
 		Object[] sqlsMsg = {"SELECT `complain`.`complainNum` FROM `vcp_db`.`complain` WHERE "
 				+ " `complain`.`idclient`= ?  AND `complain`.`status` = 'open'",idnum };
 		sendQueryToServer(sqlsMsg);
@@ -47,10 +46,20 @@ public class ComplainFuController extends Controller {
 		}
 	}
 
-	public void getSelectedItem(String selectedItem) {
-		
-		// TODO need customer service Table in DB
-		
+	public String getSelectedItemComplain(String selectedItem) {
+		Object[] sqlsMsg = {
+				"SELECT `complain_ans`.`response` FROM `vcp_employ`.`complain_ans` WHERE "
+						+ " `complain_ans`.`idcomplain`= ?", Integer.parseInt(selectedItem)};
+		sendQueryToServer(sqlsMsg);
+		return getResult().get(0).toString();
+	}
+
+	public String getSelectedItemAmount(String selectedItem) {
+		Object[] sqlsMsg = {
+				"SELECT `complain_ans`.`refound` FROM `vcp_employ`.`complain_ans` WHERE "
+						+ " `complain_ans`.`idcomplain`= ?", Integer.parseInt(selectedItem)};
+		sendQueryToServer(sqlsMsg);	
+		return getResult().get(0).toString();
 	}
 	
 	
