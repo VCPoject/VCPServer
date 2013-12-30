@@ -19,6 +19,7 @@ public class ComplainFu_Panel extends JPanel {
 	private JLabel lblCarNumber ;
 	private JLabel lblIdNumber;
 	private JButton btnSubmit;
+	private JButton btnSubmit1;
 	private JTextField textFieldIdNumber;
 	private JFormattedTextField textFieldCarNumber;
 	private JLabel lblRefound;
@@ -118,6 +119,10 @@ public class ComplainFu_Panel extends JPanel {
 			lblSelectYourComplain.setBounds(51, 369, 200, 22);
 			add(lblSelectYourComplain);
 			
+			btnSubmit1 = new JButton("Submit");
+			btnSubmit1.setBounds(78, 446, 89, 23);
+			add(btnSubmit1);
+			
 		
 	}
 	
@@ -134,9 +139,14 @@ public class ComplainFu_Panel extends JPanel {
 					for(int i=0;i<comp.length;i++)
 					complains.addItem(comp[i]);
 				}
+				complainController.getSelectedItem((String)complains.getSelectedItem());
 			}
 		});
-		
+		getBtnSubmit1().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				complainController.getSelectedItem((String)complains.getSelectedItem());
+			}
+		});
 		
 	}
 	
@@ -146,6 +156,9 @@ public class ComplainFu_Panel extends JPanel {
 	
 	public JButton getBtnSubmit() {
 		return btnSubmit;
+	}
+	public JButton getBtnSubmit1() {
+		return btnSubmit1;
 	}
 	
 	private ComplainFuController getComplainController() {

@@ -1,9 +1,11 @@
-package controler;
+package controler; 
+
+import entity.ComplainEntity;
 
 public class ComplainController extends Controller {
 
 	private String open;
-	private String idFromTable;
+	private ComplainEntity comEnt;
 
 	public ComplainController(String host, int port) {
 		super(host, port);
@@ -25,6 +27,10 @@ public class ComplainController extends Controller {
 					"INSERT INTO `vcp_db`.`complain` (`idclient`, `description`,`status`) VALUES (?,?,?);",
 					id,complain,this.open };
 			sendQueryToServer(insertComplain);
+			comEnt=new ComplainEntity();
+			comEnt.setcarNum(car);
+			comEnt.setDescription(complain);
+			comEnt.setidNum(id);
 			return true;
 			
 		}
@@ -35,16 +41,10 @@ public class ComplainController extends Controller {
 		Object[] Msg = {"SELECT `complain`.`complainNum` FROM `vcp_db`.`complain` WHERE "
 				+ " `complain`.`idclient`= ? AND `complain`.`description` = ? AND `complain`.`status` = ?;"
 				, idnum, complain,this.open};
+		if(getResult().get(0).toString().equals("done"))
 		sendQueryToServer(Msg);
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-idFromTable=getResult().get(0).toString();
-
-showSeccussesMsg("Your Complain ID is: "  + idFromTable + "  , "
+			comEnt.setComplainNum(getResult().get(0).toString());
+		showSeccussesMsg("Your Complain ID is: "  + comEnt.getComplainNum() + "  , "
 		+ " Please save to view the Complain progress.\n"
 		+ " you can view the progress in the 'Complain Follow UP' screen "
 		+ "by Selecting your iD");

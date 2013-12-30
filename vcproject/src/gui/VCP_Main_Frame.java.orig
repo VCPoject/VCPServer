@@ -7,32 +7,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import controler.LogIn_controller;
-import controler.VcpInfo;
+<<<<<<< HEAD
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
-import controler.LogIn_controller;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowListener;
+=======
+>>>>>>> branch 'master' of https://github.com/VCPoject/VCPServer.git
 
 public class VCP_Main_Frame extends JFrame {
 
-	/**
-	 * 
-	 */
 	final public int DEFAULT_PORT = 5555;
 	final public String host;
 	private static final long serialVersionUID = 1L;
@@ -44,17 +38,14 @@ public class VCP_Main_Frame extends JFrame {
 	private CheckInOut_Frame CheckInOutFrame;
 	private CancelOrder_Panel cancelOrder;
 	private Employee_Panel employee_panel;
-	private LogIn_Panel loginpanel;
 	private Complain_Panel complainPanel;
 	private ComplainFu_Panel complainFuPanel;
 	private ParkingLot_Panel parkingLotPanel;
 	private SavingParkingPlace_Panel savingparkingplace;
-	private VcpInfo vcpInfo;
 
 	public VCP_Main_Frame(String host) {
 		super();
 		this.host = host;
-		getVcpInfo();
 		initialize();
 	}
 
@@ -93,7 +84,6 @@ public class VCP_Main_Frame extends JFrame {
 						"Exit Application", JOptionPane.YES_NO_OPTION);
 
 				if (result == JOptionPane.YES_OPTION) {
-					getLogIn_Frame().getLogincontroller().updateAsNotLoggedIn();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					closeMainFrame();
 					System.exit(0);
@@ -109,9 +99,6 @@ public class VCP_Main_Frame extends JFrame {
 						getLogIn_Frame().setVisible(true);
 						getLogIn_Frame().addWindowListener(new WindowAdapter() {
 							public void windowClosing(WindowEvent e) {
-								getLogIn_Frame().closeLoginFrame();
-								loginpanel=getLogIn_Frame().getLogIn_Panel();
-								loginpanel=null;
 								loginframe=null;
 							}
 						});
@@ -132,7 +119,6 @@ public class VCP_Main_Frame extends JFrame {
 											getLogIn_Frame().closeLoginFrame();
 											loginframe = null;
 											
-											
 										}
 									}
 								});
@@ -145,9 +131,6 @@ public class VCP_Main_Frame extends JFrame {
 								
 								if (getLogIn_Frame().getLogIn_Panel().checkValidity()){
 									getLogIn_Frame().closeLoginFrame();
-									loginframe=null;
-									loginpanel=getLogIn_Frame().getLogIn_Panel();
-									loginpanel=null;
 									setContentPane(getEmployeePanel());
 									
 								}
@@ -315,15 +298,6 @@ public class VCP_Main_Frame extends JFrame {
 			}
 		});
 		
-		getEmployeePanel().getbtnSignAsnotWorking().addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setContentPane(getNotWorkingPlaces_Panel());
-				
-			}
-		});
-		
 		getMainPanel().getBtnDofek().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setContentPane(getParkingLot_Panel());
@@ -372,7 +346,7 @@ public class VCP_Main_Frame extends JFrame {
 
 	public Register_Panel getRegisterPanel() {
 		if (registerPanel == null) {
-			registerPanel = new Register_Panel(getVcpInfo().getParkingLot());
+			registerPanel = new Register_Panel();
 		}
 		return registerPanel;
 	}
@@ -434,12 +408,5 @@ public class VCP_Main_Frame extends JFrame {
 			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT);
 		
 		return savingparkingplace;
-	}
-
-	public VcpInfo getVcpInfo() {
-		if(vcpInfo == null)
-			vcpInfo = new VcpInfo(host);
-		return vcpInfo;
-		return notworkingplaces;
 	}
 }

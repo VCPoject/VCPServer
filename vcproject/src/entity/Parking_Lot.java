@@ -1,6 +1,6 @@
-package entity;
+package entity; 
 
-public class Parking_Lot {
+public class Parking_Lot  {
 	private int idparkinglot;
 	private int width;
 	private int depth;
