@@ -51,6 +51,7 @@ public class ParkingLot_controller extends Controller{
 		Object[] sqlmsg={"SELECT * FROM vcp_db.parking_place WHERE status=? AND idparking=? ;","vaccant",parkinglotId};
 		sendQueryToServer(sqlmsg);
 		result = getResult();
+		closeConnection();
 		setParkingPlaceEntity(result);
 		return parkingPlaces;
 	}
@@ -61,6 +62,7 @@ public class ParkingLot_controller extends Controller{
 		+" "+ "and parkingNum=?;" ,"save",parkinglotId,floor,line,parkingPlaceNum};
 		sendQueryToServer(sqlmsg);
 		result=getResult();
+		closeConnection();
 		if(result.get(0).equals("done")) 
 			showSeccussesMsg("Parking Place has been saved");
 			

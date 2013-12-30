@@ -2,12 +2,14 @@ package controler;
 
 import java.util.ArrayList;
 
+import entity.Employee;
+
 public class LogIn_controller extends Controller{
 
-	private ArrayList<Object> resultCopy;
+	private ArrayList<Object> result;
 	private String username;
 	private String password;
-
+	
 	public LogIn_controller(String host) {
 		super(host);
 	}
@@ -19,12 +21,13 @@ public class LogIn_controller extends Controller{
 				"SELECT username,password, login FROM vcp_employ.employ WHERE username= ? AND password = ? ;",
 				username, password};
 		sendQueryToServer(sqlsMsg);
-		resultCopy = getResult();
-
-		if (username.equals(resultCopy.get(0).toString())
-				&& password.equals(resultCopy.get(1).toString())) {
+		result = getResult();
+		
+		closeConnection();
+		if (username.equals(result.get(0).toString())
+				&& password.equals(result.get(1).toString())) {
 			
-			if (checkedIfAlreadyLoggedIn((String) resultCopy.get(2)) == false) {
+			if (checkedIfAlreadyLoggedIn(result.get(0).toString()) == false) {
 
 				updateAsLoggedIn(username);
 				showSeccussesMsg("Login was seccessfully acomplished");
@@ -35,12 +38,13 @@ public class LogIn_controller extends Controller{
 				showSeccussesMsg("You are already loggedin");
 		}
 		
-		if (!username.equals(resultCopy.get(0).toString()) || !password.equals(resultCopy.get(1).toString()))
+		if (!username.equals(result.get(0).toString()) || !password.equals(result.get(1).toString()))
 			showWarningMsg("Invalid username or password");
 		
 		return false;
 	}
 
+	
 	public boolean checkedIfAlreadyLoggedIn(String str) {
 
 		if (str.equals("NO"))
@@ -53,12 +57,14 @@ public class LogIn_controller extends Controller{
 		Object[] sqlsMsg = { "UPDATE  vcp_employ.employ SET login=? WHERE username=?;" ,
 				"YES",username};
 		sendQueryToServer(sqlsMsg);
+		closeConnection();
 	}
 	
 	public void updateAsNotLoggedIn() {
 		Object[] sqlsMsg = { "UPDATE  vcp_employ.employ SET login=? WHERE username=?;" ,
 				"NO",getUsername()};
 		sendQueryToServer(sqlsMsg);
+		closeConnection();
 	}
 
 	public String getUsername() {

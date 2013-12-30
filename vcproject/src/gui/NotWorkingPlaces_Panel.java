@@ -1,12 +1,36 @@
 package gui;
 
 import javax.swing.*;
+
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class NotWorkingPlaces_Panel extends JPanel {
+	
+	private static final long serialVersionUID = 1L;
+	private JRadioButton rdbtnParkingLot;
+	private JRadioButton rdbtnParkingPlace;
+	private JRadioButton rdbtnParkingLot1;
+	private JRadioButton rdbtnFloorNo;
+	private JRadioButton rdbtnLineNo;
+	private JRadioButton rdbtnParkingPlaceNo;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JButton btnSave;
+	private JButton btnExit;
+	private JComboBox <String> comboBoxParkingLot;
+	private JComboBox <String> comboBoxParkingPlace;
+	private JComboBox <String> comboBoxLine;
+	private JComboBox <String> comboBoxFloor;
+	
 	public NotWorkingPlaces_Panel() {
+		initialize();
 		setLayout(null);
-		
+		listners();
+	}
+	
+	public void initialize(){
+		this.setSize(785, 575);
 		JLabel lblNewLabel = new JLabel("Not working places\r\n");
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 36));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -18,54 +42,135 @@ public class NotWorkingPlaces_Panel extends JPanel {
 		lblNewLabel_1.setBounds(26, 90, 189, 25);
 		add(lblNewLabel_1);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("parking place");
-		rdbtnNewRadioButton.setBounds(139, 139, 109, 23);
-		add(rdbtnNewRadioButton);
+		rdbtnParkingPlace = new JRadioButton("parking place");
+		rdbtnParkingPlace.setBounds(139, 139, 109, 23);
+		buttonGroup.add(rdbtnParkingPlace);
+		add(rdbtnParkingPlace);
 		
-		JRadioButton rdbtnParkingLot = new JRadioButton("parking lot");
+		rdbtnParkingLot = new JRadioButton("parking lot");
 		rdbtnParkingLot.setBounds(345, 139, 109, 23);
+		buttonGroup.add(rdbtnParkingLot);
 		add(rdbtnParkingLot);
 		
-		JRadioButton rdbtnParkingLot_1 = new JRadioButton("parking lot");
-		rdbtnParkingLot_1.setBounds(6, 200, 109, 23);
-		add(rdbtnParkingLot_1);
+		rdbtnParkingLot1 = new JRadioButton("parking lot");
+		rdbtnParkingLot1.setBounds(6, 200, 109, 23);
+		add(rdbtnParkingLot1);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(118, 201, 364, 20);
-		add(comboBox);
+		comboBoxParkingLot = new <String> JComboBox<String>();
+		comboBoxParkingLot.setBounds(118, 201, 364, 20);
+		add(comboBoxParkingLot);
 		
-		JRadioButton rdbtnFloorNo = new JRadioButton("floor no.");
+		rdbtnFloorNo = new JRadioButton("floor no.");
 		rdbtnFloorNo.setBounds(6, 262, 109, 23);
+		buttonGroup.add(rdbtnFloorNo);
 		add(rdbtnFloorNo);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(118, 263, 364, 20);
-		add(comboBox_1);
+		comboBoxFloor = new <String> JComboBox<String>();
+		comboBoxFloor.setBounds(118, 263, 364, 20);
+		add(comboBoxFloor);
 		
-		JRadioButton rdbtnLineNo = new JRadioButton("Line no.");
+		rdbtnLineNo = new JRadioButton("Line no.");
 		rdbtnLineNo.setBounds(6, 324, 109, 23);
+		buttonGroup.add(rdbtnLineNo );
 		add(rdbtnLineNo);
 		
-		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setBounds(118, 325, 364, 20);
-		add(comboBox_2);
+		comboBoxLine = new <String> JComboBox<String>();
+		comboBoxLine.setBounds(118, 325, 364, 20);
+		add(comboBoxLine);
 		
-		JRadioButton rdbtnParkingPlaceNo = new JRadioButton("parking place no.");
+		rdbtnParkingPlaceNo = new JRadioButton("parking place no.");
 		rdbtnParkingPlaceNo.setBounds(6, 380, 109, 23);
+		buttonGroup.add(rdbtnParkingPlaceNo );
 		add(rdbtnParkingPlaceNo);
 		
-		JComboBox comboBox_3 = new JComboBox();
-		comboBox_3.setBounds(118, 381, 364, 20);
-		add(comboBox_3);
+		comboBoxParkingPlace = new <String> JComboBox<String>();
+		comboBoxParkingPlace.setBounds(118, 381, 364, 20);
+		add(comboBoxParkingPlace);
 		
-		JButton btnNewButton = new JButton("Save");
-		btnNewButton.setBounds(473, 443, 109, 56);
-		add(btnNewButton);
+		btnSave = new JButton("Save");
+		btnSave.setBounds(473, 443, 109, 56);
+		add(btnSave);
 		
-		JButton btnExit = new JButton("Exit");
+		btnExit = new JButton("Exit");
 		btnExit.setBounds(51, 443, 109, 56);
 		add(btnExit);
 	}
 	
-	private static final long serialVersionUID = 1L;
+	public void listners(){
+		rdbtnParkingPlace.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				setParkingPlaceAsNotWorking();
+			}
+		});
+		
+		rdbtnParkingLot.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				setParkingLotsNotWorking();
+			}
+		});
+		
+		rdbtnParkingLot1.addActionListener(new ActionListener() {
+			
+			
+			public void actionPerformed(ActionEvent e) {
+				
+				
+			}
+		});
+		
+		rdbtnFloorNo.addActionListener(new ActionListener() {
+			
+			
+			public void actionPerformed(ActionEvent e) {
+			
+				
+			}
+		});
+		
+		rdbtnLineNo.addActionListener(new ActionListener() {
+			
+			
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		
+		rdbtnParkingPlaceNo.addActionListener(new ActionListener() {
+			
+			
+			public void actionPerformed(ActionEvent e) {
+			
+				
+			}
+		});
+	}
+	
+	private void setParkingPlaceAsNotWorking() {
+		rdbtnFloorNo.setVisible(true);
+		rdbtnLineNo.setVisible(true);
+		rdbtnParkingPlaceNo.setVisible(true);
+		comboBoxFloor.setVisible(true);
+		comboBoxLine.setVisible(true);
+		comboBoxParkingPlace.setVisible(true);
+		
+	}
+	
+	private void setParkingLotsNotWorking(){
+		rdbtnFloorNo.setVisible(false);
+		rdbtnLineNo.setVisible(false);
+		rdbtnParkingPlaceNo.setVisible(false);
+		comboBoxFloor.setVisible(false);
+		comboBoxLine.setVisible(false);
+		comboBoxParkingPlace.setVisible(false);
+	}
+	
+	public JButton getbtnExit(){
+		return btnExit;
+	}
+	
+	public JButton getbtnSave(){
+		return btnSave;
+	}
 }

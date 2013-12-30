@@ -26,7 +26,6 @@ public class LogIn_Frame extends JFrame{
 	
 	public LogIn_Frame(String host){
 		super();
-		
 		this.host = host;
 		initialize();
 	}

@@ -41,8 +41,8 @@ public class VCP_Main_Frame extends JFrame {
 	private Payment_Frame paymentFrame;
 	private CheckInOut_Frame CheckInOutFrame;
 	private CancelOrder_Panel cancelOrder;
-	private LogIn_controller logincontroller;
 	private Employee_Panel employee_panel;
+	private LogIn_Panel loginpanel;
 	private Complain_Panel complainPanel;
 	private ComplainFu_Panel complainFuPanel;
 	private ParkingLot_Panel parkingLotPanel;
@@ -89,7 +89,7 @@ public class VCP_Main_Frame extends JFrame {
 						"Exit Application", JOptionPane.YES_NO_OPTION);
 
 				if (result == JOptionPane.YES_OPTION) {
-					// getLogincontroller().updateAsNotLoggedIn();
+					getLogIn_Frame().getLogincontroller().updateAsNotLoggedIn();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					closeMainFrame();
 					System.exit(0);
@@ -105,6 +105,9 @@ public class VCP_Main_Frame extends JFrame {
 						getLogIn_Frame().setVisible(true);
 						getLogIn_Frame().addWindowListener(new WindowAdapter() {
 							public void windowClosing(WindowEvent e) {
+								getLogIn_Frame().closeLoginFrame();
+								loginpanel=getLogIn_Frame().getLogIn_Panel();
+								loginpanel=null;
 								loginframe=null;
 							}
 						});
@@ -125,6 +128,7 @@ public class VCP_Main_Frame extends JFrame {
 											getLogIn_Frame().closeLoginFrame();
 											loginframe = null;
 											
+											
 										}
 									}
 								});
@@ -137,6 +141,9 @@ public class VCP_Main_Frame extends JFrame {
 								
 								if (getLogIn_Frame().getLogIn_Panel().checkValidity()){
 									getLogIn_Frame().closeLoginFrame();
+									loginframe=null;
+									loginpanel=getLogIn_Frame().getLogIn_Panel();
+									loginpanel=null;
 									setContentPane(getEmployeePanel());
 									
 								}
