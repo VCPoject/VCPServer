@@ -18,12 +18,16 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JButton btnSave;
 	private JButton btnExit;
+	private int port;
+	private String host;
 	private JComboBox <String> comboBoxParkingLot;
 	private JComboBox <String> comboBoxParkingPlace;
 	private JComboBox <String> comboBoxLine;
 	private JComboBox <String> comboBoxFloor;
 	
-	public NotWorkingPlaces_Panel() {
+	public NotWorkingPlaces_Panel(String host,int port) {
+		this.host=host;
+		this.port=port;
 		initialize();
 		setLayout(null);
 		listners();

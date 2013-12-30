@@ -47,6 +47,7 @@ public class VCP_Main_Frame extends JFrame {
 	private ComplainFu_Panel complainFuPanel;
 	private ParkingLot_Panel parkingLotPanel;
 	private SavingParkingPlace_Panel savingparkingplace;
+	private NotWorkingPlaces_Panel notworkingplaces;
 
 	public VCP_Main_Frame(String host) {
 		super();
@@ -311,6 +312,15 @@ public class VCP_Main_Frame extends JFrame {
 			}
 		});
 		
+		getEmployeePanel().getbtnSignAsnotWorking().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getNotWorkingPlaces_Panel());
+				
+			}
+		});
+		
 		getMainPanel().getBtnDofek().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setContentPane(getParkingLot_Panel());
@@ -421,5 +431,12 @@ public class VCP_Main_Frame extends JFrame {
 			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT);
 		
 		return savingparkingplace;
+	}
+	
+	public NotWorkingPlaces_Panel getNotWorkingPlaces_Panel(){
+		if(notworkingplaces==null)
+			notworkingplaces=new NotWorkingPlaces_Panel(host,DEFAULT_PORT);
+		
+		return notworkingplaces;
 	}
 }

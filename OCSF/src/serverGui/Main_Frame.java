@@ -92,18 +92,12 @@ public class Main_Frame extends JFrame {
 		sv = new EchoServer(port,dbIp,dbUser,dbPassword);
 
 		try {
-			sv.listen(); // Start listening for connections
-		} catch (Exception ex) {
-			System.out.println("ERROR - Could not listen for clients!");
-		}
-
-		try {
+			
 			sv.listen(); // Start listening for connections
 		} catch (Exception ex) {
 			System.out.println("ERROR - Could not listen for clients!");
 		}
 		ConnectionStatus();
-
 	}
 
 	private void initialize() {
