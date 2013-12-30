@@ -49,12 +49,13 @@ public class VCP_Main_Frame extends JFrame {
 	private ComplainFu_Panel complainFuPanel;
 	private ParkingLot_Panel parkingLotPanel;
 	private SavingParkingPlace_Panel savingparkingplace;
+	private NotWorkingPlaces_Panel notworkingplaces;
 	private VcpInfo vcpInfo;
 
 	public VCP_Main_Frame(String host) {
 		super();
 		this.host = host;
-		getVcpInfo();
+		//getVcpInfo();
 		initialize();
 	}
 
@@ -93,7 +94,6 @@ public class VCP_Main_Frame extends JFrame {
 						"Exit Application", JOptionPane.YES_NO_OPTION);
 
 				if (result == JOptionPane.YES_OPTION) {
-					getLogIn_Frame().getLogincontroller().updateAsNotLoggedIn();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					closeMainFrame();
 					System.exit(0);
@@ -131,8 +131,6 @@ public class VCP_Main_Frame extends JFrame {
 											frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 											getLogIn_Frame().closeLoginFrame();
 											loginframe = null;
-											
-											
 										}
 									}
 								});
@@ -317,7 +315,6 @@ public class VCP_Main_Frame extends JFrame {
 		
 		getEmployeePanel().getbtnSignAsnotWorking().addActionListener(new ActionListener() {
 			
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				setContentPane(getNotWorkingPlaces_Panel());
 				
@@ -435,11 +432,18 @@ public class VCP_Main_Frame extends JFrame {
 		
 		return savingparkingplace;
 	}
+	
+	public NotWorkingPlaces_Panel getNotWorkingPlaces_Panel(){
+		if(notworkingplaces==null)
+			notworkingplaces=new NotWorkingPlaces_Panel(host,DEFAULT_PORT);
+		
+		return notworkingplaces;
+	}
 
 	public VcpInfo getVcpInfo() {
 		if(vcpInfo == null)
 			vcpInfo = new VcpInfo(host);
 		return vcpInfo;
-		return notworkingplaces;
+	
 	}
 }

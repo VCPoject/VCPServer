@@ -88,7 +88,7 @@ public class VcpInfo extends Controller {
 				pLot.setFloor(Integer.parseInt(result.get(i++).toString()));
 				pLot.setRow(Integer.parseInt(result.get(i++).toString()));
 				pLot.setColumn(Integer.parseInt(result.get(i++).toString()));
-				pLot.setStatus(result.get(i++).toString());
+				pLot.setStatus(result.get(i).toString());
 				tempPlace.add(pLot);
 			}
 			setParkingPlaces(tempPlace);

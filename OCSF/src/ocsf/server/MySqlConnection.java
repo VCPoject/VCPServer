@@ -87,10 +87,11 @@ public class MySqlConnection {
 						list.add((Integer)obj);
 					else if (obj instanceof Long)
 						list.add((Long)obj);
-					else if (obj instanceof Double)
-						list.add((Double)obj);
 					else if (obj instanceof Float)
 						list.add((Float)obj);
+					else if (obj instanceof Double)
+						list.add((Double)obj);
+					
 				}
 				thereIsRslt = true;
 			}

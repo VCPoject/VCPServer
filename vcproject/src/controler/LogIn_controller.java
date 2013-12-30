@@ -27,8 +27,7 @@ public class LogIn_controller extends Controller{
 		if (username.equals(result.get(0).toString())
 				&& password.equals(result.get(1).toString())) {
 			
-			if (checkedIfAlreadyLoggedIn(result.get(0).toString()) == false) {
-
+			if (checkedIfAlreadyLoggedIn(result.get(2).toString()) == false) {
 				updateAsLoggedIn(username);
 				showSeccussesMsg("Login was seccessfully acomplished");
 				return true;

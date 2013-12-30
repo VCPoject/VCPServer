@@ -29,18 +29,12 @@ public class ParkingLot_controller extends Controller{
 		
 		while(i<result.size()){
 		parkingplace=new Parking_Places();
-		parkingplace.setIdparkinglot(Integer.parseInt(result.get(i).toString()));
-		i++;
-		parkingplace.setIdorder(Integer.parseInt(result.get(i).toString()));
-		i++;
-		parkingplace.setFloor(Integer.parseInt(result.get(i).toString()));
-		i++;
-		parkingplace.setRow(Integer.parseInt(result.get(i).toString()));
-		i++;
-		parkingplace.setColumn(Integer.parseInt(result.get(i).toString()));
-		i++;
-		parkingplace.setStatus(result.get(i).toString());
-		i++;
+		parkingplace.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
+		parkingplace.setIdorder(Integer.parseInt(result.get(i++).toString()));
+		parkingplace.setFloor(Integer.parseInt(result.get(i++).toString()));
+		parkingplace.setRow(Integer.parseInt(result.get(i++).toString()));
+		parkingplace.setColumn(Integer.parseInt(result.get(i++).toString()));
+		parkingplace.setStatus(result.get(i++).toString());
 		parkingPlaces.add(parkingplace);
 		}
 		
@@ -68,6 +62,43 @@ public class ParkingLot_controller extends Controller{
 			
 		else
 			showWarningMsg("Couldn't save Parking Palce");
+	}
+	
+	public ArrayList<Parking_Places> getAllparkinLotplaces(int parkinglotId){
+		ArrayList<Object> result = null;
+		Object[] sqlmsg={"SELECT * FROM vcp_db.parking_place WHERE idparking=?;",parkinglotId};
+		sendQueryToServer(sqlmsg);
+		result = getResult();
+		closeConnection();
+		setParkingPlaceEntity(result);
+		return parkingPlaces;
+	}
+	
+	public void updateParkingPlaceAsnotWorking(int parkinglotId,int floor,int line,int parkingPlaceNum){
+		ArrayList<Object> result = null;
+		Object[] sqlmsg={ "UPDATE  vcp_db.parking_place SET status=? WHERE idparking=? and floor=? and line=?"
+		+" "+ "and parkingNum=?;" ,"not working",parkinglotId,floor,line,parkingPlaceNum};
+		sendQueryToServer(sqlmsg);
+		result=getResult();
+		closeConnection();
+		if(result.get(0).equals("done")) 
+			showSeccussesMsg("Parking Place has been signed up as not working");
+			
+		else
+			showWarningMsg("Couldn't signed up Parking place as not working");
+	}
+	
+	public void updateParkingLotAsNotWorking(int parkinglotId){
+		ArrayList<Object> result = null;
+		Object[] sqlmsg={ "UPDATE  vcp_db.parking_place SET status=? WHERE idparking=?;" ,"not working",parkinglotId};
+		sendQueryToServer(sqlmsg);
+		result=getResult();
+		closeConnection();
+		if(result.get(0).equals("done")) 
+			showSeccussesMsg("Parking Place has been signed up as not working");
+			
+		else
+			showWarningMsg("Couldn't signed up Parking lot as not working");
 	}
 	
 }

@@ -47,7 +47,7 @@ public class LogIn_Frame extends JFrame{
 		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
 				/ 2 - this.getSize().height / 2);
 		this.setContentPane(getLogIn_Panel());
-		r=new Reminder(10,this);
+		r=new Reminder(120,this);
 	}
 	 
 	public LogIn_Panel getLogIn_Panel() { 
