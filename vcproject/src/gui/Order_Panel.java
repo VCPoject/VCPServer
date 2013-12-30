@@ -28,14 +28,10 @@ import java.util.Date;
 
 import javax.swing.SwingConstants;
 
-import client.Client;
-
 import com.toedter.calendar.JDateChooser;
 
 import controler.MakeOrderController;
-import entity.Car;
-import entity.ClientEntity;
-import entity.Order;
+import entity.*;
 
 public class Order_Panel extends JPanel {
 
@@ -78,9 +74,9 @@ public class Order_Panel extends JPanel {
 		super();
 		this.host = host;
 		this.port = port;
-		initialize();
-		TempClient();
-		listners();
+		initialize();/* initilize panel gui */
+		TempClient();/* change panel gui to adapt for temp client */
+		listners();/* panel listeners */
 	}
 
 	private void initialize() {
@@ -141,6 +137,7 @@ public class Order_Panel extends JPanel {
 		lblCarNumber.setBounds(6, 49, 197, 22);
 		panelDetails.add(lblCarNumber);
 		lblCarNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
+		/* set format for insert car number */
 		try {
 			MaskFormatter formatter = new MaskFormatter("##-###-##");
 			formatter.setValidCharacters("0123456789");
@@ -151,7 +148,7 @@ public class Order_Panel extends JPanel {
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-
+		// //////////////////////////////////////////
 		textFieldCarNumber.setBounds(213, 49, 137, 24);
 		panelDetails.add(textFieldCarNumber);
 		textFieldCarNumber.setColumns(10);
@@ -174,16 +171,6 @@ public class Order_Panel extends JPanel {
 		panelDetails.add(lblTimeOfDeparture);
 		lblTimeOfDeparture.setFont(new Font("Tahoma", Font.BOLD, 18));
 
-		try {
-			MaskFormatter formatterDeparturTime = new MaskFormatter("##:##");
-			formatterDeparturTime.setValidCharacters("0123456789");
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(this,
-					"Formatter error: " + e.getMessage(), "Formatter ERRORE",
-					JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-
 		lblParkingLot = new JLabel("Parking lot:");
 		lblParkingLot.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblParkingLot.setBounds(6, 117, 197, 22);
@@ -194,22 +181,12 @@ public class Order_Panel extends JPanel {
 		comboBoxParkLot.setBounds(213, 117, 137, 24);
 		panelDetails.add(comboBoxParkLot);
 		getComboBoxParkLot().addItem("Select parking lot");
-		fillComboBoxParkLot();
+		fillComboBoxParkLot();/* set into comboBox all the parking lot */
 
 		lblTimeOfArrival = new JLabel("Time of arrival:");
 		lblTimeOfArrival.setFont(new Font("Tahoma", Font.BOLD, 18));
 		panelDetails.add(lblTimeOfArrival);
 		lblTimeOfArrival.setVisible(false);
-
-		try {
-			MaskFormatter formatterDeparturTime = new MaskFormatter("##:##");
-			formatterDeparturTime.setValidCharacters("0123456789");
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(this,
-					"Formatter error: " + e.getMessage(), "Formatter ERRORE",
-					JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
 
 		lblArrivalDay = new JLabel("Arrival day");
 		lblArrivalDay.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -246,6 +223,7 @@ public class Order_Panel extends JPanel {
 		comboBoxDepartureMin.setBounds(283, 249, 65, 24);
 		panelDetails.add(comboBoxDepartureMin);
 
+		/* setting valid hours for user to chose */
 		comboBoxArrivalHour.addItem("Hour");
 		comboBoxDepartureHour.addItem("Hour");
 		for (Integer i = 0; i < 25; i++) {
@@ -257,7 +235,9 @@ public class Order_Panel extends JPanel {
 				comboBoxDepartureHour.addItem(i.toString());
 			}
 		}
+		// /////////////////////////////////////////
 
+		/* setting valid minutes for user to chose */
 		comboBoxArrivalMin.addItem("Min");
 		comboBoxDepartureMin.addItem("Min");
 		for (Integer i = 0; i < 60; i++) {
@@ -269,7 +249,7 @@ public class Order_Panel extends JPanel {
 				comboBoxDepartureMin.addItem(i.toString());
 			}
 		}
-
+		// //////////////////////////////////////////////
 		btnReturn = new JButton("Return");
 		btnReturn.setBounds(10, 519, 93, 35);
 		add(btnReturn);
@@ -279,7 +259,7 @@ public class Order_Panel extends JPanel {
 		return comboBoxParkLot;
 	}
 
-	private void fillComboBoxParkLot() {
+	private void fillComboBoxParkLot() {/* set into comboBox all the parking lot */
 		Object[] sqlMsg = { "SELECT idparking FROM vcp_db.parking_lot" };
 		getMakeOrderController().sendQueryToServer(sqlMsg);
 		ArrayList<Object> result = null;
@@ -290,7 +270,7 @@ public class Order_Panel extends JPanel {
 
 	}
 
-	private void oneTime() {
+	private void oneTime() {/* set panel gui to adapt one time client */
 		dateChooserArrival.setVisible(true);
 		dateChooserDeparture.setVisible(true);
 
@@ -319,7 +299,7 @@ public class Order_Panel extends JPanel {
 
 	}
 
-	private void TempClient() {
+	private void TempClient() {/* change panel gui to adapt for temp client */
 		dateChooserArrival.setVisible(false);
 		dateChooserDeparture.setVisible(false);
 		lblArrivalDay.setVisible(false);
@@ -339,24 +319,44 @@ public class Order_Panel extends JPanel {
 
 	private void listners() {
 
-		rdbtnTempClient.addActionListener(new ActionListener() {
+		rdbtnTempClient.addActionListener(new ActionListener() {/*
+																 * listener to
+																 * temp client
+																 * radio butten
+																 */
 			public void actionPerformed(ActionEvent e) {
 				TempClient();
 			}
 		});
 
-		rdbtnOneTimeClient.addActionListener(new ActionListener() {
+		rdbtnOneTimeClient.addActionListener(new ActionListener() {/*
+																	 * listener
+																	 * to one
+																	 * time
+																	 * client
+																	 * radio
+																	 * butten
+																	 */
 			public void actionPerformed(ActionEvent e) {
 				oneTime();
 			}
 		});
 
-		getBtnSubmit().addActionListener(new ActionListener() {
+		getBtnSubmit().addActionListener(new ActionListener() {/*
+																 * listener to
+																 * submit butten
+																 */
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ClientEntity client = new ClientEntity();
-					Car car = new Car();
-					Order order = new Order();
+					ClientEntity client;/* client entity */
+					if (rdbtnTempClient.isSelected()) {
+						client = new TempClient();
+					} else {
+						client = new OneTimeClient();
+					}
+
+					Car car = new Car();/* car entity */
+					Order order = new Order();/* order entity */
 
 					ArrayList<Object> result = null;
 					String status = "did not checked in yet";
@@ -465,11 +465,13 @@ public class Order_Panel extends JPanel {
 						getMakeOrderController().showSeccussesMsg("Order done");
 						getBtnReturn().doClick();
 					} else {
-						getMakeOrderController().showWarningMsg(result.get(0).toString());
+						getMakeOrderController().showWarningMsg(
+								result.get(0).toString());
 
 					}
 				} catch (Exception e2) {
-					getMakeOrderController().showWarningMsg("Error in submit: " + e2.getMessage());
+					getMakeOrderController().showWarningMsg(
+							"Error in submit: " + e2.getMessage());
 				} finally {
 					getMakeOrderController().closeConnection();
 				}

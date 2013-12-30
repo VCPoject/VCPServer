@@ -1,6 +1,6 @@
 package entity;
 
-public class Parking_Lot {
+public class Parking_Lot  {
 	private int idparkinglot;
 	private int width;
 	private int depth;
@@ -19,15 +19,6 @@ public class Parking_Lot {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	public int getIdorder() {
-		return idorder;
-	}
-
-	public void setIdorder(int idorder) {
-		this.idorder = idorder;
-	}
-
 
 	public int getIdparkinglot() {
 		return idparkinglot;
