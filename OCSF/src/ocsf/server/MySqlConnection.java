@@ -73,6 +73,8 @@ public class MySqlConnection {
 					selectData.setString(i, (String) getStatment[i]);
 				else if (getStatment[i] instanceof Integer)
 					selectData.setInt(i, (Integer) getStatment[i]);
+				else if (getStatment[i] instanceof Float)
+					selectData.setInt(i, (Integer) getStatment[i]);
 				else if (getStatment[i] instanceof Date)
 					selectData.setDate(i, (Date) getStatment[i]);
 			}
@@ -91,8 +93,6 @@ public class MySqlConnection {
 						list.add((Integer) obj);
 					else if (obj instanceof Long)
 						list.add((Long) obj);
-					else if (obj instanceof Double)
-						list.add((Double) obj);
 					else if (obj instanceof Float)
 						list.add((Float) obj);
 					else if (obj instanceof Date)
@@ -128,6 +128,8 @@ public class MySqlConnection {
 						updataData.setString(i, (String) getStatment[i]);
 					else if (getStatment[i] instanceof Integer)
 						updataData.setInt(i, (Integer) getStatment[i]);
+					else if (getStatment[i] instanceof Float)
+						updataData.setFloat(i, (Float) getStatment[i]);
 					else if (getStatment[i] instanceof Date)
 						updataData.setDate(i, (Date) getStatment[i]);
 				}
@@ -151,6 +153,8 @@ public class MySqlConnection {
 						updataData.setString(i, (String) getStatment[i]);
 					else if (getStatment[i] instanceof Integer)
 						updataData.setInt(i, (Integer) getStatment[i]);
+					else if (getStatment[i] instanceof Float)
+						updataData.setFloat(i, (Float) getStatment[i]);
 				}
 				updataData.executeUpdate();
 				con.commit();
@@ -173,6 +177,8 @@ public class MySqlConnection {
 						deleteData.setString(i, (String) getStatment[i]);
 					else if (getStatment[i] instanceof Integer)
 						deleteData.setInt(i, (Integer) getStatment[i]);
+					else if (getStatment[i] instanceof Float)
+						deleteData.setFloat(i, (Float) getStatment[i]);
 				}
 				deleteData.executeUpdate();
 				con.commit();

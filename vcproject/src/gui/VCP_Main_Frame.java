@@ -181,19 +181,19 @@ public class VCP_Main_Frame extends JFrame {
 				getRegisterPanel().getBtnSubmit().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
-								getPaymentFrame();
-								getPaymentFrame().setVisible(true);
+								getPaymentFrame(Float.parseFloat("565.0"));
+								getPaymentFrame().getBtnReturn().addActionListener(
+										new ActionListener() {
+											public void actionPerformed(ActionEvent e) {
+												getPaymentFrame().dispose();
+												enableMainFrame();
+											}
+										});
 								disableMainFrame();
 							}
 						});
 
-				getPaymentFrame().getBtnReturn().addActionListener(
-						new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								getPaymentFrame().dispose();
-								enableMainFrame();
-							}
-						});
+				
 			}
 		});
 
@@ -364,6 +364,13 @@ public class VCP_Main_Frame extends JFrame {
 	public Payment_Frame getPaymentFrame() {
 		if (paymentFrame == null) {
 			paymentFrame = new Payment_Frame();
+		}
+		return paymentFrame;
+	}
+	
+	public Payment_Frame getPaymentFrame(Float payment) {
+		if (paymentFrame == null) {
+			paymentFrame = new Payment_Frame(payment);
 		}
 		return paymentFrame;
 	}

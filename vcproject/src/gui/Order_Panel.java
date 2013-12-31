@@ -26,10 +26,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.swing.SwingConstants;
-
 import com.toedter.calendar.JDateChooser;
 
+import controler.FinancialCardController;
 import controler.MakeOrderController;
 import controler.VcpInfo;
 import entity.*;
@@ -73,8 +72,12 @@ public class Order_Panel extends JPanel {
 	private JTextField textFieldPayment;
 	private JLabel lblPayment;
 	private VcpInfo vcpInfo;
+	private Payment_Frame paymentFrame;
+	private boolean payFlag = true;
+	private FinancialCard fCard;
+	private Float timeToPay;
 
-	public Order_Panel(String host, int port,VcpInfo vcpInfo) {
+	public Order_Panel(String host, int port, VcpInfo vcpInfo) {
 		super();
 		this.host = host;
 		this.port = port;
@@ -153,7 +156,7 @@ public class Order_Panel extends JPanel {
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-		/////////////////////////////////////////////
+		// ///////////////////////////////////////////
 		textFieldCarNumber.setBounds(213, 49, 137, 24);
 		panelDetails.add(textFieldCarNumber);
 		textFieldCarNumber.setColumns(10);
@@ -227,12 +230,12 @@ public class Order_Panel extends JPanel {
 		comboBoxDepartureMin = new JComboBox<String>();
 		comboBoxDepartureMin.setBounds(283, 249, 65, 24);
 		panelDetails.add(comboBoxDepartureMin);
-		
+
 		lblPayment = new JLabel("Payment:");
 		lblPayment.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblPayment.setBounds(6, 282, 87, 22);
 		panelDetails.add(lblPayment);
-		
+
 		textFieldPayment = new JTextField();
 		textFieldPayment.setBounds(213, 282, 137, 24);
 		panelDetails.add(textFieldPayment);
@@ -277,8 +280,7 @@ public class Order_Panel extends JPanel {
 	private void fillComboBoxParkLot() {/* set into comboBox all the parking lot */
 		ArrayList<Parking_Lot> result = vcpInfo.getParkingLot();
 		for (Parking_Lot pLot : result) {
-			Integer pLotNum = pLot.getIdparkinglot();
-			getComboBoxParkLot().addItem(pLotNum.toString());
+			getComboBoxParkLot().addItem(pLot.getIdparkinglot().toString());
 		}
 
 	}
@@ -286,7 +288,7 @@ public class Order_Panel extends JPanel {
 	private void oneTime() {/* set panel gui to adapt one time client */
 		dateChooserArrival.setVisible(true);
 		dateChooserDeparture.setVisible(true);
-		
+
 		textFieldPayment.setVisible(true);
 
 		lblArrivalDay.setVisible(true);
@@ -398,10 +400,23 @@ public class Order_Panel extends JPanel {
 					DateFormat dateFormat = new SimpleDateFormat(
 							"yyyy-MM-dd HH:mm:ss");
 
+					String timeDeparture = comboBoxDepartureHour
+							.getSelectedItem().toString()
+							+ ":"
+							+ comboBoxDepartureMin.getSelectedItem().toString()
+							+ ":00";
+					if (timeDeparture.contains("Hours")
+							|| timeDeparture.contains("Min"))
+						order.setDepartureTime("00:00:00");
+					else
+						order.setDepartureTime(timeDeparture);
+
 					order.setCar(car);
 					order.setClient(client);
 					order.setIdparking(parkId);
 					order.setStatus(status);
+
+					timeToPay = (float) 0.0;
 
 					if (rdbtnTempClient.isSelected()) {
 						// get current date time with Date()
@@ -415,19 +430,11 @@ public class Order_Panel extends JPanel {
 								+ "(`carNum`,`idclient`,`idparking`,`arrivalDate`,`arrivalTime`,`departureTime`,`status`,`type`) "
 								+ "VALUES(?,?,?,?,?,?,?,?);";
 						order.setQuery(addOrderQuery);
-						String timeDeparture = comboBoxDepartureHour
-								.getSelectedItem().toString()
-								+ ":"
-								+ comboBoxDepartureMin.getSelectedItem()
-										.toString() + ":00";
-						if (timeDeparture.contains("Hours")
-								|| timeDeparture.contains("Min"))
-							order.setDepartureTime("00:00:00");
-						else
-							order.setDepartureTime(timeDeparture);
+						timeToPay = (float) 0.0;
+						payFlag = true;
+
 						/* Check if OneTime client is selected */
 					} else if (rdbtnOneTimeClient.isSelected()) {
-
 						String timeArrival = null;
 						String dateDeparture = null;
 
@@ -459,6 +466,13 @@ public class Order_Panel extends JPanel {
 						order.setArrivalTime(timeArrival);
 						order.setDepartureDate(dateDeparture);
 
+						Float onetime = getVcpInfo().getParkingPricingInfo()
+								.getOneTime();
+						timeToPay = (Float) (findHoursToPay(order) * onetime);
+						// Thread t1 = new Thread(new FrameRunnable(timeToPay));
+						// t1.start();
+						// getPaymentFrame(timeToPay);
+
 						order.setType("one time");
 						String addOrderQuery = "INSERT INTO `vcp_db`.`order`"
 								+ "(`carNum`,`idclient`,`idparking`,`arrivalDate`,`arrivalTime`,"
@@ -482,8 +496,40 @@ public class Order_Panel extends JPanel {
 					}
 
 					if (result.get(0).equals("done")) {
-						getMakeOrderController().showSeccussesMsg("Order done");
-						getBtnReturn().doClick();
+						if (payFlag) {
+							getBtnReturn().doClick();
+							FinancialCardController fController = new FinancialCardController(
+									host, port);
+							FinancialCard fCard = fController
+									.getFinancialCard(order.getClient()
+											.getIdClient());
+							String updateFCard;
+							if (fCard == null) {
+								fCard = new FinancialCard();
+								fCard.setIdClient(order.getClient()
+										.getIdClient());
+								fCard.setAmount(timeToPay);
+								updateFCard = "INSERT INTO `vcp_employ`.`financial_card`(`idclient`,`amount`) VALUES(?,?);";
+							} else {
+								fCard.setAmount(fCard.getAmount() + timeToPay);
+								updateFCard = "UPDATE `vcp_employ`.`financial_card` SET `amount` = ? WHERE `idclient` = ?;";
+							}
+							fCard.setQuery(updateFCard);
+							fController.sendQueryToServer(fCard);
+							if (fController.getResult().get(0).equals("done"))
+								getMakeOrderController().showSeccussesMsg(
+										"Order done");
+							else
+								throw new Exception(
+										"Cant update financial card");
+
+						}
+
+						payFlag = false;
+						/*
+						 * else { getMakeOrderController().showWarningMsg(
+						 * "Payment not received"); }
+						 */
 					} else {
 						getMakeOrderController().showWarningMsg(
 								result.get(0).toString());
@@ -531,6 +577,13 @@ public class Order_Panel extends JPanel {
 		return true;
 	}
 
+	public Payment_Frame getPaymentFrame(Float payment) {
+		if (paymentFrame == null) {
+			paymentFrame = new Payment_Frame(payment);
+		}
+		return paymentFrame;
+	}
+
 	public JButton getBtnSubmit() {
 		return btnSubmit;
 	}
@@ -550,4 +603,51 @@ public class Order_Panel extends JPanel {
 	public VcpInfo getVcpInfo() {
 		return vcpInfo;
 	}
+
+	public Long findHoursToPay(Order order) {
+		String dateStart = order.getArrivalDate() + " "
+				+ order.getArrivalTime();
+		String dateStop = order.getDepartureDate() + " "
+				+ order.getDepartureTime();
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		Date d1 = null;
+		Date d2 = null;
+		try {
+			d1 = format.parse(dateStart);
+			d2 = format.parse(dateStop);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		// Get msec from each, and subtract.
+		long diff = d2.getTime() - d1.getTime();
+		long diffSeconds = diff / 1000;
+		long diffMinutes = diff / (60 * 1000);
+		long diffHours = diff / (60 * 60 * 1000);
+		System.out.println("Time in seconds: " + diffSeconds + " seconds.");
+		System.out.println("Time in minutes: " + diffMinutes + " minutes.");
+		System.out.println("Time in hours: " + diffHours + " hours.");
+		if (diffHours < 1) {
+			return (long) 1;
+		} else {
+			return (long) Math.round(diffHours);
+		}
+
+	}
+
+	/*
+	 * public class FrameRunnable implements Runnable { private Float pay;
+	 * public FrameRunnable(Float pay){ this.pay = pay; }
+	 * 
+	 * public void run() {
+	 * getPaymentFrame(Float.parseFloat(pay.toString())).getPaymentPanel
+	 * ().getBtnPay() .addActionListener(new ActionListener() { public void
+	 * actionPerformed(ActionEvent arg0) { payFlag = getPayFrame()
+	 * .getPaymentPanel() .checkValidity(); if (payFlag) {
+	 * getPayFrame().showSeccussesMsg(); getPayFrame().dispose(); paymentFrame =
+	 * null; } else { getPayFrame().showWarningMsg(); } } }); } }
+	 */
+
 }

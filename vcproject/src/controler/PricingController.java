@@ -25,7 +25,7 @@ public class PricingController extends Controller {
 		}
 		return occasional;
 	}
-	public void setOccasional(float occasional) {
+	public void setOccasional(Float occasional) {
 		this.occasional = occasional;
 	}
 	public Float getOneTime() {
@@ -39,7 +39,7 @@ public class PricingController extends Controller {
 		}
 		return oneTime;
 	}
-	public void setOneTime(float oneTime) {
+	public void setOneTime(Float oneTime) {
 		this.oneTime = oneTime;
 	}
 	

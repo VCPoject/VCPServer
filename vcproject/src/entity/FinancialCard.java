@@ -3,8 +3,8 @@ package entity;
 public class FinancialCard implements Entity {
 
 	private String query;
-	private ClientEntity client;
-	private Float amount;
+	private Integer idclient;
+	private Float amount = (float) 0;
 	
 	@Override
 	public String getQuery() {
@@ -17,12 +17,12 @@ public class FinancialCard implements Entity {
 
 	}
 
-	public ClientEntity getClient() {
-		return client;
+	public Integer getIdClient() {
+		return idclient;
 	}
 
-	public void setClient(ClientEntity client) {
-		this.client = client;
+	public void setIdClient(Integer idclient) {
+		this.idclient = idclient;
 	}
 
 	public Float getAmount() {
@@ -35,8 +35,15 @@ public class FinancialCard implements Entity {
 
 	@Override
 	public Object[] toObject() {
-		Object[] obj = {getQuery(),getClient().getIdClient(),getAmount() };
-		return obj;
+		if(getQuery().contains("INSERT")){
+			Object[] obj = {getQuery(),getIdClient(),getAmount() };
+			return obj;
+		}else if(getQuery().contains("UPDATE")){
+			Object[] obj = {getQuery(),getIdClient(),getAmount() };
+			return obj;
+		}else{
+			Object[] obj = {getQuery(),getIdClient(),getAmount() };
+			return obj;
+		}
 	}
-
 }

@@ -10,6 +10,7 @@ import clientServer.ClientConsole;
 import entity.Car;
 import entity.ClientEntity;
 import entity.Employee;
+import entity.FinancialCard;
 import entity.Order;
 import entity.Parking_Places;
 
@@ -57,10 +58,11 @@ public abstract class Controller {
 			toServer = ((Order) entity).toObject();
 		}else if (entity instanceof Employee) {
 			toServer = ((Employee) entity).toObject();
-		} else if (entity instanceof Object[]) {
+		}else if (entity instanceof FinancialCard) {
+			toServer = ((FinancialCard) entity).toObject();
+		}else if (entity instanceof Object[]) {
 			toServer = (Object[]) entity;
 		}
-
 		server.accept(toServer);
 
 	}

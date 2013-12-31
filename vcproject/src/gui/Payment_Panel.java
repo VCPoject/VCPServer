@@ -16,16 +16,18 @@ import javax.swing.JTextField;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
 
 public class Payment_Panel extends JPanel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextField textFieldTotalPayment;
-	private JTextField textFieldCardExpiration;
 	private JTextField textFieldCardNumber;
 	private JTextField textFieldIdNumber;
 	private JTextField textFieldFullName;
@@ -39,11 +41,21 @@ public class Payment_Panel extends JPanel {
 	private JLabel lblCardExpiration;
 	private JLabel lblTotalPayment;
 	private JRadioButton rdbtnCash;
-	private JTextField textFieldTotalPaymentCash;
 	private JLabel lblTotalPaymentCash;
+	private JTextField textFieldTotalPayment;
+	private JComboBox<String> comboBoxMonth;
+	private JComboBox<String> comboBoxYear;
+	private JTextField textFieldTotalPaymentCash;
+	private Float needToPay;
 
 	public Payment_Panel() {
 		super();
+		initialize();
+	}
+
+	public Payment_Panel(Float needToPay) {
+		super();
+		this.needToPay = needToPay;
 		initialize();
 		listners();
 	}
@@ -105,17 +117,11 @@ public class Payment_Panel extends JPanel {
 		lblCardExpiration = new JLabel("Card Expiration:");
 		lblCardExpiration.setFont(new Font("Tahoma", Font.BOLD, 18));
 
-		textFieldTotalPayment = new JTextField();
-		textFieldTotalPayment.setBounds(171, 256, 55, 20);
-
 		lblTotalPayment = new JLabel("Total payment:");
 		lblTotalPayment.setFont(new Font("Tahoma", Font.BOLD, 18));
 
-		textFieldCardExpiration = new JTextField();
-		textFieldCardExpiration.setBounds(171, 223, 54, 20);
-
 		textFieldCardNumber = new JTextField();
-		textFieldCardNumber.setBounds(171, 186, 213, 20);
+		textFieldCardNumber.setBounds(171, 182, 213, 20);
 
 		textFieldIdNumber = new JTextField();
 		textFieldIdNumber.setBounds(171, 153, 213, 20);
@@ -123,14 +129,13 @@ public class Payment_Panel extends JPanel {
 		textFieldFullName = new JTextField();
 		textFieldFullName.setBounds(171, 124, 213, 20);
 
-		textFieldTotalPayment = new JTextField();
-		textFieldTotalPayment.setBounds(239, 160, 55, 20);
-
 		lblTotalPaymentCash = new JLabel("Total payment:");
 		lblTotalPaymentCash.setFont(new Font("Tahoma", Font.BOLD, 18));
 
 		textFieldTotalPaymentCash = new JTextField();
-
+		textFieldTotalPaymentCash.setColumns(10);
+		
+		//cash();
 		credit();
 
 	}
@@ -154,17 +159,17 @@ public class Payment_Panel extends JPanel {
 		lblIdNumber.setVisible(false);
 		lblCardNumber.setVisible(false);
 		lblCardExpiration.setVisible(false);
-		textFieldCardExpiration.setVisible(false);
-		textFieldCardExpiration.setVisible(false);
+		comboBoxMonth.setVisible(false);
+		comboBoxYear.setVisible(false);
+		comboBoxMonth.setVisible(false);
 		textFieldCardNumber.setVisible(false);
 		textFieldIdNumber.setVisible(false);
 		textFieldFullName.setVisible(false);
 		textFieldTotalPayment.setVisible(false);
 		lblTotalPayment.setVisible(false);
 
-		textFieldTotalPaymentCash.setBounds(239, 160, 55, 20);
+		textFieldTotalPaymentCash.setBounds(239, 160, 118, 20);
 		add(textFieldTotalPaymentCash);
-		textFieldTotalPaymentCash.setColumns(10);
 		textFieldTotalPaymentCash.setVisible(true);
 
 		lblTotalPaymentCash.setBounds(89, 156, 136, 22);
@@ -175,11 +180,12 @@ public class Payment_Panel extends JPanel {
 
 	public void credit() {
 
-		if (textFieldTotalPaymentCash.isVisible() && textFieldTotalPaymentCash != null)
+		if (textFieldTotalPaymentCash.isVisible()
+				&& textFieldTotalPaymentCash != null)
 			textFieldTotalPaymentCash.setVisible(false);
 		if (lblTotalPaymentCash.isVisible() && lblTotalPaymentCash != null)
 			lblTotalPaymentCash.setVisible(false);
-		lblFullName.setBounds(15, 120, 95, 22);
+		lblFullName.setBounds(15, 124, 95, 22);
 		add(lblFullName);
 		lblFullName.repaint();
 		lblFullName.setVisible(true);
@@ -194,22 +200,10 @@ public class Payment_Panel extends JPanel {
 		lblCardNumber.repaint();
 		lblCardNumber.setVisible(true);
 
-		lblCardExpiration.setBounds(15, 219, 146, 22);
+		lblCardExpiration.setBounds(15, 215, 146, 22);
 		add(lblCardExpiration);
 		lblCardExpiration.repaint();
 		lblCardExpiration.setVisible(true);
-
-		textFieldTotalPayment.setBounds(171, 256, 55, 20);
-		add(textFieldTotalPayment);
-		textFieldTotalPayment.setColumns(10);
-		textFieldTotalPayment.repaint();
-		textFieldTotalPayment.setVisible(true);
-
-		textFieldCardExpiration.setBounds(171, 223, 54, 20);
-		add(textFieldCardExpiration);
-		textFieldCardExpiration.setColumns(10);
-		textFieldCardExpiration.repaint();
-		textFieldCardExpiration.setVisible(true);
 
 		textFieldCardNumber.setBounds(171, 186, 213, 20);
 		add(textFieldCardNumber);
@@ -229,16 +223,64 @@ public class Payment_Panel extends JPanel {
 		textFieldFullName.repaint();
 		textFieldFullName.setVisible(true);
 
+		lblTotalPayment.setBounds(15, 244, 136, 22);
+		add(lblTotalPayment);
+
+		comboBoxMonth = new JComboBox<String>();
+		comboBoxMonth.setBounds(171, 215, 60, 20);
+		comboBoxMonth.addItem("Month");
+		for (Integer i = 1; i <= 12; i++) {
+			if (i <= 9)
+				comboBoxMonth.addItem("0" + i.toString());
+			else
+				comboBoxMonth.addItem(i.toString());
+		}
+		add(comboBoxMonth);
+
+		comboBoxYear = new JComboBox<String>();
+		comboBoxYear.setBounds(240, 215, 60, 20);
+		comboBoxYear.addItem("Year");
+		DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd");
+		Date date = new Date();
+		String[] dateStr = dateFormat.format(date).split("-");
+		Integer dateToStr = Integer.parseInt(dateStr[0]);
+		for (Integer i = 0; i <= 10; i++) {
+			Integer finalDate = dateToStr + i;
+			comboBoxYear.addItem(finalDate.toString());
+		}
+		add(comboBoxYear);
+
+		textFieldTotalPayment = new JTextField();
+		textFieldTotalPayment.setEditable(false);
+		textFieldTotalPayment.setBounds(174, 244, 210, 20);
 		add(textFieldTotalPayment);
 		textFieldTotalPayment.setColumns(10);
-		textFieldTotalPayment.repaint();
-		textFieldTotalPayment.setVisible(true);
-		
-		lblTotalPayment.setBounds(15, 252, 136, 22);
-		add(lblTotalPayment);
 		lblTotalPayment.repaint();
 		lblTotalPayment.setVisible(true);
-		
+
+	}
+
+	public boolean checkValidity() {
+		if (rdbtnCredit.isSelected()) {
+			String name = textFieldFullName.getText();
+			String idNumber = textFieldIdNumber.getText();
+			String cardNumber = textFieldCardNumber.getText();
+			String month = comboBoxMonth.getSelectedItem().toString();
+			String year = comboBoxYear.getSelectedItem().toString();
+
+			if (!name.isEmpty() && !idNumber.isEmpty() && !cardNumber.isEmpty()) {
+				if (!month.equals("Month") && !year.equals("Year")) {
+					synchronized (this) {
+						notifyAll();
+						return true;
+					}
+				} else
+					return false;
+			}
+			return false;
+		} else {
+			return true;
+		}
 
 	}
 
@@ -248,5 +290,15 @@ public class Payment_Panel extends JPanel {
 
 	public JButton getBtnPay() {
 		return btnPay;
+	}
+
+	public Float getNeedToPay() {
+		return needToPay;
+	}
+
+	public void setNeedToPay(Float needToPay) {
+		this.needToPay = needToPay;
+		textFieldTotalPayment.setText(needToPay.toString());
+		textFieldTotalPaymentCash.setText(needToPay.toString());
 	}
 }

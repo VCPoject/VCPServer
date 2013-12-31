@@ -2,18 +2,18 @@ package entity;
 
 public abstract class ClientEntity extends SystemUser {
 
-	private int idClient;
+	private Integer idClient;
 	private Car car;
 
 	public ClientEntity() {
 		super();
 	}
 
-	public int getIdClient() {
+	public Integer getIdClient() {
 		return idClient;
 	}
 
-	public void setIdClient(int idClient) {
+	public void setIdClient(Integer idClient) {
 		this.idClient = idClient;
 	}
 

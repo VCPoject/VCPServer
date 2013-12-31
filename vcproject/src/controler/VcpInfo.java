@@ -21,7 +21,7 @@ public class VcpInfo extends Controller {
 	public Pricing getParkingPricingInfo() {
 		if (pricing == null) {
 			PricingController pricingController = new PricingController();
-			Pricing pricing = new Pricing();
+			pricing = new Pricing();
 			pricing.setOccasional(pricingController.getOccasional());
 			pricing.setOneTime(pricingController.getOneTime());
 		}
