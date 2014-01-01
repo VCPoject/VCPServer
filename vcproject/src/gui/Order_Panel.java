@@ -580,11 +580,7 @@ public class Order_Panel extends JPanel {
 																 */
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ClientEntity client;/* Temp\OneTime client entity */
-					if (rdbtnTempClient.isSelected())
-						client = new TempClient();
-					else
-						client = new OneTimeClient();
+					ClientEntity client = new ClientEntity();
 
 					Car car = new Car();/* car entity */
 
@@ -619,10 +615,10 @@ public class Order_Panel extends JPanel {
 					if (parkId.equals("Select parking lot") && !rdbtnTempClient.isSelected())/* check if parking lot selected */
 						throw new Exception("You didnt select parking lot");
 					else if(parkId.equals("Select parking lot") && rdbtnTempClient.isSelected())
-						parkId = vcpInfo.getDefultParkingLot().getIdparkinglot().toString();
+						parkId = Integer.toString(vcpInfo.getDefultParkingLot().getIdparkinglot());
 
-					order.setCar(car);
-					order.setClient(client);
+					order.setCar(car.getCarNum());
+					order.setClient(client.getIdClient());
 					order.setIdparking(Integer.parseInt(parkId));
 					order.setStatus(status);
 
@@ -671,11 +667,11 @@ public class Order_Panel extends JPanel {
 							getBtnReturn().doClick();
 							FinancialCardController fController = new FinancialCardController(
 									host, port);
-							fCard = fController.getFinancialCard(order.getClient().getIdClient());
+							fCard = fController.getFinancialCard(order.getClient());
 							String updateFCard;
 							if (fCard == null) {
 								fCard = new FinancialCard();
-								fCard.setIdClient(order.getClient().getIdClient());
+								fCard.setIdClient(order.getClient());
 								fCard.setAmount(timeToPay);
 								updateFCard = "INSERT INTO `vcp_employ`.`financial_card`(`idclient`,`amount`) VALUES(?,?);";
 							} else {
@@ -792,8 +788,6 @@ public class Order_Panel extends JPanel {
 
 		// Get msec from each, and subtract.
 		long diff = d2.getTime() - d1.getTime();
-		long diffSeconds = diff / 1000;
-		long diffMinutes = diff / (60 * 1000);
 		long diffHours = diff / (60 * 60 * 1000);
 		if (diffHours < 1) {
 			return (long) 1;

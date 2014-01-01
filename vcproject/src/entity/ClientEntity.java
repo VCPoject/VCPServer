@@ -1,9 +1,8 @@
 package entity;
 
-public abstract class ClientEntity extends SystemUser {
+public class ClientEntity extends SystemUser {
 
 	private Integer idClient;
-	private Car car;
 
 	public ClientEntity() {
 		super();
@@ -16,13 +15,17 @@ public abstract class ClientEntity extends SystemUser {
 	public void setIdClient(Integer idClient) {
 		this.idClient = idClient;
 	}
+	
+	public Object[] toObject() {
+		if (getFirstName() != null && getLastName() != null) {
+			Object[] obj = {getQuery(), getIdClient(), getFirstName(), getLastName(),
+					getEmail() };
+			return obj;
+		} else {
+			Object[] obj = {getQuery(), getIdClient(), getEmail() };
+			return obj;
+		}
 
-	public Car getCar() {
-		return car;
-	}
-
-	public void setCarNum(Car car) {
-		this.car = car;
 	}
 
 }

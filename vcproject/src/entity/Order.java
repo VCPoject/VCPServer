@@ -1,9 +1,10 @@
 package entity;
 
 public class Order implements Entity {
-	private Car car;
-	private ClientEntity client;
-	private int idparking;
+	private Integer carNum;
+	private Integer idclient;
+	private Integer idorder;
+	private Integer idparking;
 	private String arrivalDate;
 	private String arrivalTime;
 	private String departureDate;
@@ -20,27 +21,27 @@ public class Order implements Entity {
 
 	}
 
-	public Car getCar() {
-		return car;
+	public Integer getCar() {
+		return carNum;
 	}
 
-	public void setCar(Car car) {
-		this.car = car;
+	public void setCar(Integer carNum) {
+		this.carNum = carNum;
 	}
 
-	public ClientEntity getClient() {
-		return client;
+	public Integer getClient() {
+		return idclient;
 	}
 
-	public void setClient(ClientEntity client) {
-		this.client = client;
+	public void setClient(Integer idclient) {
+		this.idclient = idclient;
 	}
 
-	public int getIdparking() {
+	public Integer getIdparking() {
 		return idparking;
 	}
 
-	public void setIdparking(int idparking) {
+	public void setIdparking(Integer idparking) {
 		this.idparking = idparking;
 	}
 
@@ -124,6 +125,14 @@ public class Order implements Entity {
 		this.type = type;
 	}
 
+	public Integer getIdorder() {
+		return idorder;
+	}
+
+	public void setIdorder(Integer idorder) {
+		this.idorder = idorder;
+	}
+
 	@Override
 	public String getQuery() {
 		return query;
@@ -138,12 +147,12 @@ public class Order implements Entity {
 	@Override
 	public Object[] toObject() {
 		if (this.getType().equals("temp")) {
-			Object[] obj = { getQuery(), getCar().getCarNum(), getClient().getIdClient(),
+			Object[] obj = { getQuery(), getCar(), getClient(),
 					getIdparking(), getArrivalDate(), getArrivalTime(),getDepartureDate(),getDepartureTime(),
 					getStatus(), getType() };
 			return obj;
 		} else if(this.getType().equals("one time")) {
-			Object[] obj = { getQuery(), getCar().getCarNum(), getClient().getIdClient(),
+			Object[] obj = { getQuery(), getCar(), getClient(),
 					getIdparking(), getArrivalDate(), getArrivalTime(),
 					getDepartureDate(), getDepartureTime(),
 					getStatus(), getType() };

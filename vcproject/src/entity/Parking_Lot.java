@@ -33,7 +33,7 @@ public class Parking_Lot  {
 	}
 
 	
-	public int getIdparkinglot() {
+	public Integer getIdparkinglot() {
 		return idparkinglot;
 	}
 
@@ -46,25 +46,13 @@ public class Parking_Lot  {
 		
 	}
 	
-	public int getDepth(){
-		return depth;
-	}
-	
 	public void setWidth(int width){
 		this.width=width;
 	}
-	
-	public int getWidth(){
-		return width;
-	}
 
-	public void setHight(int hight) {
+	public void setHight(Integer hight) {
 		this.hight=hight;
 		
-	}
-	
-	public int getHight(){
-		return hight;
 	}
 
 	public Integer getAltparkinglot() {
