@@ -50,12 +50,13 @@ public class VCP_Main_Frame extends JFrame {
 	private ParkingLot_Panel parkingLotPanel;
 	private SavingParkingPlace_Panel savingparkingplace;
 	private NotWorkingPlaces_Panel notworkingplaces;
+	private FindAltParkingLot findaltparkinglot;
 	private VcpInfo vcpInfo;
 
 	public VCP_Main_Frame(String host) {
 		super();
 		this.host = host;
-		//getVcpInfo();
+		getVcpInfo();
 		initialize();
 	}
 
@@ -317,7 +318,44 @@ public class VCP_Main_Frame extends JFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 				setContentPane(getNotWorkingPlaces_Panel());
+				getNotWorkingPlaces_Panel().getbtnExit().addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						JFrame frame = new JFrame();
+						int result = JOptionPane
+								.showConfirmDialog(
+										frame,
+										"Are you sure you want to exit the application?",
+										"Exit Application",
+										JOptionPane.YES_NO_OPTION);
+							if (result == JOptionPane.YES_OPTION) {
+							 setContentPane(getEmployeePanel());
+							
+							}
+						}
+				});
 				
+			}
+		});
+		
+		getEmployeePanel().getbtnFindAltParkin().addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getFindaltparkinglot());
+				getFindaltparkinglot().getbtnExit().addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						JFrame frame = new JFrame();
+						int result = JOptionPane
+								.showConfirmDialog(
+										frame,
+										"Are you sure you want to exit the application?",
+										"Exit Application",
+										JOptionPane.YES_NO_OPTION);
+							if (result == JOptionPane.YES_OPTION) {
+								findaltparkinglot=null;
+								setContentPane(getEmployeePanel());
+							}
+					}
+				});
 			}
 		});
 		
@@ -428,16 +466,23 @@ public class VCP_Main_Frame extends JFrame {
 	
 	public SavingParkingPlace_Panel getSavingParkingPlace_Panel(){
 		if(savingparkingplace==null)
-			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT);
+			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT,getVcpInfo().getParkingPlaces());
 		
 		return savingparkingplace;
 	}
 	
 	public NotWorkingPlaces_Panel getNotWorkingPlaces_Panel(){
 		if(notworkingplaces==null)
-			notworkingplaces=new NotWorkingPlaces_Panel(host,DEFAULT_PORT);
+			notworkingplaces=new NotWorkingPlaces_Panel(host,DEFAULT_PORT,getVcpInfo().getParkingPlaces());
 		
 		return notworkingplaces;
+	}
+	
+	public FindAltParkingLot getFindaltparkinglot(){
+		if(findaltparkinglot==null)
+			findaltparkinglot=new FindAltParkingLot(host, DEFAULT_PORT, getVcpInfo().getParkingLot());
+		
+		return findaltparkinglot;
 	}
 
 	public VcpInfo getVcpInfo() {

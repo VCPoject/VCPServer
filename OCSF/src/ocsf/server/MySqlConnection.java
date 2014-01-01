@@ -91,6 +91,7 @@ public class MySqlConnection {
 						list.add((Integer) obj);
 					else if (obj instanceof Long)
 						list.add((Long) obj);
+					else if (obj instanceof Double)
 						list.add((Double) obj);
 					else if (obj instanceof Float)
 						list.add((Float) obj);
@@ -130,14 +131,20 @@ public class MySqlConnection {
 					else if (getStatment[i] instanceof Date)
 						updataData.setDate(i, (Date) getStatment[i]);
 				}
-				updataData.executeUpdate();
+				
+				int result=updataData.executeUpdate();
 				con.commit();
-				setResult("done");
+				
+				if(result!=0)
+					setResult("done");
+				else
+					setResult("update failed");
 			}
 		} catch (Exception e) {
 			System.out.println("updateDB error:" + e.getMessage());
 			setResult("updateDB error:" + e.getMessage());
 		}
+		
 	}
 
 	private void insertDB(Connection con, Object[] getStatment) {

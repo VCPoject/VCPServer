@@ -29,18 +29,20 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private JComboBox <String> comboBoxLine;
 	private JComboBox <String> comboBoxParkingPlace;
 	private ParkingLot_controller parkinglotcontroller;
+	private ArrayList<Parking_Places> parkingPlaces=new ArrayList<Parking_Places>();
+	private ArrayList<Parking_Places> parkingPlaces1=new ArrayList<Parking_Places>();
 	private int parkinglotId;
 	private int floorNum;
 	private int lineNum;
 	private int parkingplaceNum;
 	private String host;
 	private int port;
-	private ArrayList<Parking_Places> parking_places=new ArrayList<Parking_Places>();
 	private static final long serialVersionUID = 1L;
 	
-	public SavingParkingPlace_Panel(String host, int port) {
+	public SavingParkingPlace_Panel(String host, int port, ArrayList<Parking_Places> parkingPlaces) {
 		super();
 		initialize();
+		this.parkingPlaces=parkingPlaces;
 		this.host=host;
 		this.port=port;
 		setLayout(null);
@@ -133,8 +135,14 @@ public class SavingParkingPlace_Panel extends JPanel {
 				
 				comboBoxParkinglot.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
+						try{
 						parkinglotId =Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
-						parking_places=getParkingLot_controller().getVaccantParkingPlaces(parkinglotId);
+						parkingPlaces1=getParkingLot_controller().getVaccantParkingPlaces(parkinglotId);
+						}
+						
+						catch(Exception e1){
+							parkinglotId=0;
+						}
 						
 					}
 				});
@@ -146,7 +154,13 @@ public class SavingParkingPlace_Panel extends JPanel {
 				
 				comboBoxFloor.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
+						try{
 						floorNum =Integer.parseInt(comboBoxFloor.getSelectedItem().toString());
+						}
+						
+						catch(Exception e1){
+							floorNum=0;
+						}
 					}
 				});
 			}
@@ -158,8 +172,14 @@ public class SavingParkingPlace_Panel extends JPanel {
 			
 				comboBoxLine.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
-						lineNum =Integer.parseInt(comboBoxLine.getSelectedItem().toString());
+						try{
+							lineNum =Integer.parseInt(comboBoxLine.getSelectedItem().toString());
 							fillParkingPlacecombox();
+						}
+						
+						catch(Exception e1){
+							lineNum=0;
+						}
 							
 					}
 					
@@ -179,7 +199,9 @@ public class SavingParkingPlace_Panel extends JPanel {
 							parkingplaceNum=Integer.parseInt(comboBoxParkingPlace.getSelectedItem().toString());
 						}
 						
-						catch(Exception e1){}
+						catch(Exception e1){
+							parkingplaceNum=0;
+						}
 					}
 				});
 			}
@@ -196,7 +218,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 	
 		comboBoxParkingPlace.removeAllItems();
 		comboBoxParkingPlace.addItem(" ");
-			for(Parking_Places parking_place: parking_places)
+			for(Parking_Places parking_place: parkingPlaces1)
 				if(parking_place.getFloor()==floorNum && parking_place.getRow()==lineNum)
 					comboBoxParkingPlace.addItem((Integer.toString(parking_place.getColumn())));
 	}
@@ -204,7 +226,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 	
 	public ParkingLot_controller getParkingLot_controller(){
 		if(parkinglotcontroller==null)
-			parkinglotcontroller=new ParkingLot_controller(this.host,this.port);
+			parkinglotcontroller=new ParkingLot_controller(this.host,this.port,parkingPlaces);
 		
 		return  parkinglotcontroller;
 	}

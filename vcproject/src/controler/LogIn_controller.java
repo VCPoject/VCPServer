@@ -22,8 +22,7 @@ public class LogIn_controller extends Controller{
 				username, password};
 		sendQueryToServer(sqlsMsg);
 		result = getResult();
-		
-		closeConnection();
+		//closeConnection();
 		if (username.equals(result.get(0).toString())
 				&& password.equals(result.get(1).toString())) {
 			
