@@ -1,58 +1,36 @@
 package controler;
 
 import java.util.ArrayList;
+
 import entity.Parking_Lot;
 import entity.Parking_Places;
 
 public class ParkingLot_controller extends Controller{
-	ArrayList<Parking_Lot> parkingLotList=new ArrayList<Parking_Lot>();
-	ArrayList<Parking_Places> parkingPlaces=new ArrayList<Parking_Places>();
-	private Parking_Lot p;
-	private Parking_Places parkingplace;
+	private ArrayList<Parking_Lot> parkingLotList;
+	private ArrayList<Parking_Places> parkingPlaces;
+	private ArrayList<Parking_Places> vaccantParkingPlaces=new ArrayList<Parking_Places>();
+	private ArrayList<Parking_Lot> availableParkingLots=new ArrayList<Parking_Lot>();
 	
-	public ParkingLot_controller(String host, int port) {
+	public ParkingLot_controller(ArrayList<Parking_Lot> parkingLot,String host,int port) {
 		super(host, port);
+		this.parkingLotList=parkingLot;
+	}
+
+	
+	public ParkingLot_controller(String host, int port, ArrayList<Parking_Places> parking_places) {
+		super(host, port);
+		this.parkingPlaces=parking_places; 
 	}
 	
-	public void setParkingLotEntity(ArrayList<Object>  result){
-		p=new Parking_Lot();
-		p.setIdparkinglot(Integer.parseInt(result.get(0).toString()));
-		p.setDepth(Integer.parseInt(result.get(1).toString()));
-		p.setHight(Integer.parseInt(result.get(2).toString()));
-		p.setDepth(Integer.parseInt(result.get(3).toString()));
-		p.setStatus(result.get(4).toString());
-		parkingLotList.add(p);
-	}
-	
-	public void setParkingPlaceEntity(ArrayList<Object>  result){
-		int i=0;
+	 
+	public ArrayList<Parking_Places>  getVaccantParkingPlaces(int parkinglotId){
 		
-		while(i<result.size()){
-		parkingplace=new Parking_Places();
-		parkingplace.setIdparkinglot(Integer.parseInt(result.get(i).toString()));
-		i++;
-		parkingplace.setIdorder(Integer.parseInt(result.get(i).toString()));
-		i++;
-		parkingplace.setFloor(Integer.parseInt(result.get(i).toString()));
-		i++;
-		parkingplace.setRow(Integer.parseInt(result.get(i).toString()));
-		i++;
-		parkingplace.setColumn(Integer.parseInt(result.get(i).toString()));
-		i++;
-		parkingplace.setStatus(result.get(i).toString());
-		i++;
-		parkingPlaces.add(parkingplace);
+		for(Parking_Places parkingplace:parkingPlaces){
+			if(parkingplace.getIdparkinglot()==parkinglotId && parkingplace.getStatus().equals("vaccant"))
+				vaccantParkingPlaces.add(parkingplace);
 		}
 		
-	}
-	
-	public ArrayList<Parking_Places>  getVaccantParkingPlaces(int parkinglotId){
-		ArrayList<Object> result = null;
-		Object[] sqlmsg={"SELECT * FROM vcp_db.parking_place WHERE status=? AND idparking=? ;","vaccant",parkinglotId};
-		sendQueryToServer(sqlmsg);
-		result = getResult();
-		setParkingPlaceEntity(result);
-		return parkingPlaces;
+		return vaccantParkingPlaces;
 	}
 	
 	public void saveParkingPlace(int parkinglotId,int floor,int line,int parkingPlaceNum){
@@ -61,6 +39,7 @@ public class ParkingLot_controller extends Controller{
 		+" "+ "and parkingNum=?;" ,"save",parkinglotId,floor,line,parkingPlaceNum};
 		sendQueryToServer(sqlmsg);
 		result=getResult();
+		closeConnection();
 		if(result.get(0).equals("done")) 
 			showSeccussesMsg("Parking Place has been saved");
 			
@@ -68,4 +47,99 @@ public class ParkingLot_controller extends Controller{
 			showWarningMsg("Couldn't save Parking Palce");
 	}
 	
+	public ArrayList<Parking_Places> getAllparkingLotplaces(int parkinglotId){
+		return parkingPlaces;
+	}
+	
+	public void updateParkingPlaceAsnotWorking(int parkinglotId,int parkingPlaceNum,int flag){
+		ArrayList<Object> result = null;
+		Object[] sqlmsg={ "UPDATE  vcp_db.parking_place SET status=? WHERE idparking=? and parkingNum=?;", "not working"
+		,parkinglotId,parkingPlaceNum};
+		sendQueryToServer(sqlmsg);
+		result=getResult();
+		
+		if(result.get(0).equals("done")){ 
+			if(flag==0)
+				showSeccussesMsg("Parking Place has been signed up as not working");
+			
+			for(Parking_Places parkingPlace:parkingPlaces){
+				if(parkingPlace.getIdparkinglot()==parkinglotId && parkingPlace.getColumn()==parkingPlaceNum)
+						parkingPlace.setStatus("not working");
+			}
+		}
+		
+		else{
+			if(flag==0)
+				showWarningMsg("Couldn't signed up Parking place as not working");
+		}
+}
+	
+	public void updateParkingLotAsNotWorking(int parkinglotId){
+		ArrayList<Object> result = null;
+		ArrayList<Parking_Places> parkingPlace= getAllparkingLotplaces(parkinglotId);
+		
+		for(Parking_Places parkingplace:parkingPlace)
+			updateParkingPlaceAsnotWorking(parkinglotId,parkingplace.getColumn(),1);
+		
+		Object[] sqlmsg={ "UPDATE  vcp_db.parking_lot SET status=? WHERE idparking=?;" ,"not working",parkinglotId};
+		sendQueryToServer(sqlmsg);
+		result=getResult();
+		closeConnection();
+		
+		if(result.get(0).equals("done")) {
+			showSeccussesMsg("Parking Lot has been signed up as not working");
+			for(Parking_Lot parkingLot:parkingLotList)
+				if(parkingLot.getIdparkinglot()==parkinglotId)
+					parkingLot.setStatus("not working");
+		}
+		
+		else
+			showWarningMsg("Couldn't signed up Parking lot as not working");
+	}
+	
+	public ArrayList<Parking_Lot> findAvailableParkingLots(){
+		for(Parking_Lot parkingLot: parkingLotList)
+			if(parkingLot.getStatus().equals("available"))
+				availableParkingLots.add(parkingLot);
+		
+		return availableParkingLots;
+	}
+	
+	public void updateParkingLotAsFull(int parkinglotId){
+		ArrayList<Object> result = null;
+		Object[] sqlmsg={ "UPDATE  vcp_db.parking_lot SET status=? WHERE idparking=?;" ,"full",parkinglotId};
+		sendQueryToServer(sqlmsg);
+		result=getResult();
+		closeConnection();
+		
+		if(result.get(0).equals("done")) {
+			showSeccussesMsg("Parking Lot has been signed up as full");
+			for(Parking_Lot parkingLot:parkingLotList)
+				if(parkingLot.getIdparkinglot()==parkinglotId)
+					parkingLot.setStatus("full");
+		}
+		
+		else
+			showWarningMsg("Couldn't signed up Parking lot as full");
+	}
+	
+	public void updateparkingLotAsAlt(int fullParkinglotId,int altParkinglotId){
+		ArrayList<Object> result = null;
+		Object[] sqlmsg={ "UPDATE vcp_db.parking_lot SET alt_parking_lot=? WHERE idparking=?;" ,altParkinglotId,
+		fullParkinglotId};
+		sendQueryToServer(sqlmsg);
+		result=getResult();
+		closeConnection();
+		
+		if(result.get(0).equals("done")) {
+			showSeccussesMsg("Parking Lot has been signed up as alternative parking lot");
+			for(Parking_Lot parkingLot:parkingLotList)
+				if(parkingLot.getIdparkinglot()==fullParkinglotId)
+					parkingLot.setAltparkinglot(altParkinglotId);
+		}
+		
+		else
+			showWarningMsg("Couldn't signed up Parking lot as alternative parking lot");
+		
+	}
 }

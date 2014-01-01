@@ -5,6 +5,7 @@ public class Parking_Lot  {
 	private Integer width;
 	private Integer depth;
 	private Integer hight;
+	private Integer altparkinglot;
 	private String status;
 	
 	public Parking_Lot(){
@@ -31,7 +32,8 @@ public class Parking_Lot  {
 		this.status = status;
 	}
 
-	public Integer getIdparkinglot() {
+	
+	public int getIdparkinglot() {
 		return idparkinglot;
 	}
 
@@ -44,12 +46,32 @@ public class Parking_Lot  {
 		
 	}
 	
-	public void setWidth(Integer width){
+	public int getDepth(){
+		return depth;
+	}
+	
+	public void setWidth(int width){
 		this.width=width;
 	}
+	
+	public int getWidth(){
+		return width;
+	}
 
-	public void setHight(Integer hight) {
+	public void setHight(int hight) {
 		this.hight=hight;
 		
+	}
+	
+	public int getHight(){
+		return hight;
+	}
+
+	public Integer getAltparkinglot() {
+		return altparkinglot;
+	}
+
+	public void setAltparkinglot(int altparkinglot) {
+		this.altparkinglot = altparkinglot;
 	}
 }

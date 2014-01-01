@@ -133,9 +133,11 @@ public class MySqlConnection {
 					else if (getStatment[i] instanceof Date)
 						updataData.setDate(i, (Date) getStatment[i]);
 				}
-				Integer result = updataData.executeUpdate();
+				
+				int result=updataData.executeUpdate();
 				con.commit();
-				if(result != 0)
+				
+				if(result!=0)
 					setResult("done");
 				else
 					setResult("update failed");
@@ -144,6 +146,7 @@ public class MySqlConnection {
 			System.out.println("updateDB error:" + e.getMessage());
 			setResult("updateDB error:" + e.getMessage());
 		}
+		
 	}
 
 	private void insertDB(Connection con, Object[] getStatment) {

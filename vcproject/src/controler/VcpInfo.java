@@ -1,6 +1,7 @@
 package controler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import entity.*;
 
@@ -11,6 +12,7 @@ public class VcpInfo extends Controller {
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
 	private boolean systemEnable = false;
+	
 
 	public VcpInfo(String host) {
 		super(host);
@@ -64,12 +66,12 @@ public class VcpInfo extends Controller {
 		if (result != null && !result.get(0).equals("No Result")) {
 			for (int i = 0; i < result.size(); i++) {
 				Parking_Lot pLot = new Parking_Lot();
-				pLot.setIdparkinglot(Integer.parseInt(result.get(i++)
-						.toString()));
+				pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
 				pLot.setDepth(Integer.parseInt(result.get(i++).toString()));
 				pLot.setHight(Integer.parseInt(result.get(i++).toString()));
 				pLot.setWidth(Integer.parseInt(result.get(i++).toString()));
-				pLot.setStatus(result.get(i).toString());
+				pLot.setStatus(result.get(i++).toString());
+				pLot.setAltparkinglot(Integer.parseInt(result.get(i).toString()));
 				tempLot.add(pLot);
 			}
 			setParkingLot(tempLot);
@@ -92,7 +94,7 @@ public class VcpInfo extends Controller {
 				pLot.setFloor(Integer.parseInt(result.get(i++).toString()));
 				pLot.setRow(Integer.parseInt(result.get(i++).toString()));
 				pLot.setColumn(Integer.parseInt(result.get(i++).toString()));
-				pLot.setStatus(result.get(i++).toString());
+				pLot.setStatus(result.get(i).toString());
 				tempPlace.add(pLot);
 			}
 			setParkingPlaces(tempPlace);
