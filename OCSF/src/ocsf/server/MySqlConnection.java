@@ -133,9 +133,12 @@ public class MySqlConnection {
 					else if (getStatment[i] instanceof Date)
 						updataData.setDate(i, (Date) getStatment[i]);
 				}
-				updataData.executeUpdate();
+				Integer result = updataData.executeUpdate();
 				con.commit();
-				setResult("done");
+				if(result != 0)
+					setResult("done");
+				else
+					setResult("update failed");
 			}
 		} catch (Exception e) {
 			System.out.println("updateDB error:" + e.getMessage());
@@ -156,9 +159,12 @@ public class MySqlConnection {
 					else if (getStatment[i] instanceof Float)
 						updataData.setFloat(i, (Float) getStatment[i]);
 				}
-				updataData.executeUpdate();
+				Integer result = updataData.executeUpdate();
 				con.commit();
-				setResult("done");
+				if(result != 0)
+					setResult("done");
+				else
+					setResult("update failed");
 			}
 		} catch (Exception e) {
 			System.out.println("insertDB error:" + e.getMessage());
@@ -180,9 +186,12 @@ public class MySqlConnection {
 					else if (getStatment[i] instanceof Float)
 						deleteData.setFloat(i, (Float) getStatment[i]);
 				}
-				deleteData.executeUpdate();
+				Integer result = deleteData.executeUpdate();
 				con.commit();
-				setResult("done");
+				if(result != 0)
+					setResult("done");
+				else
+					setResult("update failed");
 			}
 		} catch (Exception e) {
 			System.out.println("deleteDB error:" + e.getMessage());
