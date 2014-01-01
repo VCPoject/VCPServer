@@ -69,11 +69,8 @@ public class Order_Panel extends JPanel {
 	private JComboBox<String> comboBoxArrivalMin;
 	private JComboBox<String> comboBoxDepartureHour;
 	private JComboBox<String> comboBoxDepartureMin;
-	private JTextField textFieldPayment;
-	private JLabel lblPayment;
 	private VcpInfo vcpInfo;
 	private Payment_Frame paymentFrame;
-	private boolean payFlag = true;
 	private FinancialCard fCard;
 	private Float timeToPay;
 
@@ -231,16 +228,6 @@ public class Order_Panel extends JPanel {
 		comboBoxDepartureMin.setBounds(283, 249, 65, 24);
 		panelDetails.add(comboBoxDepartureMin);
 
-		lblPayment = new JLabel("Payment:");
-		lblPayment.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblPayment.setBounds(6, 282, 87, 22);
-		panelDetails.add(lblPayment);
-
-		textFieldPayment = new JTextField();
-		textFieldPayment.setBounds(213, 282, 137, 24);
-		panelDetails.add(textFieldPayment);
-		textFieldPayment.setColumns(10);
-
 		/* setting valid hours for user to chose */
 		comboBoxArrivalHour.addItem("Hour");
 		comboBoxDepartureHour.addItem("Hour");
@@ -253,7 +240,7 @@ public class Order_Panel extends JPanel {
 				comboBoxDepartureHour.addItem(i.toString());
 			}
 		}
-		// /////////////////////////////////////////
+		////////////////////////////////////////////
 
 		/* setting valid minutes for user to chose */
 		comboBoxArrivalMin.addItem("Min");
@@ -289,11 +276,8 @@ public class Order_Panel extends JPanel {
 		dateChooserArrival.setVisible(true);
 		dateChooserDeparture.setVisible(true);
 
-		textFieldPayment.setVisible(true);
-
 		lblArrivalDay.setVisible(true);
 		lblDepartureDay.setVisible(true);
-		lblPayment.setVisible(true);
 
 		lblTimeOfArrival.setBounds(6, 183, 197, 22);
 		lblTimeOfArrival.setVisible(true);
@@ -333,8 +317,6 @@ public class Order_Panel extends JPanel {
 		comboBoxDepartureHour.setBounds(213, 115, 65, 24);
 		comboBoxDepartureMin.setBounds(283, 115, 65, 24);
 		lblTimeOfDeparture.setBounds(6, 115, 197, 22);
-		textFieldPayment.setVisible(false);
-		lblPayment.setVisible(false);
 	}
 
 	private void listners() {
@@ -368,71 +350,84 @@ public class Order_Panel extends JPanel {
 																 */
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ClientEntity client;/* client entity */
-					if (rdbtnTempClient.isSelected()) {
+					ClientEntity client;/* Temp\OneTime client entity */
+					if (rdbtnTempClient.isSelected())
 						client = new TempClient();
-					} else {
+					else
 						client = new OneTimeClient();
-					}
 
 					Car car = new Car();/* car entity */
 					Order order = new Order();/* order entity */
 
 					ArrayList<Object> result = null;
-					String status = "did not checked in yet";
-
-					client.setIdClient(Integer.parseInt(textFieldIdNumber
-							.getText()));
-					client.setEmail(textFieldEmail.getText());
-
-					car.setCarNum(Integer.parseInt(textFieldCarNumber.getText()
-							.replaceAll("-", "")));
-					car.setClient(client);
-
-					int parkId;
-					if (comboBoxParkLot.getSelectedItem().toString()
-							.equals("Select parking lot"))
-						parkId = 1;
+					String status = "did not checked in yet";/* status that will be applied to new order that didnt checked in */
+					
+					/*	Check and set client id	*/
+					Integer cID = Integer.parseInt(textFieldIdNumber.getText());
+					if(!cID.toString().isEmpty())
+						client.setIdClient(cID);/* setting client id */
 					else
-						parkId = Integer.parseInt(comboBoxParkLot
-								.getSelectedItem().toString());
+						throw new Exception("You didnt enter any ID");
+					
+					/*	Check and set client email	*/
+					String cEmail = textFieldEmail.getText();
+					if(!cEmail.isEmpty() && cEmail.contains("@"))
+						client.setEmail(cEmail);/* setting client email */
+					else
+						throw new Exception("You didnt enter any email");
 
-					DateFormat dateFormat = new SimpleDateFormat(
-							"yyyy-MM-dd HH:mm:ss");
+					/*	Check and set car number and his owner	*/
+					Integer carNumber = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
+					if(!carNumber.toString().isEmpty()){
+					car.setCarNum(Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", "")));/* setting car number */
+					car.setClient(client);/* setting client entity to car entity */
+					}
+					else
+						throw new Exception("You didnt enter car number");
 
-					String timeDeparture = comboBoxDepartureHour
-							.getSelectedItem().toString()
-							+ ":"
-							+ comboBoxDepartureMin.getSelectedItem().toString()
-							+ ":00";
-					if (timeDeparture.contains("Hours")
-							|| timeDeparture.contains("Min"))
+					/*	Check for selected parking lot	*/
+					String parkId = comboBoxParkLot.getSelectedItem().toString();
+					if (parkId.equals("Select parking lot") && !rdbtnTempClient.isSelected())/* check if parking lot selected */
+						throw new Exception("You didnt select parking lot");
+					else if(parkId.equals("Select parking lot") && rdbtnTempClient.isSelected())
+						parkId = vcpInfo.getDefultParkingLot().getIdparkinglot().toString();
+						
+
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					
+					/* Checking for departure time selection */
+					String timeDeparture = comboBoxDepartureHour.getSelectedItem().toString() + 
+							":"	+ comboBoxDepartureMin.getSelectedItem().toString() + ":00";
+					if (timeDeparture.contains("Hours") && timeDeparture.contains("Min"))/* if not selected hours and minutes */
 						order.setDepartureTime("00:00:00");
-					else
+					else if(!timeDeparture.contains("Hours") && timeDeparture.contains("Min")){/* if not selected min */
+						timeDeparture = comboBoxDepartureHour.getSelectedItem().toString() + ":" + "00:00";
+						order.setDepartureTime(timeDeparture);
+					}
+					else/* if all selected */
 						order.setDepartureTime(timeDeparture);
 
 					order.setCar(car);
 					order.setClient(client);
-					order.setIdparking(parkId);
+					order.setIdparking(Integer.parseInt(parkId));
 					order.setStatus(status);
 
 					timeToPay = (float) 0.0;
 
-					if (rdbtnTempClient.isSelected()) {
+					if (rdbtnTempClient.isSelected()) {/* temp client selected */
 						// get current date time with Date()
 						Date date = new Date();
 						String[] dateAndTime = dateFormat.format(date).split(
 								"\\s");
 						order.setArrivalDate(dateAndTime[0]);
 						order.setArrivalTime(dateAndTime[1]);
+						order.setDepartureDate(dateAndTime[0]);
 						order.setType("temp");
 						String addOrderQuery = "INSERT INTO `vcp_db`.`order`"
-								+ "(`carNum`,`idclient`,`idparking`,`arrivalDate`,`arrivalTime`,`departureTime`,`status`,`type`) "
-								+ "VALUES(?,?,?,?,?,?,?,?);";
+								+ "(`carNum`,`idclient`,`idparking`,`arrivalDate`,`arrivalTime`,departureDate,`departureTime`,`status`,`type`) "
+								+ "VALUES(?,?,?,?,?,?,?,?,?);";
 						order.setQuery(addOrderQuery);
-						timeToPay = (float) 0.0;
-						payFlag = true;
-
+						
 						/* Check if OneTime client is selected */
 					} else if (rdbtnOneTimeClient.isSelected()) {
 						String timeArrival = null;
@@ -442,25 +437,22 @@ public class Order_Panel extends JPanel {
 								.getSelectedItem().toString();
 						String arrivalMin = comboBoxArrivalMin
 								.getSelectedItem().toString();
-						if (!arrivalHour.equals("Hour")
-								|| !arrivalMin.equals("Min")) {
-							timeArrival = comboBoxArrivalHour.getSelectedItem()
-									.toString()
-									+ ":"
-									+ comboBoxArrivalMin.getSelectedItem()
-											.toString() + ":00";
-
+						if (!arrivalHour.equals("Hour")	&& !arrivalMin.equals("Min")) {
+							timeArrival = comboBoxArrivalHour.getSelectedItem().toString()
+									+ ":" + comboBoxArrivalMin.getSelectedItem().toString() + ":00";
 						} else {
-							throw new Exception(
-									"You didn`t select arrivel time");
+							throw new Exception("You didn`t select arrivel time");
 						}
 						Date departureDate = dateChooserDeparture.getDate();
+						if(departureDate == null)
+							throw new Exception("You didnt select departure date");
 						DateFormat formatDate = new SimpleDateFormat(
 								"yyyy-MM-dd");
 						dateDeparture = formatDate.format(departureDate);
 
 						Date arrivalDate = dateChooserArrival.getDate();
-
+						if(arrivalDate == null)
+							throw new Exception("You didnt select arrival date");
 						String dateArrival = formatDate.format(arrivalDate);
 						order.setArrivalDate(dateArrival);
 						order.setArrivalTime(timeArrival);
@@ -469,11 +461,11 @@ public class Order_Panel extends JPanel {
 						Float onetime = getVcpInfo().getParkingPricingInfo()
 								.getOneTime();
 						timeToPay = (Float) (findHoursToPay(order) * onetime);
-						// Thread t1 = new Thread(new FrameRunnable(timeToPay));
-						// t1.start();
-						// getPaymentFrame(timeToPay);
-
+						System.out.println(timeToPay.toString());
+						if(timeToPay < 0)
+							throw new Exception("You didnt select valid time");
 						order.setType("one time");
+						
 						String addOrderQuery = "INSERT INTO `vcp_db`.`order`"
 								+ "(`carNum`,`idclient`,`idparking`,`arrivalDate`,`arrivalTime`,"
 								+ "`departureDate`,`departureTime`,status,`type`)"
@@ -496,18 +488,15 @@ public class Order_Panel extends JPanel {
 					}
 
 					if (result.get(0).equals("done")) {
-						if (payFlag) {
+						if (rdbtnOneTimeClient.isSelected()) {
 							getBtnReturn().doClick();
 							FinancialCardController fController = new FinancialCardController(
 									host, port);
-							FinancialCard fCard = fController
-									.getFinancialCard(order.getClient()
-											.getIdClient());
+							fCard = fController.getFinancialCard(order.getClient().getIdClient());
 							String updateFCard;
 							if (fCard == null) {
 								fCard = new FinancialCard();
-								fCard.setIdClient(order.getClient()
-										.getIdClient());
+								fCard.setIdClient(order.getClient().getIdClient());
 								fCard.setAmount(timeToPay);
 								updateFCard = "INSERT INTO `vcp_employ`.`financial_card`(`idclient`,`amount`) VALUES(?,?);";
 							} else {
@@ -516,24 +505,18 @@ public class Order_Panel extends JPanel {
 							}
 							fCard.setQuery(updateFCard);
 							fController.sendQueryToServer(fCard);
-							if (fController.getResult().get(0).equals("done"))
-								getMakeOrderController().showSeccussesMsg(
-										"Order done");
+							if (fController.getResult().get(0).equals("done") && rdbtnOneTimeClient.isSelected())
+								getMakeOrderController().showSeccussesMsg("Order done. "
+										+ "Your financial card update with amount of: " + fCard.getAmount());
 							else
-								throw new Exception(
-										"Cant update financial card");
-
-						}
-
-						payFlag = false;
-						/*
-						 * else { getMakeOrderController().showWarningMsg(
-						 * "Payment not received"); }
-						 */
+								throw new Exception("Cant update financial card");
+						}else if(rdbtnTempClient.isSelected()){
+							getMakeOrderController().showSeccussesMsg("Order done. "
+									+ "Payment will be taken at the exit from the parking lot");
+						}else throw new Exception("error while try to add new order");
 					} else {
-						getMakeOrderController().showWarningMsg(
-								result.get(0).toString());
-
+						String ErrMsg = result.get(0).toString();
+						throw new Exception(ErrMsg);
 					}
 				} catch (Exception e2) {
 					getMakeOrderController().showWarningMsg(
@@ -626,28 +609,10 @@ public class Order_Panel extends JPanel {
 		long diffSeconds = diff / 1000;
 		long diffMinutes = diff / (60 * 1000);
 		long diffHours = diff / (60 * 60 * 1000);
-		System.out.println("Time in seconds: " + diffSeconds + " seconds.");
-		System.out.println("Time in minutes: " + diffMinutes + " minutes.");
-		System.out.println("Time in hours: " + diffHours + " hours.");
 		if (diffHours < 1) {
 			return (long) 1;
 		} else {
 			return (long) Math.round(diffHours);
 		}
-
 	}
-
-	/*
-	 * public class FrameRunnable implements Runnable { private Float pay;
-	 * public FrameRunnable(Float pay){ this.pay = pay; }
-	 * 
-	 * public void run() {
-	 * getPaymentFrame(Float.parseFloat(pay.toString())).getPaymentPanel
-	 * ().getBtnPay() .addActionListener(new ActionListener() { public void
-	 * actionPerformed(ActionEvent arg0) { payFlag = getPayFrame()
-	 * .getPaymentPanel() .checkValidity(); if (payFlag) {
-	 * getPayFrame().showSeccussesMsg(); getPayFrame().dispose(); paymentFrame =
-	 * null; } else { getPayFrame().showWarningMsg(); } } }); } }
-	 */
-
 }

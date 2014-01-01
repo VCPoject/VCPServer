@@ -93,14 +93,17 @@ public abstract class Controller {
 
 	public void closeConnection() {
 		try {
-			server.getClient().closeConnection();
+			if(isConnected())
+				server.getClient().closeConnection();
 		} catch (IOException e) {
 			showWarningMsg("error while closing connection: " + e.getMessage());
 		}
 	}
 
 	public boolean isConnected() {
-		return server.isConnected();
+		if(server != null)
+			return server.isConnected();
+		else return false;
 	}
 
 }

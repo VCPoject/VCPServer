@@ -9,12 +9,15 @@ public class VcpInfo extends Controller {
 	private ArrayList<Parking_Lot> parkingLot;
 	private ArrayList<Parking_Places> parkingPlaces;
 	private Pricing pricing;
+	private Parking_Lot defultParkingLot;
+	private boolean systemEnable = false;
 
 	public VcpInfo(String host) {
 		super(host);
 		getParkingLotInfo();
 		getParkingPlacesInfo();
 		getParkingPricingInfo();
+		getDefultParkingLot();
 		closeConnection();
 	}
 
@@ -52,7 +55,7 @@ public class VcpInfo extends Controller {
 		this.parkingPlaces.add(parkingPlaces);
 	}
 
-	private void getParkingLotInfo() {
+	public ArrayList<Parking_Lot> getParkingLotInfo() {
 		Object[] parkingLotQuery = { "SELECT * FROM `vcp_db`.`parking_lot`;" };
 		sendQueryToServer(parkingLotQuery);
 		ArrayList<Object> result = getResult();
@@ -71,7 +74,7 @@ public class VcpInfo extends Controller {
 			}
 			setParkingLot(tempLot);
 		}
-
+		return parkingLot;
 	}
 
 	private void getParkingPlacesInfo() {
@@ -95,6 +98,26 @@ public class VcpInfo extends Controller {
 			setParkingPlaces(tempPlace);
 		}
 
+	}
+
+	public Parking_Lot getDefultParkingLot() {
+		if(defultParkingLot == null)
+		{
+			defultParkingLot = getParkingLotInfo().get(0);
+		}
+		return defultParkingLot;
+	}
+
+	public void setDefultParkingLot(Parking_Lot defultParkingLot) {
+		this.defultParkingLot = defultParkingLot;
+	}
+
+	public boolean isSystemEnable() {
+		return systemEnable;
+	}
+
+	public void setSystemEnable(boolean systemEnable) {
+		this.systemEnable = systemEnable;
 	}
 
 }

@@ -139,7 +139,7 @@ public class Order implements Entity {
 	public Object[] toObject() {
 		if (this.getType().equals("temp")) {
 			Object[] obj = { getQuery(), getCar().getCarNum(), getClient().getIdClient(),
-					getIdparking(), getArrivalDate(), getArrivalTime(),getDepartureTime(),
+					getIdparking(), getArrivalDate(), getArrivalTime(),getDepartureDate(),getDepartureTime(),
 					getStatus(), getType() };
 			return obj;
 		} else if(this.getType().equals("one time")) {
