@@ -145,6 +145,8 @@ public class VcpInfo extends Controller {
 	public void addParkingPlaces(Parking_Places parkingPlaces) {
 		this.parkingPlaces.add(parkingPlaces);
 	}
+	
+	
 
 	public ArrayList<Parking_Lot> getParkingLotInfo() {
 		Object[] parkingLotQuery = { "SELECT * FROM `vcp_db`.`parking_lot`;" };

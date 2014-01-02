@@ -387,7 +387,7 @@ public class Order_Panel extends JPanel {
 	private void fillComboBoxParkLot() {/* set into comboBox all the parking lot */
 		ArrayList<Parking_Lot> result = vcpInfo.getParkingLot();
 		for (Parking_Lot pLot : result) {
-			getComboBoxParkLot().addItem(pLot.getIdparkinglot().toString());
+			getComboBoxParkLot().addItem((Integer.toString(pLot.getIdparkinglot())));
 		}
 
 	}
@@ -615,7 +615,7 @@ public class Order_Panel extends JPanel {
 					if (parkId.equals("Select parking lot") && !rdbtnTempClient.isSelected())/* check if parking lot selected */
 						throw new Exception("You didnt select parking lot");
 					else if(parkId.equals("Select parking lot") && rdbtnTempClient.isSelected())
-						parkId = Integer.toString(vcpInfo.getDefultParkingLot().getIdparkinglot());
+						parkId = (Integer.toString(vcpInfo.getDefultParkingLot().getIdparkinglot()));
 
 					order.setCar(car.getCarNum());
 					order.setClient(client.getIdClient());
@@ -788,6 +788,8 @@ public class Order_Panel extends JPanel {
 
 		// Get msec from each, and subtract.
 		long diff = d2.getTime() - d1.getTime();
+		long diffSeconds = diff / 1000;
+		long diffMinutes = diff / (60 * 1000);
 		long diffHours = diff / (60 * 60 * 1000);
 		if (diffHours < 1) {
 			return (long) 1;

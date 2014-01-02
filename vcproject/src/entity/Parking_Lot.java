@@ -12,18 +12,6 @@ public class Parking_Lot  {
 		
 	}
 
-	public Integer getWidth() {
-		return width;
-	}
-
-	public Integer getDepth() {
-		return depth;
-	}
-
-	public Integer getHight() {
-		return hight;
-	}
-
 	public String getStatus() {
 		return status;
 	}
