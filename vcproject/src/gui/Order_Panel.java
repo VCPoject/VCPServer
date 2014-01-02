@@ -387,7 +387,7 @@ public class Order_Panel extends JPanel {
 	private void fillComboBoxParkLot() {/* set into comboBox all the parking lot */
 		ArrayList<Parking_Lot> result = vcpInfo.getParkingLot();
 		for (Parking_Lot pLot : result) {
-			getComboBoxParkLot().addItem(pLot.getIdparkinglot().toString());
+			getComboBoxParkLot().addItem((Integer.toString(pLot.getIdparkinglot())));
 		}
 
 	}
@@ -619,7 +619,7 @@ public class Order_Panel extends JPanel {
 					if (parkId.equals("Select parking lot") && !rdbtnTempClient.isSelected())/* check if parking lot selected */
 						throw new Exception("You didnt select parking lot");
 					else if(parkId.equals("Select parking lot") && rdbtnTempClient.isSelected())
-						parkId = vcpInfo.getDefultParkingLot().getIdparkinglot().toString();
+						parkId = (Integer.toString(vcpInfo.getDefultParkingLot().getIdparkinglot()));
 
 					order.setCar(car);
 					order.setClient(client);

@@ -2,6 +2,8 @@ package gui;
  
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
@@ -12,14 +14,15 @@ public class LogIn_Panel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private String host;
 	private JTextField usertxtfieled;
-	private JTextField pswdtxtfield;
 	private JButton btnexit;
 	private JButton btnsubmmit;
 	private LogIn_controller logIncontroller;
+	private JPasswordField passwordField;
 	
 
 	public LogIn_Panel(String host){
 		super();
+		setToolTipText("1234\r\n");
 		this.host = host;
 		initialize();
 		listners();
@@ -35,12 +38,6 @@ public class LogIn_Panel extends JPanel{
 		usertxtfieled.setBounds(136, 132, 228, 20);
 		add(usertxtfieled);
 		usertxtfieled.setColumns(10);
-		
-		 pswdtxtfield = new JTextField();
-		 pswdtxtfield.setText("1234");
-		 pswdtxtfield.setBounds(136, 217, 228, 20);
-		 add( pswdtxtfield);
-		 pswdtxtfield.setColumns(10);
 		
 		btnsubmmit = new JButton("Submmit");
 		btnsubmmit.setBounds(307, 274, 138, 56);
@@ -64,22 +61,37 @@ public class LogIn_Panel extends JPanel{
 		lblLogIn.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 36));
 		lblLogIn.setBounds(158, 39, 138, 46);
 		add(lblLogIn);
+		
+		passwordField = new JPasswordField();
+		passwordField.setToolTipText("1234");
+		passwordField.setBounds(136, 217, 228, 20);
+		add(passwordField);
 		getLogincontroller();
 	}
 	
 	public void listners(){
+		
+		/*passwordField.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				passwordField.setToolTipText();
+			}
+		});*/
 	}
 	
 	public JButton getBtnSubmit(){
 		return btnsubmmit;
 	}
 	
+	
 	public JButton getBtnExit(){
 		return btnexit;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public String getPswdText(){
-		return pswdtxtfield.getText();
+		return passwordField.getText();
 	}
 	
 	public String getUserText(){
@@ -98,5 +110,4 @@ public class LogIn_Panel extends JPanel{
 		return logIncontroller;
 		
 	}
-
 }
