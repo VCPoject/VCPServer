@@ -450,7 +450,7 @@ public class Order_Panel extends JPanel {
 		PayPan.setVisible(false);
 		comboBoxDepartureHour.setBounds(213, 115, 65, 24);
 		comboBoxDepartureMin.setBounds(283, 115, 65, 24);
-		lblTimeOfDeparture.setBounds(6, 115, 197, 22);
+		lblTimeOfDeparture.setBounds(6, 181, 197, 22);
 		btnPay.setVisible(false);
 		btnSubmit.setEnabled(true);
 		
@@ -487,7 +487,7 @@ public class Order_Panel extends JPanel {
 				try {
 					if(rdbtnCradit.isSelected()){
 						if(frmtdtxtfldCreditCard.getText().equals("                ")){
-							throw new Exception("You didnt insert cradic card");
+							throw new Exception("You didnt insert cradit card");
 						}
 						getMakeOrderController().showSeccussesMsg("Payment recived, you can press now submit");
 					}

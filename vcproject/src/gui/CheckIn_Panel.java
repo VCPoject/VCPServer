@@ -28,7 +28,7 @@ public class CheckIn_Panel extends JPanel {
 	}
 
 	private void listners() {
-
+		
 	}
 
 	private void initialize() {

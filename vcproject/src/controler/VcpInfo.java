@@ -9,6 +9,7 @@ public class VcpInfo extends Controller {
 
 	private ArrayList<Parking_Lot> parkingLot;
 	private ArrayList<Parking_Places> parkingPlaces;
+	private HashMap<String,Employee> employeeMap=new HashMap<String,Employee>();
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
 	private boolean systemEnable = false;
@@ -17,9 +18,9 @@ public class VcpInfo extends Controller {
 	public VcpInfo(String host) {
 		super(host);
 		getParkingLotInfo();
+		getEmployeeInfo();
 		getParkingPlacesInfo();
 		getParkingPricingInfo();
-		getDefultParkingLot();
 		closeConnection();
 	}
 
@@ -57,7 +58,13 @@ public class VcpInfo extends Controller {
 		this.parkingPlaces.add(parkingPlaces);
 	}
 	
+	public void setEmployee(HashMap<String,Employee> employeeMap){
+		this.employeeMap=employeeMap;
+	}
 	
+	public HashMap<String,Employee> getEmployee(){
+		return employeeMap;
+	}
 
 	public ArrayList<Parking_Lot> getParkingLotInfo() {
 		Object[] parkingLotQuery = { "SELECT * FROM `vcp_db`.`parking_lot`;" };
@@ -90,8 +97,7 @@ public class VcpInfo extends Controller {
 		if (result != null && !result.get(0).equals("No Result")) {
 			for (int i = 0; i < result.size(); i++) {
 				Parking_Places pLot = new Parking_Places();
-				pLot.setIdparkinglot(Integer.parseInt(result.get(i++)
-						.toString()));
+				pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
 				pLot.setIdorder(Integer.parseInt(result.get(i++).toString()));
 				pLot.setFloor(Integer.parseInt(result.get(i++).toString()));
 				pLot.setRow(Integer.parseInt(result.get(i++).toString()));
@@ -103,16 +109,35 @@ public class VcpInfo extends Controller {
 		}
 
 	}
+	
+	public void getEmployeeInfo(){
+		int i=0;
+		Object[] employeeQuery={"SELECT * FROM vcp_employ.employ;"};
+		sendQueryToServer(employeeQuery);
+		ArrayList<Object> result = getResult();
+		HashMap<String,Employee> employeeMap=new   HashMap<String,Employee>();
+		while(i<result.size()){
+			Employee employee=new Employee();
+			employee.setIdEmployee(Integer.parseInt(result.get(i++).toString()));
+			employee.setFirstName(result.get(i++).toString());
+			employee.setLastName(result.get(i++).toString());
+			employee.setRole(result.get(i++).toString());
+			employee.setUserName(result.get(i++).toString());
+			employee.setPassword(result.get(i++).toString());
+			employee.setEmail(result.get(i++).toString());
+			employee.setLogin(result.get(i++).toString());
+			employeeMap.put(employee.getUserName(),employee);
+		}
+		
+		setEmployee(employeeMap);
+	}
 
 	public Parking_Lot getDefultParkingLot() {
-		if(defultParkingLot == null)
-		{
-			defultParkingLot = getParkingLotInfo().get(0);
-		}
 		return defultParkingLot;
 	}
 
 	public void setDefultParkingLot(Parking_Lot defultParkingLot) {
+		showSeccussesMsg("You are now in parking lot:"+" "+defultParkingLot.getIdparkinglot());
 		this.defultParkingLot = defultParkingLot;
 	}
 

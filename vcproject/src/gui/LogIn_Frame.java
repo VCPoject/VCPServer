@@ -13,9 +13,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import controler.LogIn_controller;
 import controler.Reminder;
+import controler.VcpInfo;
+import entity.Employee;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
  
 public class LogIn_Frame extends JFrame{
 
@@ -23,6 +26,8 @@ public class LogIn_Frame extends JFrame{
 	private LogIn_Panel loginpanel;
 	private Reminder r;
 	private String host;
+	private VcpInfo vcpInfo;
+	
 	
 	public LogIn_Frame(String host){
 		super();
@@ -53,7 +58,8 @@ public class LogIn_Frame extends JFrame{
 	public LogIn_Panel getLogIn_Panel() { 
 		
 		if(loginpanel==null)
-			loginpanel=new LogIn_Panel(host);
+			loginpanel=new LogIn_Panel(host,getVcpInfo().getEmployee());
+		
 		return loginpanel; 
 	}
 	
@@ -68,4 +74,10 @@ public class LogIn_Frame extends JFrame{
 		
 	}
 	
+	public VcpInfo getVcpInfo() {
+		if(vcpInfo == null)
+			vcpInfo = new VcpInfo(host);
+		return vcpInfo;
+	
+	}
 }

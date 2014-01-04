@@ -1,7 +1,7 @@
 package entity; 
 
 public class Parking_Lot  {
-	private Integer idparkinglot;
+	private int idparkinglot;
 	private Integer width;
 	private Integer depth;
 	private Integer hight;

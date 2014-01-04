@@ -30,14 +30,16 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	private int floorNum;
 	private int lineNum;
 	private int parkingplaceNum;
+	private int defaultParkingLot;
 	private ArrayList<Parking_Places> parkingPlaces;
 	private JComboBox <String> comboBoxParkingLot;
 	private JComboBox <String> comboBoxParkingPlace;
 	private JComboBox <String> comboBoxLine;
 	private JComboBox <String> comboBoxFloor;
 	
-	public NotWorkingPlaces_Panel(String host,int port, ArrayList<Parking_Places> parkingPlaces) {
+	public NotWorkingPlaces_Panel(String host,int port, ArrayList<Parking_Places> parkingPlaces,int defaultParkingLot){
 		super();
+		this.defaultParkingLot=defaultParkingLot;
 		this.parkingPlaces= parkingPlaces;
 		this.host=host;
 		this.port=port;
@@ -132,8 +134,7 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	
 
 	public void fillParkinglotcombobox(){
-		for(Integer i=1;i<7;i++)
-			comboBoxParkingLot.addItem(i.toString());
+			comboBoxParkingLot.addItem((Integer.toString(defaultParkingLot)));
 	}
 	
 	public void fillFloorcomboBox(){
