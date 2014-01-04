@@ -2,8 +2,6 @@ package controler;
 
 import java.util.ArrayList;
 
-import entity.Employee;
-
 public class LogIn_controller extends Controller{
 
 	private ArrayList<Object> result;

@@ -24,7 +24,7 @@ public class FinancialCardController extends Controller {
 			ArrayList<Object> result = null;
 			result = getResult();
 			boolean res = result.get(0).equals("No Result");
-			if(!result.get(0).equals("No Result")){
+			if(!res){
 				financialCard.setIdClient((Integer)result.get(0));
 				financialCard.setAmount((Float)result.get(1));
 				return financialCard;

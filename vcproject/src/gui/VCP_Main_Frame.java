@@ -7,26 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
-import controler.LogIn_controller;
 import controler.VcpInfo;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import controler.LogIn_controller;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowListener;
 
 public class VCP_Main_Frame extends JFrame {
 
@@ -51,6 +36,7 @@ public class VCP_Main_Frame extends JFrame {
 	private SavingParkingPlace_Panel savingparkingplace;
 	private NotWorkingPlaces_Panel notworkingplaces;
 	private FindAltParkingLot findaltparkinglot;
+	private ResubscribePanel resubscribePanel;
 	private VcpInfo vcpInfo;
 
 	public VCP_Main_Frame(String host) {
@@ -182,24 +168,9 @@ public class VCP_Main_Frame extends JFrame {
 						new ActionListener() {
 							public void actionPerformed(ActionEvent arg0) {
 								setContentPane(getMainPanel());
+								registerPanel = null;
 							}
 						});
-				getRegisterPanel().getBtnSubmit().addActionListener(
-						new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								getPaymentFrame(Float.parseFloat("565.0"));
-								getPaymentFrame().getBtnReturn().addActionListener(
-										new ActionListener() {
-											public void actionPerformed(ActionEvent e) {
-												getPaymentFrame().dispose();
-												enableMainFrame();
-											}
-										});
-								disableMainFrame();
-							}
-						});
-
-				
 			}
 		});
 
@@ -364,6 +335,18 @@ public class VCP_Main_Frame extends JFrame {
 				setContentPane(getParkingLot_Panel());
 			}
 		});
+		
+		getMainPanel().getBtnResubscribe().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(getResubscribePanel());
+				getResubscribePanel().getBtnReturn().addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						setContentPane(getMainPanel());
+						resubscribePanel = null;
+					}
+				});
+			}
+		});
 			
 			
 		
@@ -407,7 +390,7 @@ public class VCP_Main_Frame extends JFrame {
 
 	public Register_Panel getRegisterPanel() {
 		if (registerPanel == null) {
-			registerPanel = new Register_Panel(getVcpInfo().getParkingLot());
+			registerPanel = new Register_Panel(host,DEFAULT_PORT,getVcpInfo());
 		}
 		return registerPanel;
 	}
@@ -474,21 +457,18 @@ public class VCP_Main_Frame extends JFrame {
 	public SavingParkingPlace_Panel getSavingParkingPlace_Panel(){
 		if(savingparkingplace==null)
 			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT,getVcpInfo().getParkingPlaces());
-		
 		return savingparkingplace;
 	}
 	
 	public NotWorkingPlaces_Panel getNotWorkingPlaces_Panel(){
 		if(notworkingplaces==null)
 			notworkingplaces=new NotWorkingPlaces_Panel(host,DEFAULT_PORT,getVcpInfo().getParkingPlaces());
-		
 		return notworkingplaces;
 	}
 	
 	public FindAltParkingLot getFindaltparkinglot(){
 		if(findaltparkinglot==null)
 			findaltparkinglot=new FindAltParkingLot(host, DEFAULT_PORT, getVcpInfo().getParkingLot());
-		
 		return findaltparkinglot;
 	}
 
@@ -498,4 +478,12 @@ public class VCP_Main_Frame extends JFrame {
 		return vcpInfo;
 	
 	}
+
+	public ResubscribePanel getResubscribePanel() {
+		if(resubscribePanel == null){
+			resubscribePanel = new ResubscribePanel(host, DEFAULT_PORT, getVcpInfo());
+		}
+		return resubscribePanel;
+	}
+
 }

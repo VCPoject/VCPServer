@@ -4,18 +4,12 @@ package gui;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
-
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import controler.LogIn_controller;
 import controler.Reminder;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
  
 public class LogIn_Frame extends JFrame{
 

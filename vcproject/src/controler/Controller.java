@@ -13,6 +13,7 @@ import entity.Employee;
 import entity.FinancialCard;
 import entity.Order;
 import entity.Parking_Places;
+import entity.Subscribe;
 
 public abstract class Controller {
 	final public static int DEFAULT_PORT = 5555;
@@ -60,6 +61,8 @@ public abstract class Controller {
 			toServer = ((Employee) entity).toObject();
 		}else if (entity instanceof FinancialCard) {
 			toServer = ((FinancialCard) entity).toObject();
+		}else if (entity instanceof Subscribe) {
+			toServer = ((Subscribe) entity).toObject();
 		}else if (entity instanceof Object[]) {
 			toServer = (Object[]) entity;
 		}

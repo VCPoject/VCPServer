@@ -132,6 +132,14 @@ public class MySqlConnection {
 						updataData.setFloat(i, (Float) getStatment[i]);
 					else if (getStatment[i] instanceof Date)
 						updataData.setDate(i, (Date) getStatment[i]);
+					else if (getStatment[i] == null){
+						try {
+							updataData.setNull(i, java.sql.Types.VARCHAR);
+						} catch (Exception e) {
+							updataData.setNull(i, java.sql.Types.INTEGER);
+						}
+						
+					}
 				}
 				
 				int result=updataData.executeUpdate();
