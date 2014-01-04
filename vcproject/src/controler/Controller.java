@@ -87,6 +87,7 @@ public abstract class Controller {
 			} catch (Exception e2) {
 				result = null;
 				flag = false;
+				showWarningMsg("getResult error: " + e2.getMessage());
 			}
 
 		}

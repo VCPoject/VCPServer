@@ -169,6 +169,13 @@ public class MySqlConnection {
 						updataData.setInt(i, (Integer) getStatment[i]);
 					else if (getStatment[i] instanceof Float)
 						updataData.setFloat(i, (Float) getStatment[i]);
+					else if (getStatment[i] == null){
+						try {
+							updataData.setNull(i, java.sql.Types.VARCHAR);
+						} catch (Exception e) {
+							updataData.setNull(i, java.sql.Types.INTEGER);
+						}
+					}
 				}
 				Integer result = updataData.executeUpdate();
 				con.commit();
