@@ -2,8 +2,8 @@ package entity;
 
 public class Car implements Entity {
 
-	private int carNum;
-	private ClientEntity client;
+	private Integer carNum;
+	private Integer idclient;
 	private String query;
 	
 	
@@ -11,20 +11,20 @@ public class Car implements Entity {
 		super();
 	}
 	
-	public int getCarNum() {
+	public Integer getCarNum() {
 		return carNum;
 	}
 
-	public void setCarNum(int carNum) {
+	public void setCarNum(Integer carNum) {
 		this.carNum = carNum;
 	}
 
-	public ClientEntity getClient() {
-		return this.client;
+	public Integer getClient() {
+		return this.idclient;
 	}
 
-	public void setClient(ClientEntity client) {
-		this.client = client;
+	public void setClient(Integer client) {
+		this.idclient = client;
 	}
 
 	@Override
@@ -40,8 +40,15 @@ public class Car implements Entity {
 
 	@Override
 	public Object[] toObject() {
-		Object[] obj = {getQuery(),getCarNum(),getClient().getIdClient()};
+		Object[] obj = {getQuery(),getCarNum(),getClient()};
 		return obj;
+	}
+	
+	public boolean equals(Car car) {
+		if(car.getCarNum().equals(this.getCarNum()) && car.getClient().equals(this.getClient()))
+			return true;
+		return false;
+		
 	}
 
 }

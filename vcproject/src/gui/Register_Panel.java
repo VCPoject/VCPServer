@@ -1,19 +1,18 @@
-package gui; 
+package gui;
 
 import java.awt.SystemColor;
-
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-
 import java.awt.Font;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
+import java.util.Date;
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.ButtonGroup;
@@ -21,13 +20,11 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.SwingConstants;
-
-import com.toedter.calendar.JDateChooser;
-
+import controler.RegisterController;
+import controler.VcpInfo;
 import entity.Car;
 import entity.Parking_Lot;
-import entity.Parking_Places;
-
+import entity.Subscribe;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -36,26 +33,46 @@ public class Register_Panel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String host;
+	private int port;
+	private RegisterController registerController;
 	private JButton btnReturn;
 	private final ButtonGroup buttonGroupSubscribeType = new ButtonGroup();
 	private final ButtonGroup buttonGroupCustomerType = new ButtonGroup();
-	private JTextField txtIdNumber;
+	private JFormattedTextField txtIdNumber;
 	private JFormattedTextField formattedTextFieldCarNumber;
 	private JButton btnSubmit;
 	private JButton btnAddCar;
 	private JComboBox<String> comboBoxAddCar;
 	private JComboBox<Integer> comboBoxParkingLot;
-	private JDateChooser startDateChooser;
 	private JComboBox<String> comboBoxDepartureHour;
 	private JComboBox<String> comboBoxDepartureMin;
 	private JRadioButton rdbtnFull;
 	private JRadioButton rdbtnPartial;
-	private ArrayList<Parking_Lot> parkingLot;
+	private VcpInfo vcpInfo;
 	private ArrayList<Car> cars;
+	private JLabel lblCreditCard;
+	private JPanel PayPan;
+	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
+	private JPanel panelCradit;
+	private JRadioButton rdbtnCradit;
+	private JRadioButton rdbtnCash;
+	private JLabel lblPayCash;
+	private JFormattedTextField frmtdtxtfldCreditCard;
+	private JComboBox<String> comboBoxMonth;
+	private JLabel lblCardExpiration;
+	private JComboBox<String> comboBoxYear;
+	private JButton btnPay;
+	private JLabel lblAmount;
+	private JTextField textFieldAmount;
+	private JRadioButton rdbtnPrivate;
+	private JRadioButton rdbtnBusiness;
 
-	public Register_Panel(ArrayList<Parking_Lot> parkingLot) {
+	public Register_Panel(String host, int port, VcpInfo vcpInfo) {
 		super();
-		this.parkingLot = parkingLot;
+		this.host = host;
+		this.port = port;
+		this.vcpInfo = vcpInfo;
 		initialize();
 		listners();
 	}
@@ -106,7 +123,7 @@ public class Register_Panel extends JPanel {
 		panelNewSubscribe.setBorder(new TitledBorder(UIManager
 				.getBorder("TitledBorder.border"), "New subscribe",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelNewSubscribe.setBounds(181, 225, 423, 251);
+		panelNewSubscribe.setBounds(180, 190, 423, 320);
 		add(panelNewSubscribe);
 		panelNewSubscribe.setLayout(null);
 
@@ -120,28 +137,34 @@ public class Register_Panel extends JPanel {
 		panelNewSubscribe.add(lblCarNumber);
 		lblCarNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
 
-		JLabel lblStartDate = new JLabel("Start date:");
-		lblStartDate.setBounds(8, 96, 114, 22);
-		panelNewSubscribe.add(lblStartDate);
-		lblStartDate.setFont(new Font("Tahoma", Font.BOLD, 18));
-
 		JLabel lblParkingLot = new JLabel("Parking lot:");
-		lblParkingLot.setBounds(8, 136, 114, 22);
+		lblParkingLot.setBounds(8, 91, 114, 22);
 		panelNewSubscribe.add(lblParkingLot);
 		lblParkingLot.setFont(new Font("Tahoma", Font.BOLD, 18));
 
-		txtIdNumber = new JTextField();
+		try {
+			MaskFormatter formatterID = new MaskFormatter("#########");
+			formatterID.setValidCharacters("0123456789");
+			txtIdNumber = new JFormattedTextField(formatterID);
+		} catch (ParseException e) {
+			JOptionPane.showMessageDialog(this,
+					"Formatter error: " + e.getMessage(), "Formatter ERRORE",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+
 		txtIdNumber.setBounds(159, 16, 255, 24);
 		panelNewSubscribe.add(txtIdNumber);
 		txtIdNumber.setColumns(10);
 
 		btnSubmit = new JButton("Submit");
-		btnSubmit.setBounds(325, 217, 89, 23);
+		btnSubmit.setEnabled(false);
+		btnSubmit.setBounds(325, 280, 89, 30);
 		panelNewSubscribe.add(btnSubmit);
 
 		comboBoxParkingLot = new JComboBox<Integer>();
-		comboBoxParkingLot.setBounds(159, 136, 255, 24);
-		for (Parking_Lot pLot : getParkingLot()) {
+		comboBoxParkingLot.setBounds(159, 91, 255, 24);
+		for (Parking_Lot pLot : getVcpInfo().getParkingLot()) {
 			comboBoxParkingLot.addItem(pLot.getIdparkinglot());
 		}
 		panelNewSubscribe.add(comboBoxParkingLot);
@@ -155,22 +178,32 @@ public class Register_Panel extends JPanel {
 		btnAddCar.setBounds(233, 56, 70, 24);
 		panelNewSubscribe.add(btnAddCar);
 
-		startDateChooser = new JDateChooser();
-		startDateChooser.setBounds(159, 96, 255, 24);
-		panelNewSubscribe.add(startDateChooser);
-
 		JLabel lblDepartureTime = new JLabel("Departure time:");
-		lblDepartureTime.setBounds(8, 176, 145, 22);
+		lblDepartureTime.setBounds(8, 131, 145, 22);
 		panelNewSubscribe.add(lblDepartureTime);
 		lblDepartureTime.setFont(new Font("Tahoma", Font.BOLD, 18));
 
+		comboBoxDepartureMin = new JComboBox<String>();
+		comboBoxDepartureMin.setBounds(324, 131, 90, 24);
+		panelNewSubscribe.add(comboBoxDepartureMin);
+
 		comboBoxDepartureHour = new JComboBox<String>();
-		comboBoxDepartureHour.setBounds(227, 176, 90, 24);
+		comboBoxDepartureHour.setBounds(227, 131, 90, 24);
+		Integer i = 0;
+		for (i = 0; i < 25; i++) {
+			if (i <= 9) {
+				comboBoxDepartureHour.addItem("0" + i.toString());
+				comboBoxDepartureMin.addItem("0" + i.toString());
+			} else {
+				comboBoxDepartureHour.addItem(i.toString());
+				comboBoxDepartureMin.addItem(i.toString());
+			}
+		}
 		panelNewSubscribe.add(comboBoxDepartureHour);
 
-		comboBoxDepartureMin = new JComboBox<String>();
-		comboBoxDepartureMin.setBounds(324, 176, 90, 24);
-		panelNewSubscribe.add(comboBoxDepartureMin);
+		for (i = 25; i < 60; i++) {
+			comboBoxDepartureMin.addItem(i.toString());
+		}
 
 		JLabel lblCustomerType = new JLabel("Customer type:");
 		lblCustomerType.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -186,14 +219,14 @@ public class Register_Panel extends JPanel {
 		add(panelSelectCustomer);
 		panelSelectCustomer.setLayout(null);
 
-		JRadioButton rdbtnPrivate = new JRadioButton("Private");
+		rdbtnPrivate = new JRadioButton("Private");
 		buttonGroupCustomerType.add(rdbtnPrivate);
 		rdbtnPrivate.setSelected(true);
 		rdbtnPrivate.setBackground(SystemColor.activeCaption);
 		rdbtnPrivate.setBounds(6, 16, 73, 23);
 		panelSelectCustomer.add(rdbtnPrivate);
 
-		JRadioButton rdbtnBusiness = new JRadioButton("Business");
+		rdbtnBusiness = new JRadioButton("Business");
 		buttonGroupCustomerType.add(rdbtnBusiness);
 		rdbtnBusiness.setBackground(SystemColor.activeCaption);
 		rdbtnBusiness.setBounds(81, 16, 82, 23);
@@ -212,36 +245,237 @@ public class Register_Panel extends JPanel {
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
+		PayPan = new JPanel();
+		PayPan.setBackground(SystemColor.activeCaption);
+		PayPan.setBorder(new TitledBorder(UIManager
+				.getBorder("TitledBorder.border"), "Payment",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		PayPan.setBounds(35, 164, 356, 106);
+		panelNewSubscribe.add(PayPan);
+		PayPan.setLayout(null);
+
+		panelCradit = new JPanel();
+		panelCradit.setBackground(SystemColor.activeCaption);
+		panelCradit.setBounds(10, 38, 337, 57);
+		PayPan.add(panelCradit);
+		panelCradit.setLayout(null);
+
+		lblCreditCard = new JLabel("Cradit card:");
+		lblCreditCard.setBounds(0, 0, 106, 22);
+		panelCradit.add(lblCreditCard);
+		lblCreditCard.setFont(new Font("Tahoma", Font.BOLD, 18));
+
+		MaskFormatter formatterCreditCard;
+		try {
+			formatterCreditCard = new MaskFormatter("################");
+			formatterCreditCard.setValidCharacters("0123456789");
+			frmtdtxtfldCreditCard = new JFormattedTextField(formatterCreditCard);
+		} catch (ParseException e) {
+			JOptionPane.showMessageDialog(this,
+					"Formatter error: " + e.getMessage(), "Formatter ERRORE",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+		frmtdtxtfldCreditCard.setBounds(200, 2, 137, 24);
+		panelCradit.add(frmtdtxtfldCreditCard);
+
+		lblCardExpiration = new JLabel("Card expiration:");
+		lblCardExpiration.setBounds(0, 33, 146, 22);
+		panelCradit.add(lblCardExpiration);
+		lblCardExpiration.setFont(new Font("Tahoma", Font.BOLD, 18));
+
+		comboBoxMonth = new JComboBox<String>();
+		comboBoxMonth.setBounds(200, 33, 65, 24);
+		panelCradit.add(comboBoxMonth);
+
+		comboBoxYear = new JComboBox<String>();
+		comboBoxYear.setBounds(269, 33, 67, 24);
+		panelCradit.add(comboBoxYear);
+
+		rdbtnCash = new JRadioButton("Cash");
+		rdbtnCash.setBackground(SystemColor.activeCaption);
+		buttonGroup_1.add(rdbtnCash);
+		rdbtnCash.setBounds(298, 10, 49, 23);
+		PayPan.add(rdbtnCash);
+
+		rdbtnCradit = new JRadioButton("Cradit");
+		rdbtnCradit.setBackground(SystemColor.activeCaption);
+		rdbtnCradit.setSelected(true);
+		buttonGroup_1.add(rdbtnCradit);
+		rdbtnCradit.setBounds(220, 10, 55, 23);
+		PayPan.add(rdbtnCradit);
+
+		JLabel lblPaymentType = new JLabel("Payment Type:");
+		lblPaymentType.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblPaymentType.setBounds(75, 11, 135, 22);
+		PayPan.add(lblPaymentType);
+
+		lblPayCash = new JLabel("Press button \"Pay Cash\"");
+		lblPayCash.setFont(new Font("Arial", Font.BOLD, 18));
+		lblPayCash.setBounds(70, 53, 216, 22);
+		PayPan.add(lblPayCash);
+
+		btnPay = new JButton("Pay cradit");
+		btnPay.setBounds(226, 280, 89, 30);
+		panelNewSubscribe.add(btnPay);
+
+		lblAmount = new JLabel("Amount:");
+		lblAmount.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblAmount.setBounds(8, 280, 78, 22);
+		panelNewSubscribe.add(lblAmount);
+
+		textFieldAmount = new JTextField();
+		textFieldAmount.setText("0.0");
+		textFieldAmount.setEditable(false);
+		textFieldAmount.setBounds(96, 280, 86, 24);
+		panelNewSubscribe.add(textFieldAmount);
+		textFieldAmount.setColumns(10);
+
+		for (i = 1; i <= 12; i++) {
+			if (i <= 9)
+				comboBoxMonth.addItem("0" + i.toString());
+			else
+				comboBoxMonth.addItem(i.toString());
+		}
+		DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd");
+		Date date = new Date();
+		String[] dateStr = dateFormat.format(date).split("-");
+		Integer dateToStr = Integer.parseInt(dateStr[0]);
+		for (i = 0; i <= 10; i++) {
+			Integer finalDate = dateToStr + i;
+			comboBoxYear.addItem(finalDate.toString());
+		}
 	}
 
 	private void listners() {
 		btnAddCar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(!txtIdNumber.getText().toString().isEmpty()){
-				boolean canAdd = true;
-				String carNumberStr = formattedTextFieldCarNumber.getText();
-				if (carNumberStr != null) {
-					for (int i = 0; i < comboBoxAddCar.getItemCount(); i++) {
-						if (comboBoxAddCar.getItemAt(i).equals(carNumberStr)) {
-							JOptionPane.showMessageDialog(new JFrame(),
-									"Add car error: "
-											+ "You already insert car number: "
-											+ carNumberStr);
-							canAdd = false;
+				try {
+					boolean canAdd = false;
+					String idclient = txtIdNumber.getText().toString();
+					if (idclient.equals("         "))
+						throw new Exception("Enter ID first");
+					String carNumberStr = formattedTextFieldCarNumber.getText()
+							.toString();
+					if (!carNumberStr.equals("  -   -  ")
+							&& carNumberStr != null) {
+						carNumberStr = carNumberStr.replace("-", "");
+						for (int i = 0; i < comboBoxAddCar.getItemCount(); i++) {
+							if (comboBoxAddCar.getItemAt(i)
+									.equals(carNumberStr)) {
+								throw new Exception(
+										"Add car error: You already insert car number: "
+												+ carNumberStr);
+							}
 						}
-					}
-					if (canAdd) {
-						
+						Car registerCar = new Car();
+						registerCar.setCarNum(Integer.parseInt(carNumberStr));
+						registerCar.setClient(Integer.parseInt(idclient));
+						for (Car car : getVcpInfo().getAllCars()) {
+							if (car.getCarNum().equals(Integer.parseInt(carNumberStr))
+									&& car.getClient().equals(Integer.parseInt(idclient))) {
+								canAdd = true;
+								break;
+							}
+						}
+						if (!canAdd) {
+							throw new Exception("Add car error: id " + idclient
+									+ "is not associated with car number: "
+									+ carNumberStr);
+						}
+
+						for (Subscribe findSubscribe : getVcpInfo()
+								.getAllSubscribed()) {
+							if (findSubscribe.getCarNum().equals(Integer.parseInt(carNumberStr)) && findSubscribe.getIdClient().equals(Integer.parseInt(idclient))) {
+								if (getRegisterController().isExpired(findSubscribe)) {
+									throw new Exception(carNumberStr + " is already registerd.\nYou can to make resubscribe to member id: " + findSubscribe.getSubscribeNum());
+								}
+								else{
+									throw new Exception(carNumberStr + " is already registerd and valid, no need to make register\n you can check-in with member id: " + findSubscribe.getSubscribeNum());
+								}
+							}else if(findSubscribe.getCarNum().equals(Integer.parseInt(carNumberStr))){
+								throw new Exception("Car number " + carNumberStr + " is allready registerd to other client");
+							}
+						}
+
 						comboBoxAddCar.setEnabled(true);
 						comboBoxAddCar.addItem(carNumberStr);
+						changePayment();
+						formattedTextFieldCarNumber.setText(null);
+					} else {
+						throw new Exception("You didn`t insert car number");
 					}
-					formattedTextFieldCarNumber.setText(null);
+				} catch (Exception e2) {
+					getRegisterController().showWarningMsg(e2.getMessage());
 				}
 
 			}
+		});
+
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					for (int i = 0; i < comboBoxAddCar.getItemCount(); i++) {
+						Subscribe newSubscribe = new Subscribe();
+						String carnumber = comboBoxAddCar.getItemAt(i).replace(
+								"-", "");
+						newSubscribe.setCarNum(Integer.parseInt(carnumber));
+						newSubscribe.setIdClient(Integer.parseInt(txtIdNumber
+								.getText().toString()));
+						Date date = new Date();
+						DateFormat dateFormat = new SimpleDateFormat(
+								"yyyy-MM-dd");
+						String todayDate = dateFormat.format(date);
+						newSubscribe.setStartDate(todayDate);
+						String subscribeQuery;
+						if (rdbtnPartial.isSelected()) {
+							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`idparking`,`startDate`,`subscribType`,`customerType`,`leavingTime`) VALUES(?,?,?,?,?,?,?);";
+							newSubscribe.setSubscribType(rdbtnPartial.getText());
+							newSubscribe.setIdparking(Integer
+									.parseInt(comboBoxParkingLot
+											.getSelectedItem().toString()));
+							newSubscribe.setDepartureTime(comboBoxDepartureHour
+									.getSelectedItem()
+									+ ":"
+									+ comboBoxDepartureMin.getSelectedItem()
+									+ ":00");
+						} else {
+							newSubscribe.setSubscribType(rdbtnFull.getText());
+							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`startDate`,`subscribType`,`customerType`) VALUES(?,?,?,?,?);";
+						}
+						if (rdbtnPrivate.isSelected())
+							newSubscribe.setCustomerType(rdbtnPrivate.getText());
+						else
+							newSubscribe.setCustomerType(rdbtnBusiness
+									.getText());
+						newSubscribe.setSubscribeNum(getVcpInfo()
+								.getAllSubscribed().size() + 1);
+						newSubscribe.setQuery(subscribeQuery);
+						getVcpInfo().getAllSubscribed().add(newSubscribe);
+						getRegisterController().addNewSubscribe(newSubscribe);
+						if (!getRegisterController().getResult().get(0)
+								.equals("done"))
+							throw new Exception(
+									"Error while try to add subscribe to database");
+						getRegisterController()
+								.showSeccussesMsg(
+										"Your subscribe number for car "
+												+ carnumber
+												+ " is: "
+												+ newSubscribe
+														.getSubscribeNum()
+												+ "\n"
+												+ "you will need to enter him when you make check-in");
+					}
+					getRegisterController().showSeccussesMsg(
+							"Wellcome!\nYou are now Subscribe.");
+				} catch (Exception e2) {
+					getRegisterController().showWarningMsg(e2.getMessage());
+				}
+
 			}
 		});
-		
+
 		rdbtnFull.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				comboBoxParkingLot.setEnabled(false);
@@ -249,7 +483,7 @@ public class Register_Panel extends JPanel {
 				comboBoxDepartureMin.setEnabled(false);
 			}
 		});
-		
+
 		rdbtnPartial.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				comboBoxParkingLot.setEnabled(true);
@@ -257,6 +491,58 @@ public class Register_Panel extends JPanel {
 				comboBoxDepartureMin.setEnabled(true);
 			}
 		});
+
+		rdbtnCradit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelCradit.setVisible(true);
+				btnPay.setText("Pay cradit");
+			}
+		});
+
+		rdbtnCash.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				panelCradit.setVisible(false);
+				btnPay.setText("Pay cash");
+			}
+		});
+
+		btnPay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					if (rdbtnCradit.isSelected()) {
+						if (frmtdtxtfldCreditCard.getText().equals(
+								"                ")) {
+							throw new Exception("You didnt insert cradit card");
+						}
+					}
+
+					if (textFieldAmount.getText().equals("0.0"))
+						throw new Exception("You didn't insert any car");
+					getRegisterController().showSeccussesMsg(
+							"Payment recived, you can press now submit");
+					btnSubmit.setEnabled(true);
+					btnPay.setEnabled(false);
+				} catch (Exception e) {
+					getRegisterController().showWarningMsg(
+							"Error in Payment: " + e.getMessage());
+				}
+
+			}
+		});
+	}
+
+	/*
+	 * return true if client is not subscribe but in the system and his car is
+	 * ok
+	 */
+	public boolean checkForClientValidity(Integer clientID) throws Exception {
+		for (Subscribe subscribe : getVcpInfo().getAllSubscribed()) {
+			if (subscribe.getIdClient().equals(clientID)) {
+
+			}
+		}
+
+		return true;
 	}
 
 	public JButton getBtnReturn() {
@@ -267,13 +553,39 @@ public class Register_Panel extends JPanel {
 		return btnSubmit;
 	}
 
-	public ArrayList<Parking_Lot> getParkingLot() {
-		return parkingLot;
-	}
-
 	public ArrayList<Car> getCars() {
 		if (cars == null)
 			cars = new ArrayList<Car>();
 		return cars;
+	}
+
+	public VcpInfo getVcpInfo() {
+		return vcpInfo;
+	}
+
+	private RegisterController getRegisterController() {
+		if (registerController == null || !registerController.isConnected()) {
+			registerController = new RegisterController(host, port);
+		}
+
+		return registerController;
+	}
+
+	private void changePayment() {
+		String payment;
+		if (rdbtnFull.isSelected())
+			if (comboBoxAddCar.getItemCount() > 1)
+				payment = getVcpInfo().getParkingPricingInfo()
+						.getFull(comboBoxAddCar.getItemCount()).toString();
+			else
+				payment = getVcpInfo().getParkingPricingInfo().getFullOneCar()
+						.toString();
+		else if (comboBoxAddCar.getItemCount() > 1)
+			payment = getVcpInfo().getParkingPricingInfo()
+					.getPartially(comboBoxAddCar.getItemCount()).toString();
+		else
+			payment = getVcpInfo().getParkingPricingInfo().getPartiallyOneCar()
+					.toString();
+		textFieldAmount.setText(payment);
 	}
 }

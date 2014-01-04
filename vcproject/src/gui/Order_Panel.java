@@ -468,15 +468,8 @@ public class Order_Panel extends JPanel {
 				TempClient();
 			}
 		});
-
-		rdbtnOneTimeClient.addActionListener(new ActionListener() {/*
-																	 * listener
-																	 * to one
-																	 * time
-																	 * client
-																	 * radio
-																	 * butten
-																	 */
+		/*	Listener to one time/temp client radio button	*/
+		rdbtnOneTimeClient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				oneTime();
 			}
@@ -487,7 +480,7 @@ public class Order_Panel extends JPanel {
 				try {
 					if(rdbtnCradit.isSelected()){
 						if(frmtdtxtfldCreditCard.getText().equals("                ")){
-							throw new Exception("You didnt insert cradic card");
+							throw new Exception("You didnt insert cradit card");
 						}
 						getMakeOrderController().showSeccussesMsg("Payment recived, you can press now submit");
 					}
@@ -605,7 +598,7 @@ public class Order_Panel extends JPanel {
 					Integer carNumber = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
 					if(!carNumber.toString().isEmpty()){
 					car.setCarNum(Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", "")));/* setting car number */
-					car.setClient(client);/* setting client entity to car entity */
+					car.setClient(client.getIdClient());/* setting client entity to car entity */
 					}
 					else
 						throw new Exception("You didnt enter car number");
@@ -709,7 +702,7 @@ public class Order_Panel extends JPanel {
 	protected boolean checkIfCarExist(Car car) {
 		Object[] isCarExists = {
 				"SELECT count(`car`.`carNum`) FROM `vcp_db`.`car` WHERE carNum = ? AND idclient = ?;",
-				car.getCarNum(), car.getClient().getIdClient() };
+				car.getCarNum(), car.getClient() };
 		getMakeOrderController().searchCar(isCarExists);
 		ArrayList<Object> result = getMakeOrderController().getResult();
 		if (result.get(0).toString().equals("0")) {

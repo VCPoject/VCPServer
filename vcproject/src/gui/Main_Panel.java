@@ -23,6 +23,7 @@ public class Main_Panel extends JPanel {
 	private JButton btnComplain;
 	private JButton btnComplainFu;
 	private JButton btnDofek;
+	private JButton btnResubscribe;
 	
 	public Main_Panel() {
 		super();
@@ -79,6 +80,10 @@ public class Main_Panel extends JPanel {
 		btnDofek = new JButton("dofek");
 		btnDofek.setBounds(217, 319, 89, 23);
 		add(btnDofek);
+		
+		btnResubscribe = new JButton("ReSubscribe");
+		btnResubscribe.setBounds(499, 259, 127, 35);
+		add(btnResubscribe);
 	}
 
 	public JButton getBtnExit() {
@@ -117,5 +122,9 @@ public class Main_Panel extends JPanel {
 
 	public JButton getBtnDofek() {
 		return btnDofek;
+	}
+
+	public JButton getBtnResubscribe() {
+		return btnResubscribe;
 	}
 }

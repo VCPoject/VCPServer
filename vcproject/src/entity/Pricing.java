@@ -2,39 +2,39 @@ package entity;
 
 public class Pricing implements Entity {
 
-	private float occasional;
-	private float oneTime;
+	private Float occasional;
+	private Float oneTime;
 	private String query;
 	
-	public float getOccasional() {
+	public Float getOccasional() {
 		return occasional;
 	}
 
-	public void setOccasional(float occasional) {
+	public void setOccasional(Float occasional) {
 		this.occasional = occasional;
 	}
 
-	public float getOneTime() {
+	public Float getOneTime() {
 		return oneTime;
 	}
 
-	public void setOneTime(float oneTime) {
+	public void setOneTime(Float oneTime) {
 		this.oneTime = oneTime;
 	}
 
-	public float getPartiallyOneCar() {
+	public Float getPartiallyOneCar() {
 		return 60*getOneTime();
 	}
 
-	public float getPartially(int numOfCars) {
+	public Float getPartially(Integer numOfCars) {
 		return (float) (60*getOneTime()*numOfCars*0.9);
 	}
 
-	public float getFullOneCar() {
+	public Float getFullOneCar() {
 		return 70*getOneTime();
 	}
 
-	public float getFull(int numOfCars) {
+	public Float getFull(int numOfCars) {
 		return 70*getOneTime()*numOfCars;
 	}
 
