@@ -1,14 +1,16 @@
 package controler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import entity.*;
 
-public class VcpInfo extends Controller implements Runnable {
+public class VcpInfo extends Controller{
 
 	private ArrayList<Parking_Lot> parkingLot;
 	private ArrayList<Parking_Places> parkingPlaces;
-	private HashMap<String,Employee> employeeMap=new HashMap<String,Employee>();
+	private ArrayList<ClientEntity> allClients;
+	private HashMap<String, Employee> employeeMap;
 	private ArrayList<Order> allOrders;
 	private ArrayList<Car> allCars;
 	private ArrayList<Subscribe> allSubscribed;
@@ -18,10 +20,19 @@ public class VcpInfo extends Controller implements Runnable {
 
 	public VcpInfo(String host) {
 		super(host);
-		Thread t1 = new Thread(this);
 		getEmployeeInfo();
+		getParkingLotInfo();
+		getParkingPlacesInfo();
+		getDefultParkingLot();
+		getAllClients();
+		getAllOrders();
+		getAllSubscribed();
+		getAllCars();
+		getParkingPricingInfo();
+		closeConnection();
 	}
 
+	public ArrayList<Car> getAllCars() {
 		if (allCars == null) {
 			Object[] getallcars = { "SELECT * FROM `vcp_db`.`car`;" };
 			sendQueryToServer(getallcars);
@@ -55,27 +66,22 @@ public class VcpInfo extends Controller implements Runnable {
 			if (result != null && !result.get(0).equals("No Result")) {
 				for (int i = 0; i < result.size(); i++) {
 					Subscribe addsubscribe = new Subscribe();
-					addsubscribe.setSubscribeNum(Integer.parseInt(result.get(
-							i++).toString()));
-					addsubscribe.setIdClient(Integer.parseInt(result.get(i++)
-							.toString()));
-					addsubscribe.setCarNum(Integer.parseInt(result.get(i++)
-							.toString()));
+					addsubscribe.setSubscribeNum(Integer.parseInt(result.get(i++).toString()));
+					addsubscribe.setIdClient(Integer.parseInt(result.get(i++).toString()));
+					addsubscribe.setCarNum(Integer.parseInt(result.get(i++).toString()));
 					if (!result.get(i).toString().equals("no value"))
-						addsubscribe.setIdparking(Integer.parseInt(result.get(
-								i++).toString()));
+						addsubscribe.setIdparking(Integer.parseInt(result.get(i++).toString()));
 					else
 						i++;
 					addsubscribe.setStartDate(result.get(i++).toString());
 					addsubscribe.setSubscribType(result.get(i++).toString());
 					addsubscribe.setCustomerType(result.get(i++).toString());
 					if (!result.get(i).toString().equals("no value"))
-						addsubscribe.setDepartureTime(result.get(i++)
-								.toString());
+						addsubscribe.setDepartureTime(result.get(i++).toString());
 					else
 						i++;
-					addsubscribe.setEntriesDay(Integer.parseInt(result.get(i)
-							.toString()));
+					if(!result.get(i).toString().equals("no value"))
+						addsubscribe.setEntriesDay(Integer.parseInt(result.get(i).toString()));
 					tempSubscribeList.add(addsubscribe);
 				}
 			}
@@ -94,16 +100,13 @@ public class VcpInfo extends Controller implements Runnable {
 			sendQueryToServer(getallorders);
 			ArrayList<Object> result = getResult();
 			ArrayList<Order> tempOrderList = new ArrayList<Order>();
-			if (result != null && !result.get(0).equals("No Result")) {
+			if (result != null && !result.get(0).equals("No Result") && !result.get(0).toString().equals("no value")) {
 				for (int i = 0; i < result.size(); i++) {
 					Order order = new Order();
-					order.setIdorder(Integer.parseInt(result.get(i++)
-							.toString()));
+					order.setIdorder(Integer.parseInt(result.get(i++).toString()));
 					order.setCar(Integer.parseInt(result.get(i++).toString()));
-					order.setClient(Integer
-							.parseInt(result.get(i++).toString()));
-					order.setIdparking(Integer.parseInt(result.get(i++)
-							.toString()));
+					order.setClient(Integer.parseInt(result.get(i++).toString()));
+					order.setIdparking(Integer.parseInt(result.get(i++).toString()));
 					order.setArrivalDate(result.get(i++).toString());
 					order.setArrivalTime(result.get(i++).toString());
 					order.setDepartureDate(result.get(i++).toString());
@@ -211,12 +214,6 @@ public class VcpInfo extends Controller implements Runnable {
 		this.parkingPlaces.add(parkingPlaces);
 	}
 
-	public void setEmployee(HashMap<String,Employee> employeeMap){
-		this.employeeMap=employeeMap;
-	}
-	public HashMap<String,Employee> getEmployee(){
-		return employeeMap;
-	}
 	public ArrayList<Parking_Lot> getParkingLotInfo() {
 		if (parkingLot == null) {
 			Object[] parkingLotQuery = { "SELECT * FROM `vcp_db`.`parking_lot`;" };
@@ -253,10 +250,12 @@ public class VcpInfo extends Controller implements Runnable {
 			if (result != null && !result.get(0).equals("No Result")) {
 				for (int i = 0; i < result.size(); i++) {
 					Parking_Places pLot = new Parking_Places();
-				pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
+					pLot.setIdparkinglot(Integer.parseInt(result.get(i++)
+							.toString()));
 					String idOrder = result.get(i++).toString();
-					if(!idOrder.equals("no value"))
-						pLot.setIdorder(Integer.parseInt(result.get(i++).toString()));
+					if (!idOrder.equals("no value"))
+						pLot.setIdorder(Integer.parseInt(result.get(i)
+								.toString()));
 					pLot.setFloor(Integer.parseInt(result.get(i++).toString()));
 					pLot.setRow(Integer.parseInt(result.get(i++).toString()));
 					pLot.setColumn(Integer.parseInt(result.get(i++).toString()));
@@ -269,35 +268,15 @@ public class VcpInfo extends Controller implements Runnable {
 		return parkingPlaces;
 
 	}
-	
-	public void getEmployeeInfo(){
-		int i=0;
-		Object[] employeeQuery={"SELECT * FROM vcp_employ.employ;"};
-		sendQueryToServer(employeeQuery);
-		ArrayList<Object> result = getResult();
-		HashMap<String,Employee> employeeMap=new   HashMap<String,Employee>();
-		while(i<result.size()){
-			Employee employee=new Employee();
-			employee.setIdEmployee(Integer.parseInt(result.get(i++).toString()));
-			employee.setFirstName(result.get(i++).toString());
-			employee.setLastName(result.get(i++).toString());
-			employee.setRole(result.get(i++).toString());
-			employee.setUserName(result.get(i++).toString());
-			employee.setPassword(result.get(i++).toString());
-			employee.setEmail(result.get(i++).toString());
-			employee.setLogin(result.get(i++).toString());
-			employeeMap.put(employee.getUserName(),employee);
-		}
-		
-		setEmployee(employeeMap);
-	}
 
 	public Parking_Lot getDefultParkingLot() {
+		if (defultParkingLot == null) {
+			defultParkingLot = getParkingLotInfo().get(0);
+		}
 		return defultParkingLot;
 	}
 
 	public void setDefultParkingLot(Parking_Lot defultParkingLot) {
-		showSeccussesMsg("You are now in parking lot:"+" "+defultParkingLot.getIdparkinglot());
 		this.defultParkingLot = defultParkingLot;
 	}
 
@@ -309,16 +288,32 @@ public class VcpInfo extends Controller implements Runnable {
 		this.systemEnable = systemEnable;
 	}
 
-	@Override
-	public void run() {
-		getParkingLotInfo();
-		getParkingPlacesInfo();
-		getDefultParkingLot();
-		getAllClients();
-		getAllOrders();
-		getAllSubscribed();
-		getAllCars();
-		getParkingPricingInfo();
-		closeConnection();
+	public void setEmployee(HashMap<String, Employee> employeeMap) {
+		this.employeeMap = employeeMap;
+	}
+
+	public HashMap<String, Employee> getEmployeeInfo() {
+		if (employeeMap == null) {
+			int i = 0;
+			Object[] employeeQuery = { "SELECT * FROM vcp_employ.employ;" };
+			sendQueryToServer(employeeQuery);
+			HashMap<String, Employee> employeeHash = new HashMap<String, Employee>();
+			ArrayList<Object> result = getResult();
+			while (i < result.size()) {
+				Employee employee = new Employee();
+				employee.setIdEmployee(Integer.parseInt(result.get(i++).toString()));
+				employee.setFirstName(result.get(i++).toString());
+				employee.setLastName(result.get(i++).toString());
+				employee.setRole(result.get(i++).toString());
+				employee.setUserName(result.get(i++).toString());
+				employee.setPassword(result.get(i++).toString());
+				employee.setEmail(result.get(i++).toString());
+				employee.setLogin(result.get(i++).toString());
+				employee.setRelevance(result.get(i++).toString());
+				employeeHash.put(employee.getUserName(), employee);
+			}
+			setEmployee(employeeHash);
+		}
+		return employeeMap;
 	}
 }

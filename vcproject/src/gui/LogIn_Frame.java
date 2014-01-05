@@ -58,7 +58,7 @@ public class LogIn_Frame extends JFrame{
 	public LogIn_Panel getLogIn_Panel() { 
 		
 		if(loginpanel==null)
-			loginpanel=new LogIn_Panel(host,getVcpInfo().getEmployee());
+			loginpanel=new LogIn_Panel(host,getVcpInfo().getEmployeeInfo());
 		
 		return loginpanel; 
 	}

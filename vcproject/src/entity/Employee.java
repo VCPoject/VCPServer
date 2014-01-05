@@ -6,7 +6,7 @@ public class Employee extends SystemUser {
 	private int idEmployee;
 	private String role;
 	private String login;
-	private String association;
+	private String relevance;
 
 	public Employee() {
 		super();
@@ -52,12 +52,12 @@ public class Employee extends SystemUser {
 		this.login = login;
 	}
 
-	public String getAssociation() {
-		return association;
+	public String getRelevance() {
+		return relevance;
 	}
 
-	public void setAssociation(String association) {
-		this.association = association;
+	public void setRelevance(String relevance) {
+		this.relevance = relevance;
 	}
 
 	@Override

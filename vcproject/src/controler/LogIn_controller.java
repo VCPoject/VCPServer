@@ -18,7 +18,6 @@ public class LogIn_controller extends Controller{
 		setPassword(password);
 		this.employeeMap=employeeMap;
 	}
-		result = getResult();
 	
 	public boolean checkValidity() {
 		
