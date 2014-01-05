@@ -2,8 +2,10 @@ package controler;
 
 import java.util.ArrayList;
 
+import entity.Order;
 import entity.Parking_Lot;
 import entity.Parking_Places;
+import entity.Reservation;
 
 public class ParkingLot_controller extends Controller{
 	private ArrayList<Parking_Lot> parkingLotList;
@@ -33,19 +35,45 @@ public class ParkingLot_controller extends Controller{
 		return vaccantParkingPlaces;
 	}
 	
-	public void saveParkingPlace(int parkinglotId,int floor,int line,int parkingPlaceNum){
+	public void saveParkingPlace(int parkinglotId,String arrivalDate,String departureDate,
+			String arrivalTime,String departutreTime ,int parkingPlaceNum,int lineNum,int floorNum){
+		
 		ArrayList<Object> result = null;
-		Object[] sqlmsg={ "UPDATE  vcp_db.parking_place SET status=? WHERE idparking=? and floor=? and line=?"
-		+" "+ "and parkingNum=?;" ,"save",parkinglotId,floor,line,parkingPlaceNum};
-		sendQueryToServer(sqlmsg);
+		Object[] svaeParkingPlace={ "UPDATE  vcp_db.parking_place SET status=? WHERE idparking=? and parkingNum=?;" 
+		,"save",parkinglotId,parkingPlaceNum};
+		sendQueryToServer(svaeParkingPlace);
 		result=getResult();
-		closeConnection();
 		if(result.get(0).equals("done")) 
 			showSeccussesMsg("Parking Place has been saved");
 			
 		else
 			showWarningMsg("Couldn't save Parking Palce");
+		
+		Reservation reservation=new Reservation();
+		reservation.setArrivalDate(arrivalDate);
+		reservation.setArrivalTime(arrivalTime);
+		reservation.setDepartureDate(departureDate);
+		reservation.setDepartureTime(departutreTime);
+		reservation.setParkingLotNum(parkinglotId);
+		reservation.setParkingPlaceNum(parkingPlaceNum);
+		reservation.setFloorNum(floorNum);
+		reservation.setLineNum(lineNum);
+		String addReservationQuery = "INSERT INTO `vcp_db`.`reservation`"
+				+ "(`parkingNum`,`idparking`,`floor`,`line`,"
+				+ "`arrivalDate`,`arrivalTime`,`departureDate`,`departureTime`)"
+				+ "VALUES(?,?,?,?,?,?,?,?);";
+		reservation.setQuery(addReservationQuery);
+		sendQueryToServer(reservation);
+		result=getResult();
+		if(result.get(0).equals("done")) 
+			showSeccussesMsg("Parking Place has been saved");
+			
+		else
+			showWarningMsg("Couldn't save Parking Palce");
+		
+		closeConnection();
 	}
+	
 	
 	public ArrayList<Parking_Places> getAllparkingLotplaces(int parkinglotId){
 		return parkingPlaces;

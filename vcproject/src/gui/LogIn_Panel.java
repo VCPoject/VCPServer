@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 import javax.swing.*;
 
 import controler.LogIn_controller;
+import entity.Employee;
 
 public class LogIn_Panel extends JPanel{
 	
@@ -18,16 +20,17 @@ public class LogIn_Panel extends JPanel{
 	private JButton btnsubmmit;
 	private LogIn_controller logIncontroller;
 	private JPasswordField passwordField;
-	
+	private HashMap<String,Employee> employeeMap;
 
-	public LogIn_Panel(String host){
+	public LogIn_Panel(String host,HashMap<String,Employee> employeeMap){
 		super();
-		setToolTipText("1234\r\n");
+		this.employeeMap=employeeMap;
 		this.host = host;
 		initialize();
-		listners();
 	}
 	
+
+
 	private void initialize(){
 		this.setBounds(10, 11, 455, 342);
 		setBackground(Color.LIGHT_GRAY);
@@ -66,18 +69,6 @@ public class LogIn_Panel extends JPanel{
 		passwordField.setToolTipText("1234");
 		passwordField.setBounds(136, 217, 228, 20);
 		add(passwordField);
-		getLogincontroller();
-	}
-	
-	public void listners(){
-		
-		/*passwordField.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				passwordField.setToolTipText();
-			}
-		});*/
 	}
 	
 	public JButton getBtnSubmit(){
@@ -99,13 +90,13 @@ public class LogIn_Panel extends JPanel{
 	}
 
 	public boolean checkValidity() {
-		return logIncontroller.checkValidity(getUserText(),getPswdText());
+		return getLogincontroller().checkValidity();
 	}
 	
 	public LogIn_controller getLogincontroller(){
 		if(logIncontroller == null)
 		{
-			logIncontroller = new LogIn_controller(this.host);
+			logIncontroller = new LogIn_controller(this.host,employeeMap,getUserText(),getPswdText());
 		}
 		return logIncontroller;
 		

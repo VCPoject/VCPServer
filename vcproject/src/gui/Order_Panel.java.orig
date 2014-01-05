@@ -450,7 +450,7 @@ public class Order_Panel extends JPanel {
 		PayPan.setVisible(false);
 		comboBoxDepartureHour.setBounds(213, 115, 65, 24);
 		comboBoxDepartureMin.setBounds(283, 115, 65, 24);
-		lblTimeOfDeparture.setBounds(6, 181, 197, 22);
+		lblTimeOfDeparture.setBounds(6, 115, 197, 22);
 		btnPay.setVisible(false);
 		btnSubmit.setEnabled(true);
 		
@@ -468,8 +468,15 @@ public class Order_Panel extends JPanel {
 				TempClient();
 			}
 		});
-		/*	Listener to one time/temp client radio button	*/
-		rdbtnOneTimeClient.addActionListener(new ActionListener() {
+
+		rdbtnOneTimeClient.addActionListener(new ActionListener() {/*
+																	 * listener
+																	 * to one
+																	 * time
+																	 * client
+																	 * radio
+																	 * butten
+																	 */
 			public void actionPerformed(ActionEvent e) {
 				oneTime();
 			}
@@ -480,7 +487,7 @@ public class Order_Panel extends JPanel {
 				try {
 					if(rdbtnCradit.isSelected()){
 						if(frmtdtxtfldCreditCard.getText().equals("                ")){
-							throw new Exception("You didnt insert cradit card");
+							throw new Exception("You didnt insert cradic card");
 						}
 						getMakeOrderController().showSeccussesMsg("Payment recived, you can press now submit");
 					}
@@ -598,7 +605,7 @@ public class Order_Panel extends JPanel {
 					Integer carNumber = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
 					if(!carNumber.toString().isEmpty()){
 					car.setCarNum(Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", "")));/* setting car number */
-					car.setClient(client.getIdClient());/* setting client entity to car entity */
+					car.setClient(client);/* setting client entity to car entity */
 					}
 					else
 						throw new Exception("You didnt enter car number");
@@ -608,7 +615,11 @@ public class Order_Panel extends JPanel {
 					if (parkId.equals("Select parking lot") && !rdbtnTempClient.isSelected())/* check if parking lot selected */
 						throw new Exception("You didnt select parking lot");
 					else if(parkId.equals("Select parking lot") && rdbtnTempClient.isSelected())
+<<<<<<< HEAD
+						parkId = Integer.toString(vcpInfo.getDefultParkingLot().getIdparkinglot());
+=======
 						parkId = (Integer.toString(vcpInfo.getDefultParkingLot().getIdparkinglot()));
+>>>>>>> refs/remotes/origin/gal
 
 					order.setCar(car.getCarNum());
 					order.setClient(client.getIdClient());
@@ -702,7 +713,7 @@ public class Order_Panel extends JPanel {
 	protected boolean checkIfCarExist(Car car) {
 		Object[] isCarExists = {
 				"SELECT count(`car`.`carNum`) FROM `vcp_db`.`car` WHERE carNum = ? AND idclient = ?;",
-				car.getCarNum(), car.getClient() };
+				car.getCarNum(), car.getClient().getIdClient() };
 		getMakeOrderController().searchCar(isCarExists);
 		ArrayList<Object> result = getMakeOrderController().getResult();
 		if (result.get(0).toString().equals("0")) {
@@ -781,8 +792,6 @@ public class Order_Panel extends JPanel {
 
 		// Get msec from each, and subtract.
 		long diff = d2.getTime() - d1.getTime();
-		long diffSeconds = diff / 1000;
-		long diffMinutes = diff / (60 * 1000);
 		long diffHours = diff / (60 * 60 * 1000);
 		if (diffHours < 1) {
 			return (long) 1;

@@ -24,15 +24,11 @@ public class ParkingLotInit extends JPanel{
 	private VcpInfo vcpInfo;
 	private String host;
 	
-	private ArrayList<Parking_Lot> ParkingLot;
-	
 	public ParkingLotInit(String host, ArrayList<Parking_Lot> parkingLotInfo) {
 		super();
-		this.ParkingLot=parkingLotInfo;
 		this.host=host;
 		initialize();
 		setLayout(null);
-		
 	}
 
 	private void initialize() {
@@ -57,11 +53,11 @@ public class ParkingLotInit extends JPanel{
 		fillcomboBoxParkinLot();
 		
 		btnSave = new JButton("Save");
-		btnSave.setBounds(363, 327, 130, 55);
+		btnSave.setBounds(360, 288, 109, 55);
 		add(btnSave);
 		
 		btnExit = new JButton("Exit");
-		btnExit.setBounds(20, 327, 130, 55);
+		btnExit.setBounds(20, 288, 109, 55);
 		add(btnExit);
 		
 	}
@@ -69,21 +65,6 @@ public class ParkingLotInit extends JPanel{
 	public void fillcomboBoxParkinLot() {
 		for(Integer i=1;i<7;i++)
 			comboBoxParkingLot.addItem(i.toString());
-	}
-
-	public void listners(){
-		
-		
-		
-		/* getbtnSave().addActionListener(new ActionListener(){
-
-			public void actionPerformed(ActionEvent e) {
-				for(Parking_Lot parkinglot: ParkingLot)
-					if(parkinglot.getIdparkinglot()==defaultParkinglotNum)
-						getVcpInfo().setDefultParkingLot(parkinglot);
-			}
-			 
-		 });*/
 	}
 
 	public JButton getbtnExit(){

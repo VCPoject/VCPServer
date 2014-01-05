@@ -12,6 +12,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import controler.VcpInfo;
 import entity.Parking_Lot;
 
+import java.awt.event.*;
+
+
 public class VCP_Main_Frame extends JFrame {
 
 	
@@ -44,7 +47,6 @@ public class VCP_Main_Frame extends JFrame {
 		this.host = host;
 		getVcpInfo();
 		initializeParkingLot();
-		//initialize();
 	}
 	
 	
@@ -57,12 +59,13 @@ public class VCP_Main_Frame extends JFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 				
-				if (getLogIn_Frame().getLogIn_Panel().checkValidity())
-							getLogIn_Frame().setContentPane(getParkingLotInit());
+				if (getLogIn_Frame().getLogIn_Panel().checkValidity()){
+					getLogIn_Frame().getLogIn_Panel().getLogincontroller().updateAsNotLoggedIn();
+						getLogIn_Frame().setContentPane(getParkingLotInit());
+				}
 							
-						
-					}
-				});
+			}
+		});
 				
 				getLogIn_Frame().getLogIn_Panel().getBtnExit()
 				.addActionListener(new ActionListener() {
@@ -75,7 +78,6 @@ public class VCP_Main_Frame extends JFrame {
 										"Exit Application",
 										JOptionPane.YES_NO_OPTION);
 							if (result == JOptionPane.YES_OPTION) {
-								getLogIn_Frame().getLogincontroller().updateAsNotLoggedIn();
 								frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 								getLogIn_Frame().closeLoginFrame();
 								System.exit(0);
@@ -188,7 +190,6 @@ public class VCP_Main_Frame extends JFrame {
 														"Exit Application",
 														JOptionPane.YES_NO_OPTION);
 										if (result == JOptionPane.YES_OPTION) {
-											getLogIn_Frame().getLogincontroller().updateAsNotLoggedIn();
 											frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 											getLogIn_Frame().closeLoginFrame();
 											loginframe = null;
@@ -354,6 +355,7 @@ public class VCP_Main_Frame extends JFrame {
 								JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.YES_OPTION) {
 					setContentPane(getMainPanel());
+					getLogIn_Frame().getLogIn_Panel().getLogincontroller().updateAsNotLoggedIn();
 					
 				}
 			}
@@ -530,19 +532,22 @@ public class VCP_Main_Frame extends JFrame {
 	
 	public SavingParkingPlace_Panel getSavingParkingPlace_Panel(){
 		if(savingparkingplace==null)
-			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT,getVcpInfo().getParkingPlaces());
+			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT,getVcpInfo().getParkingPlaces(),
+					getVcpInfo().getDefultParkingLot().getIdparkinglot());
 		return savingparkingplace;
 	}
 	
 	public NotWorkingPlaces_Panel getNotWorkingPlaces_Panel(){
 		if(notworkingplaces==null)
-			notworkingplaces=new NotWorkingPlaces_Panel(host,DEFAULT_PORT,getVcpInfo().getParkingPlaces());
+			notworkingplaces=new NotWorkingPlaces_Panel(host,DEFAULT_PORT,getVcpInfo().getParkingPlaces(),
+					getVcpInfo().getDefultParkingLot().getIdparkinglot());
 		return notworkingplaces;
 	}
 	
 	public FindAltParkingLot getFindaltparkinglot(){
 		if(findaltparkinglot==null)
-			findaltparkinglot=new FindAltParkingLot(host, DEFAULT_PORT, getVcpInfo().getParkingLot());
+			findaltparkinglot=new FindAltParkingLot(host, DEFAULT_PORT, getVcpInfo().getParkingLot(),
+					getVcpInfo().getDefultParkingLot().getIdparkinglot());
 		return findaltparkinglot;
 	}
 	

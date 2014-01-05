@@ -24,12 +24,14 @@ public class FindAltParkingLot extends JPanel{
 	private JComboBox <String> comboBoxParkingLot2;
 	private int fullParkingLotId;
 	private int altParkingLotId;
+	private int defaultParkingLot;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JButton btnExit;
 	private JButton btnSave;
 	
-	public FindAltParkingLot(String host,int port,ArrayList<Parking_Lot> parkingLot) {
+	public FindAltParkingLot(String host,int port,ArrayList<Parking_Lot> parkingLot,int defaultParkingLot){
 		super();
+		this.defaultParkingLot=defaultParkingLot;
 		this.parkingLot=parkingLot;
 		this.host=host;
 		this.port=port;
@@ -87,8 +89,7 @@ public class FindAltParkingLot extends JPanel{
 	}
 	
 	public void fillParkinglotcombobox() {
-		for(Integer i=1;i<7;i++)
-			comboBoxParkingLot1.addItem(i.toString());
+			comboBoxParkingLot1.addItem((Integer.toString(defaultParkingLot)));
 	}
 	
 	public void fillAltParkinglotcombox(){
