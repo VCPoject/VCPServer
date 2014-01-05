@@ -1,4 +1,4 @@
-package clientServer;
+package clientServer;  
  
 // This file contains material supporting section 3.7 of the textbook:
 // "Object Oriented Software Engineering" and is issued under the open-source
@@ -103,6 +103,7 @@ public class ClientConsole implements ClientIF {
 	}
 
 	public ArrayList<Object> getResult() {
+	
 		return this.result;
 	}
 	

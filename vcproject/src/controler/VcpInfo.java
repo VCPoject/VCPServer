@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import entity.*;
 
-public class VcpInfo extends Controller {
+public class VcpInfo extends Controller implements Runnable {
 
 	private ArrayList<Parking_Lot> parkingLot;
 	private ArrayList<Parking_Places> parkingPlaces;
@@ -18,15 +18,8 @@ public class VcpInfo extends Controller {
 
 	public VcpInfo(String host) {
 		super(host);
-		getParkingPlacesInfo();
-		getParkingLotInfo();
-		getDefultParkingLot();
-		getAllClients();
-		getAllOrders();
-		getAllSubscribed();
-		getAllCars();
-		getParkingPricingInfo();
-		closeConnection();
+		Thread t1 = new Thread(this);
+		t1.start();
 	}
 
 	public ArrayList<Car> getAllCars() {
@@ -218,8 +211,6 @@ public class VcpInfo extends Controller {
 	public void addParkingPlaces(Parking_Places parkingPlaces) {
 		this.parkingPlaces.add(parkingPlaces);
 	}
-	
-	
 
 	public ArrayList<Parking_Lot> getParkingLotInfo() {
 		if (parkingLot == null) {
@@ -247,7 +238,7 @@ public class VcpInfo extends Controller {
 		return parkingLot;
 	}
 
-	public ArrayList<Parking_Places> getParkingPlacesInfo() {
+	private ArrayList<Parking_Places> getParkingPlacesInfo() {
 		if (parkingPlaces == null) {
 			Object[] parkingPlaceQuery = { "SELECT * FROM `vcp_db`.`parking_place`;" };
 			sendQueryToServer(parkingPlaceQuery);
@@ -259,8 +250,9 @@ public class VcpInfo extends Controller {
 					Parking_Places pLot = new Parking_Places();
 					pLot.setIdparkinglot(Integer.parseInt(result.get(i++)
 							.toString()));
-					pLot.setIdorder(Integer
-							.parseInt(result.get(i++).toString()));
+					String idOrder = result.get(i++).toString();
+					if(!idOrder.equals("no value"))
+						pLot.setIdorder(Integer.parseInt(result.get(i++).toString()));
 					pLot.setFloor(Integer.parseInt(result.get(i++).toString()));
 					pLot.setRow(Integer.parseInt(result.get(i++).toString()));
 					pLot.setColumn(Integer.parseInt(result.get(i++).toString()));
@@ -271,6 +263,7 @@ public class VcpInfo extends Controller {
 			}
 		}
 		return parkingPlaces;
+
 	}
 
 	public Parking_Lot getDefultParkingLot() {
@@ -292,4 +285,16 @@ public class VcpInfo extends Controller {
 		this.systemEnable = systemEnable;
 	}
 
+	@Override
+	public void run() {
+		getParkingLotInfo();
+		getParkingPlacesInfo();
+		getDefultParkingLot();
+		getAllClients();
+		getAllOrders();
+		getAllSubscribed();
+		getAllCars();
+		getParkingPricingInfo();
+		closeConnection();
+	}
 }

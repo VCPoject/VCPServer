@@ -19,8 +19,8 @@ public class LogIn_controller extends Controller{
 				"SELECT username,password, login FROM vcp_employ.employ WHERE username= ? AND password = ? ;",
 				username, password};
 		sendQueryToServer(sqlsMsg);
-		result = getResult();
 		//closeConnection();
+		result = getResult();
 		if (username.equals(result.get(0).toString())
 				&& password.equals(result.get(1).toString())) {
 			

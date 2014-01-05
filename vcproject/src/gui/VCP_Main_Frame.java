@@ -78,6 +78,7 @@ public class VCP_Main_Frame extends JFrame {
 								getLogIn_Frame().getLogincontroller().updateAsNotLoggedIn();
 								frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 								getLogIn_Frame().closeLoginFrame();
+								System.exit(0);
 								
 							}
 						}
@@ -91,6 +92,7 @@ public class VCP_Main_Frame extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								 defaultParkinglotNum=(Integer.parseInt(getParkingLotInit().getcomboBoxParkingLot()
 										.getSelectedItem().toString()));
+								 getVcpInfo().setDefultParkingLot(getVcpInfo().getParkingLotInfo().get(defaultParkinglotNum - 1));
 							}
 							
 						});
@@ -564,5 +566,9 @@ public class VCP_Main_Frame extends JFrame {
 		}
 		return resubscribePanel;
 	}
+	
+	
 
 }
+
+

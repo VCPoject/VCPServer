@@ -50,4 +50,20 @@ public class Parking_Lot  {
 	public void setAltparkinglot(int altparkinglot) {
 		this.altparkinglot = altparkinglot;
 	}
+
+	public Integer getWidth() {
+		return width;
+	}
+
+	public void setWidth(Integer width) {
+		this.width = width;
+	}
+
+	public Integer getDepth() {
+		return depth;
+	}
+
+	public Integer getHight() {
+		return hight;
+	}
 }
