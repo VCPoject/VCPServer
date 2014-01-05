@@ -1,0 +1,84 @@
+package entity; 
+
+public class Parking_Lot  {
+	private Integer idparkinglot;
+	private Integer width;
+	private Integer depth;
+	private Integer hight;
+<<<<<<< HEAD
+=======
+	private Integer altparkinglot;
+>>>>>>> refs/remotes/origin/gal
+	private String status;
+	
+	public Parking_Lot(){
+		
+	}
+
+	public Integer getWidth() {
+		return width;
+	}
+
+	public Integer getDepth() {
+		return depth;
+	}
+
+	public Integer getHight() {
+		return hight;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	
+	public int getIdparkinglot() {
+		return idparkinglot;
+	}
+
+	public void setIdparkinglot(Integer idparkinglot) {
+		this.idparkinglot = idparkinglot;
+	}
+
+	public void setDepth(Integer depth) {
+		this.depth= depth;
+		
+	}
+	
+<<<<<<< HEAD
+	public void setWidth(Integer width){
+=======
+	public int getDepth(){
+		return depth;
+	}
+	
+	public void setWidth(int width){
+>>>>>>> refs/remotes/origin/gal
+		this.width=width;
+	}
+	
+	public int getWidth(){
+		return width;
+	}
+
+	public void setHight(Integer hight) {
+		this.hight=hight;
+		
+	}
+	
+	public int getHight(){
+		return hight;
+	}
+
+	public Integer getAltparkinglot() {
+		return altparkinglot;
+	}
+
+	public void setAltparkinglot(int altparkinglot) {
+		this.altparkinglot = altparkinglot;
+	}
+}

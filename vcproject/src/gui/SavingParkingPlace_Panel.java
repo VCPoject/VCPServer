@@ -8,6 +8,7 @@ import controler.VcpInfo;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -120,22 +121,26 @@ public class SavingParkingPlace_Panel extends JPanel {
 		add(comboBoxParkinglot);
 		comboBoxParkinglot.addItem(" ");
 		fillParkinglotcombobox();
+		comboBoxParkinglot.setEnabled(false);
 		
 		comboBoxFloor = new JComboBox<String> ();
 		comboBoxFloor.setBounds(166, 201, 82, 20);
 		add(comboBoxFloor);
 		comboBoxFloor.addItem(" ");
 		fillFloorcomboBox();
+		comboBoxFloor.setEnabled(false);
 		
 		comboBoxLine = new JComboBox<String> ();
 		comboBoxLine.setBounds(166, 261, 82, 20);
 		add(comboBoxLine);
 		comboBoxLine.addItem(" ");
 		fillLinecomboBox();
+		comboBoxLine.setEnabled(false);
 		
 		comboBoxParkingPlace = new JComboBox<String>();
 		comboBoxParkingPlace.setBounds(166, 324, 82, 20);
 		add(comboBoxParkingPlace);
+		comboBoxParkingPlace.setEnabled(false);
 		
 		arrivalDate= new JDateChooser();
 		arrivalDate.setBounds(475, 150, 87, 20);
@@ -175,15 +180,19 @@ public class SavingParkingPlace_Panel extends JPanel {
 		buttonGroup.add(rdbtnaDepartureTime);
 		add(rdbtnaDepartureTime);
 		
-		comboBoxDepartureMin = new JComboBox<String>();
-		comboBoxDepartureMin.setBounds(475, 324, 48, 20);
-		add(comboBoxDepartureMin);
-		
 		comboBoxDepartureHour = new JComboBox<String>();
-		comboBoxDepartureHour.setBounds(527, 324, 48, 20);
+		comboBoxDepartureHour.setBounds(475, 324, 48, 20);
 		add(comboBoxDepartureHour);
+		
+		comboBoxDepartureMin = new JComboBox<String>();
+		comboBoxDepartureMin.setBounds(527, 324, 48, 20);
+		add(comboBoxDepartureMin);
 		fillcomboBoxHour();
 		fillcomboBoxMin();
+		comboBoxArrivalHour.setEnabled(false);
+		comboBoxArrivalMin.setEnabled(false);
+		comboBoxDepartureHour.setEnabled(false);
+		comboBoxDepartureMin.setEnabled(false);
 	}
 
 	public void fillcomboBoxMin() {
@@ -237,16 +246,18 @@ public class SavingParkingPlace_Panel extends JPanel {
 		
 		rdbtnParkinLot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				comboBoxParkinglot.setEnabled(true);
 				comboBoxParkinglot.addActionListener(new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
 						try{
 						parkinglotId =Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
 						parkingPlaces1=getParkingLot_controller().getVaccantParkingPlaces(parkinglotId);
+						comboBoxParkinglot.setEnabled(false);
 						}
 						
 						catch(Exception e1){
 							parkinglotId=0;
+							comboBoxParkinglot.setEnabled(false);
 						}
 						
 					}
@@ -261,10 +272,12 @@ public class SavingParkingPlace_Panel extends JPanel {
 					public void actionPerformed(ActionEvent e) {
 						try{
 						floorNum =Integer.parseInt(comboBoxFloor.getSelectedItem().toString());
+						comboBoxFloor.setEnabled(true);
 						}
 						
 						catch(Exception e1){
 							floorNum=0;
+							comboBoxFloor.setEnabled(false);
 						}
 					}
 				});
@@ -280,10 +293,12 @@ public class SavingParkingPlace_Panel extends JPanel {
 						try{
 							lineNum =Integer.parseInt(comboBoxLine.getSelectedItem().toString());
 							fillParkingPlacecombox();
+							comboBoxFloor.setEnabled(false);
 						}
 						
 						catch(Exception e1){
 							lineNum=0;
+							comboBoxFloor.setEnabled(true);
 						}
 							
 					}
@@ -315,35 +330,85 @@ public class SavingParkingPlace_Panel extends JPanel {
 		btnSave.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				try{
-					String arrivatlTime=arrivalTimeHour+":"+arrivalTimeMin+":"+"00";
+					
+					if(parkinglotId==0)
+						throw new Exception("You did'nt insert parking lot no.");
+					
+					else if(floorNum==0)
+						throw new Exception("You did'nt insert floor no.");
+					
+					else if(lineNum==0)
+						throw new Exception("You did'nt insert line no.");
+					
+					else if(parkingplaceNum==0)
+						throw new Exception("You did'nt insert parking place no.");
+					
+					ArrivalDate=arrivalDate.getDate();
+					DepartureDate=departureDate.getDate();
+					
+					if(ArrivalDate == null)
+						throw new Exception("You didnt select departure date");
+					
+					else if(DepartureDate == null)
+						throw new Exception("You didnt select departure date");
+
+					
+					DateFormat formatDepartureDate = new SimpleDateFormat("yyyy-MM-dd");
+					Datedeparture=formatDepartureDate.format(DepartureDate);
+					
+					 if(ArrivalDate.after(DepartureDate))
+						throw new Exception("You're arrival date is further then your departure date");
+					
+					DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+					Date currentDate = new Date();
+					
+					if(ArrivalDate.before(dateFormat.parse(dateFormat.format(currentDate))))
+						throw new Exception("You're arrival date has been expired");
+					
+					else if(DepartureDate.before(dateFormat.parse(dateFormat.format(currentDate))))
+						throw new Exception("You're arrival date has been expired");
+					
+					String arrivalTime=arrivalTimeHour+":"+arrivalTimeMin+":"+"00";
 					String departureTime=departureTimeHour+":"+departureTimeMin+":"+"00";
-					if(arrivatlTime.contains("Min") || arrivatlTime.contains("Hour"))
+					
+					if(arrivalTime.contains("Min") || arrivalTime.contains("Hour"))
 						throw new Exception("You did'nt insert arrival time");
+					
 					else if(departureTime.contains("Min") || departureTime.contains("Hour"))
 						throw new Exception("You did'nt insert departure time");
-					getParkingLot_controller().saveParkingPlace(parkinglotId,Datearrival,arrivatlTime,Datedeparture,
+					
+					String dateArrival[]=arrivalTime.split(":");
+					String dateDeparture[]=departureTime.split(":");
+					Integer arrivalHour=Integer.parseInt(dateArrival[0]);
+					Integer arrivalMin=Integer.parseInt(dateArrival[1]);	
+					Integer arrivalSec=Integer.parseInt(dateArrival[2]);
+					Integer departureHour=Integer.parseInt(dateDeparture[0]);
+					Integer departurelMin=Integer.parseInt(dateDeparture[1]);	
+					Integer departurelSec=Integer.parseInt(dateDeparture[2]);
+					
+					if(arrivalHour>departureHour || arrivalMin>departurelMin || arrivalSec>departurelSec)
+						throw new Exception("You're arrival time is further then your departure time");
+					
+					getParkingLot_controller().saveParkingPlace(parkinglotId,Datearrival,arrivalTime,Datedeparture,
 					departureTime,parkingplaceNum,lineNum,floorNum);
 				}
 				catch(Exception e1){
-					e1.getMessage();
+					getParkingLot_controller().showWarningMsg(e1.getMessage());
 				}
 			}
 		});
 		
 		rdbtnArrivalDate.addActionListener(new ActionListener() {
 			
-			@Override
+	
 			public void actionPerformed(ActionEvent arg0) {
 				try{
 					ArrivalDate=arrivalDate.getDate();
-				if(ArrivalDate == null)
-					throw new Exception("You didnt select departure date");
-				DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
-				Datearrival=formatDate.format(ArrivalDate);
+					
 				}
 				
 				catch(Exception e){
-					getParkingLot_controller().showWarningMsg(e.getMessage());
+					ArrivalDate=null;
 				}
 				
 			}
@@ -356,14 +421,11 @@ public class SavingParkingPlace_Panel extends JPanel {
 		public void actionPerformed(ActionEvent arg0) {
 				try{
 					DepartureDate=departureDate.getDate();
-					if(DepartureDate == null)
-						throw new Exception("You didnt select departure date");
-					DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
-					Datedeparture=formatDate.format(DepartureDate);
+					
 				}
 			
 				catch(Exception e){
-					getParkingLot_controller().showWarningMsg(e.getMessage());
+					DepartureDate=null;;
 				}
 			
 			}
@@ -372,6 +434,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 		rdbtnArrivalTime.addActionListener(new ActionListener() {
 		
 		public void actionPerformed(ActionEvent e) {
+			
 			comboBoxArrivalMin.addActionListener(new ActionListener() {
 		
 					public void actionPerformed(ActionEvent e) {
@@ -379,6 +442,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 					
 					}
 				});
+			
 			comboBoxArrivalHour.addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
@@ -394,13 +458,17 @@ public class SavingParkingPlace_Panel extends JPanel {
 		rdbtnaDepartureTime.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
+				comboBoxArrivalHour.setEnabled(true);
+				comboBoxArrivalMin.setEnabled(true);
+				
 				comboBoxDepartureMin.addActionListener(new ActionListener() {
-			
+						
 						public void actionPerformed(ActionEvent e) {
 							departureTimeMin=comboBoxDepartureMin.getSelectedItem().toString();
-						
+							
 						}
 					});
+				
 				comboBoxDepartureHour.addActionListener(new ActionListener() {
 					
 					public void actionPerformed(ActionEvent e) {
@@ -408,6 +476,9 @@ public class SavingParkingPlace_Panel extends JPanel {
 					
 					}
 				});
+				
+				comboBoxArrivalHour.setEnabled(false);
+				comboBoxArrivalMin.setEnabled(false);
 				
 				}
 			});	
