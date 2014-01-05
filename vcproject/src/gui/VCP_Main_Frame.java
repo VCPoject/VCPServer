@@ -444,7 +444,7 @@ public class VCP_Main_Frame extends JFrame {
 	public CancelOrder_Panel getCancelOrderPanel() {
 
 		if (cancelOrder == null) {
-			cancelOrder = new CancelOrder_Panel();
+			cancelOrder = new CancelOrder_Panel(host,DEFAULT_PORT,getVcpInfo().getParkingPricingInfo());
 		}
 		return cancelOrder;
 	}

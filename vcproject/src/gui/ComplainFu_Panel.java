@@ -29,6 +29,7 @@ public class ComplainFu_Panel extends JPanel {
 	private String host;
 	private int port = 5555;
 	private ComplainFuController complainController;
+	private JScrollPane scrollPane;
 	
 	public ComplainFu_Panel(String host, int port) {
 		super();
@@ -105,10 +106,14 @@ public class ComplainFu_Panel extends JPanel {
 			add(textField_1);
 			textField_1.setColumns(10);
 			
+			scrollPane = new JScrollPane();
+			scrollPane.setBounds(578, 350, 197, 93);
+			add(scrollPane);
+			
 			textArea = new JTextArea();
+			textArea.setFont(new Font("Courier New", Font.PLAIN, 12));
+			scrollPane.setViewportView(textArea);
 			textArea.setEditable(false);
-			textArea.setBounds(578, 350, 197, 93);
-			add(textArea);
 			
 			complains = new JComboBox<String>();
 			complains.setBounds(25, 402, 211, 20);
@@ -139,14 +144,24 @@ public class ComplainFu_Panel extends JPanel {
 					for(int i=0;i<comp.length;i++)
 					complains.addItem(comp[i]);
 				}
-				complainController.getSelectedItem((String)complains.getSelectedItem());
 			}
 		});
 		getBtnSubmit1().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				complainController.getSelectedItem((String)complains.getSelectedItem());
+			String s=complainController.getSelectedItemComplain((String)complains.getSelectedItem());
+			if(s.equals("No Result")){
+				textArea.setText("The Complain is still in\norder Please"
+						+ " Check again \nsoon");
+			}
+			else{
+				textArea.setText(s);
+				s=complainController.getSelectedItemAmount((String)complains.getSelectedItem());
+				textField_1.setText(s);
+			}
 			}
 		});
+		
+		
 		
 	}
 	

@@ -55,10 +55,12 @@ public class MySqlConnection {
 				} else if (command.contains("DELETE")) {
 					deleteDB(conn, msg);
 				}
+			else if(command.contains("DELETE"))
+				deleteDB(conn, msg);
 				conn.close();
 			}
 		} catch (Exception e) {
-			setResult("Database error:" + e.getMessage());
+			setResult("DataBase error:" + e.getMessage());
 		}
 
 	}
@@ -96,9 +98,10 @@ public class MySqlConnection {
 					else if (obj instanceof Float)
 						list.add((Float) obj);
 					else if (obj instanceof Date)
-						list.add((Date) obj);
+						list.add((Date)obj);
 					else if (obj instanceof Time)
-						list.add((Time) obj);
+						list.add((Time)obj);
+					
 				}
 				thereIsRslt = true;
 			}
@@ -182,6 +185,26 @@ public class MySqlConnection {
 			setResult("insertDB error:" + e.getMessage());
 		}
 
+	}
+	
+	private void deleteDB(Connection con, Object[] getStatment){
+		try {
+			PreparedStatement deleteData = con
+					.prepareStatement((String) getStatment[0]);
+			for (int i = 1; i < getStatment.length; i++) {
+				if (getStatment[i] instanceof String)
+					deleteData.setString(i, (String) getStatment[i]);
+				else if (getStatment[i] instanceof Integer)
+					deleteData.setInt(i, (Integer) getStatment[i]);
+			}
+			deleteData.executeUpdate();
+			con.commit();
+			Thread.sleep(10);
+			setResult("done");
+		} catch (Exception e) {
+			System.out.println("deleteDB error:" + e.getMessage());
+			setResult("deleteDB error:" + e.getMessage());
+		}
 	}
 
 	private void deleteDB(Connection con, Object[] getStatment) {

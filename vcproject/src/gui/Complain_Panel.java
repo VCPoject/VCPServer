@@ -96,12 +96,7 @@ public class Complain_Panel extends JPanel {
 	
 	private void listners(){
 		
-		getBtnSubmit().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		
-		
+
 		getBtnSubmit().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int idnum = Integer.parseInt(textFieldIdNumber.getText());

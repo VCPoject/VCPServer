@@ -32,7 +32,7 @@ public class VcpInfo extends Controller{
 		closeConnection();
 	}
 
-	public ArrayList<Car> getAllCars() {
+	public Pricing getParkingPricingInfo() {
 		if (allCars == null) {
 			Object[] getallcars = { "SELECT * FROM `vcp_db`.`car`;" };
 			sendQueryToServer(getallcars);
