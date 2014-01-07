@@ -146,6 +146,11 @@ public class Order implements Entity {
 
 	@Override
 	public Object[] toObject() {
+		if(this.getQuery().contains("UPDATE")){
+			Object[] obj = {getQuery(),getCheckInDate(),getCheckInTime(),getStatus(),getIdorder()};
+			return obj;
+		}
+		
 		if (this.getType().equals("temp")) {
 			Object[] obj = { getQuery(), getCar(), getClient(),
 					getIdparking(), getArrivalDate(), getArrivalTime(),getDepartureDate(),getDepartureTime(),

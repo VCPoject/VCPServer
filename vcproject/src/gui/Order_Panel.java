@@ -517,8 +517,7 @@ public class Order_Panel extends JPanel {
 					order = new Order();
 					
 					/* Checking for departure time selection */
-					String timeDeparture = comboBoxDepartureHour.getSelectedItem().toString() + 
-							":"	+ comboBoxDepartureMin.getSelectedItem().toString() + ":00";
+					String timeDeparture = comboBoxDepartureHour.getSelectedItem().toString() + ":"	+ comboBoxDepartureMin.getSelectedItem().toString() + ":00";
 					if (timeDeparture.contains("Hours") && timeDeparture.contains("Min"))/* if not selected hours and minutes */
 						order.setDepartureTime("00:00:00");
 					else if(!timeDeparture.contains("Hours") && timeDeparture.contains("Min")){/* if not selected min */
@@ -529,12 +528,9 @@ public class Order_Panel extends JPanel {
 						order.setDepartureTime(timeDeparture);
 					
 					if (rdbtnOneTimeClient.isSelected()){
-						Float onetime = getVcpInfo().getParkingPricingInfo()
-								.getOneTime();
-						String arrivalHour = comboBoxArrivalHour
-								.getSelectedItem().toString();
-						String arrivalMin = comboBoxArrivalMin
-								.getSelectedItem().toString();
+						Float onetime = getVcpInfo().getParkingPricingInfo().getOneTime();
+						String arrivalHour = comboBoxArrivalHour.getSelectedItem().toString();
+						String arrivalMin = comboBoxArrivalMin.getSelectedItem().toString();
 						if (!arrivalHour.equals("Hour")	&& !arrivalMin.equals("Min")) {
 							timeArrival = comboBoxArrivalHour.getSelectedItem().toString()
 									+ ":" + comboBoxArrivalMin.getSelectedItem().toString() + ":00";

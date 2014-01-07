@@ -11,7 +11,6 @@ public class RegisterController extends Controller {
 
 	public RegisterController(String host, int port) {
 		super(host, port);
-		// TODO Auto-generated constructor stub
 	}
 
 	public void addNewSubscribe(Subscribe newSubscribed) {

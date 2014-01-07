@@ -487,7 +487,7 @@ public class VCP_Main_Frame extends JFrame {
 
 	public CheckInOut_Frame getCheckInFrame(boolean isCheckIn) {
 		if (CheckInOutFrame == null)
-			CheckInOutFrame = new CheckInOut_Frame(isCheckIn);
+			CheckInOutFrame = new CheckInOut_Frame(host,DEFAULT_PORT,getVcpInfo(),isCheckIn);
 		return CheckInOutFrame;
 	}
 

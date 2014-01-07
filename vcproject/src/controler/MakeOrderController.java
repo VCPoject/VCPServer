@@ -19,8 +19,14 @@ public class MakeOrderController extends Controller {
 	}
 
 	public void addNewOrder(Order order) {
-			sendQueryToServer(order);
-		}
+		String updateOrder = "UPDATE `vcp_db`.`order` SET `checkInDate` = ?, `checkInTime` = ?, `status` = ? WHERE `idorder` = ?;";
+		order.setQuery(updateOrder);
+		sendQueryToServer(order);
+	}
+	
+	public void UpdateOrder(Order order) {
+		sendQueryToServer(order);
+	}
 	
 	public void searchClient(Object[] clientQuery){
 		sendQueryToServer(clientQuery);
