@@ -7,7 +7,6 @@ import entity.Employee;
 
 public class LogIn_controller extends Controller{
 
-	private ArrayList<Object> result;
 	private String username;
 	private String password;
 	private HashMap<String,Employee> employeeMap;
@@ -18,6 +17,7 @@ public class LogIn_controller extends Controller{
 		setPassword(password);
 		this.employeeMap=employeeMap;
 	}
+	
 	
 	public boolean checkValidity() {
 		

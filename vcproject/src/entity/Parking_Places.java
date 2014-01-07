@@ -9,6 +9,7 @@ public class Parking_Places implements Entity {
 	private Integer subscribeNum;
 	private String status;
 	private String query; 
+	private int subscribeNum;
 	
 	public Parking_Places(){
 	}
@@ -88,5 +89,13 @@ public class Parking_Places implements Entity {
 		
 		Object[] toSend = {getQuery(),getIdorder(),getSubscribeNum(),getFloor(),getRow(),getColumn(),getStatus()};
 		return toSend;
+	}
+
+	public int getSubscribeNum() {
+		return subscribeNum;
+	}
+
+	public void setSubscribeNum(int subscribeNum) {
+		this.subscribeNum = subscribeNum;
 	}
 }
