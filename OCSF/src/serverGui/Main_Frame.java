@@ -29,6 +29,9 @@ public class Main_Frame extends JFrame {
 	private Main_Panel mainPanel;
 	private int port;
 	private EchoServer sv;
+	String dbIp;
+	String dbUser;
+	String dbPassword;
 
 	public Main_Frame(int port) {
 		super();
@@ -149,12 +152,9 @@ public class Main_Frame extends JFrame {
 		getMainPanel().getBtnStartServer().addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						String dbIp = getMainPanel().getTextFieldServerIP()
-								.getText();
-						String dbUser = getMainPanel().getTextFieldDBusername()
-								.getText();
-						String dbPassword = new String(getMainPanel()
-								.getPasswordField().getPassword());
+						dbIp = getMainPanel().getTextFieldServerIP().getText();
+						dbUser = getMainPanel().getTextFieldDBusername().getText();
+						dbPassword = new String(getMainPanel().getPasswordField().getPassword());
 						setConnection(port, dbIp, dbUser, dbPassword);
 						getMainPanel().getBtnStopServer().setEnabled(true);
 						getMainPanel().getBtnStartServer().setEnabled(false);

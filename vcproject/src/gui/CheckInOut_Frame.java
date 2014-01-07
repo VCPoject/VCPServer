@@ -3,11 +3,14 @@ package gui;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import controler.VcpInfo;
 
 public class CheckInOut_Frame extends JFrame {
 	
@@ -15,10 +18,17 @@ public class CheckInOut_Frame extends JFrame {
 	private CheckOut_Panel checkOutPanel;
 	private static final long serialVersionUID = 1L;
 	private boolean isCheckIn = false;
+	private String host;
+	private int port;
+	private VcpInfo vcpInfo;
+	
 
-	public CheckInOut_Frame(boolean isCheckIn) {
+	public CheckInOut_Frame(String host,int port, VcpInfo vcpInfo,boolean isCheckIn) {
 		super();
 		this.isCheckIn = isCheckIn;
+		this.host = host;
+		this.port = port;
+		this.vcpInfo = vcpInfo;
 		initialize();
 	}
 
@@ -46,7 +56,7 @@ public class CheckInOut_Frame extends JFrame {
 
 	public CheckIn_Panel getCheckInPanel() {
 			if (checkInPanel == null)
-				checkInPanel = new CheckIn_Panel();
+				checkInPanel = new CheckIn_Panel(host,port,getVcpInfo());
 			return checkInPanel;
 	}
 
@@ -61,6 +71,10 @@ public class CheckInOut_Frame extends JFrame {
 		if (checkOutPanel == null)
 			checkOutPanel = new CheckOut_Panel();
 		return checkOutPanel;
+	}
+
+	public VcpInfo getVcpInfo() {
+		return vcpInfo;
 	}
 
 }

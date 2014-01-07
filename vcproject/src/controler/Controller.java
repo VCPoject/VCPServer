@@ -109,4 +109,12 @@ public abstract class Controller {
 		else return false;
 	}
 
+	public String getHost() {
+		return host;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
 }

@@ -94,7 +94,7 @@ public class VcpInfo extends Controller{
 		this.allSubscribed = allSubscribed;
 	}
 
-	private ArrayList<Order> getAllOrders() {
+	public ArrayList<Order> getAllOrders() {
 		if (allOrders == null) {
 			Object[] getallorders = { "SELECT * FROM `vcp_db`.`order`;" };
 			sendQueryToServer(getallorders);
@@ -254,8 +254,10 @@ public class VcpInfo extends Controller{
 							.toString()));
 					String idOrder = result.get(i++).toString();
 					if (!idOrder.equals("no value"))
-						pLot.setIdorder(Integer.parseInt(result.get(i)
-								.toString()));
+						pLot.setIdorder(Integer.parseInt(idOrder));
+					String subscribeNum = result.get(i++).toString();
+					if(!subscribeNum.equals("no value"))
+						pLot.setSubscribeNum(Integer.parseInt(subscribeNum));
 					pLot.setFloor(Integer.parseInt(result.get(i++).toString()));
 					pLot.setRow(Integer.parseInt(result.get(i++).toString()));
 					pLot.setColumn(Integer.parseInt(result.get(i++).toString()));

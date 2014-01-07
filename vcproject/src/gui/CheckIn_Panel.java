@@ -1,16 +1,37 @@
 package gui;
 
 import java.awt.SystemColor;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+
 import java.awt.Font;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.JFormattedTextField;
 import javax.swing.text.MaskFormatter;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
+
+import controler.CheckInController;
+import controler.MakeOrderController;
+import controler.ParkingPlaceController;
+import controler.VcpInfo;
+import entity.Order;
+import entity.Parking_Places;
+import entity.Subscribe;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class CheckIn_Panel extends JPanel {
 	/**
@@ -19,18 +40,27 @@ public class CheckIn_Panel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JFormattedTextField textFieldCarNumber;
 	private JButton btnReturn;
-	private JTextField textField;
+	private JTextField textFieldMemberID;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JRadioButton rdbtnOrder;
+	private JRadioButton rdbtnSubscribeCheckin;
+	private JButton btnCheckin;
+	private String host;
+	private int port;
+	private VcpInfo vcpInfo;
+	private CheckInController checkInController;
+	private ParkingPlaceController parkingPlaceController;
+	private MakeOrderController makeOrderController;
 
-	public CheckIn_Panel() {
+	public CheckIn_Panel(String host,int port, VcpInfo vcpInfo) {
 		super();
+		this.host = host;
+		this.port = port;
+		this.vcpInfo = vcpInfo;
 		initialize();
 		listners();
 	}
-
-	private void listners() {
-		
-	}
-
+	
 	private void initialize() {
 		this.setBounds(10, 11, 464, 340);
 		setLayout(null);
@@ -43,7 +73,7 @@ public class CheckIn_Panel extends JPanel {
 
 		JLabel lblCarNumber = new JLabel("Car number:");
 		lblCarNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblCarNumber.setBounds(126, 102, 114, 22);
+		lblCarNumber.setBounds(126, 144, 114, 22);
 		add(lblCarNumber);
 
 		try {
@@ -58,11 +88,11 @@ public class CheckIn_Panel extends JPanel {
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-		textFieldCarNumber.setBounds(272, 102, 73, 24);
+		textFieldCarNumber.setBounds(272, 144, 73, 24);
 		add(textFieldCarNumber);
 
-		JButton btnCheckin = new JButton("Check-In");
-		btnCheckin.setBounds(187, 195, 89, 23);
+		btnCheckin = new JButton("Check-In");
+		btnCheckin.setBounds(187, 231, 95, 35);
 		add(btnCheckin);
 
 		btnReturn = new JButton("Return");
@@ -71,19 +101,156 @@ public class CheckIn_Panel extends JPanel {
 
 		JLabel lblMemberId = new JLabel("Member ID:");
 		lblMemberId.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblMemberId.setBounds(126, 135, 109, 22);
+		lblMemberId.setBounds(126, 177, 109, 22);
 		add(lblMemberId);
 
-		textField = new JTextField();
-		textField.setEditable(false);
-		textField.setFont(new Font("Tahoma", Font.BOLD, 11));
-		textField.setBounds(272, 137, 73, 20);
-		add(textField);
-		textField.setColumns(10);
+		textFieldMemberID = new JTextField();
+		textFieldMemberID.setEditable(false);
+		textFieldMemberID.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textFieldMemberID.setBounds(272, 179, 73, 24);
+		add(textFieldMemberID);
+		textFieldMemberID.setColumns(10);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.activeCaption);
+		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Check-in type", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(213, 46, 95, 72);
+		add(panel);
+		panel.setLayout(null);
+		
+		rdbtnOrder = new JRadioButton("Order");
+		rdbtnOrder.setBounds(6, 16, 53, 23);
+		panel.add(rdbtnOrder);
+		rdbtnOrder.setBackground(SystemColor.activeCaption);
+		rdbtnOrder.setSelected(true);
+		buttonGroup.add(rdbtnOrder);
+		
+		rdbtnSubscribeCheckin = new JRadioButton("Subscribe");
+		rdbtnSubscribeCheckin.setBounds(6, 42, 71, 23);
+		panel.add(rdbtnSubscribeCheckin);
+		rdbtnSubscribeCheckin.setBackground(SystemColor.activeCaption);
+		buttonGroup.add(rdbtnSubscribeCheckin);
+		
+		JLabel lblCheckinType = new JLabel("Check-in type:");
+		lblCheckinType.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblCheckinType.setBounds(81, 74, 132, 22);
+		add(lblCheckinType);
 
+	}
+
+	private void listners() {
+		rdbtnOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				textFieldMemberID.setEditable(false);
+				
+			}
+		});
+		
+		rdbtnSubscribeCheckin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textFieldMemberID.setEditable(true);
+			}
+		});
+		
+		btnCheckin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Subscribe subscribe = null;
+					Order order = null;
+					Parking_Places pPlace;
+					Integer[] parkingInfo;
+					String departDateStr = "";
+					String carNumStr = textFieldCarNumber.getText();
+					//Check car number //
+					if(carNumStr.equals("  -   -  "))
+						throw new Exception("You didnt enter any car number");
+					Integer carNum = Integer.parseInt(carNumStr.replace("-", ""));
+					
+					if(rdbtnOrder.isSelected()){
+						order = getCheckInController().getCarOrder(carNum);
+						if(order == null)
+							throw new Exception("There is no order for car number: " + carNumStr);
+						departDateStr = order.getDepartureDate() + " " + order.getDepartureTime();
+						parkingInfo = getCheckInController().Algo(StringToDate(departDateStr));
+						pPlace = getParkingPlaceController().getParkingPlaceByCoordinate(parkingInfo);
+						pPlace.setIdorder(order.getIdorder());
+						pPlace.setSubscribeNum(null);
+						
+						Date date = new Date();
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						String[] strDate = format.format(date).split("//s");
+						order.setCheckInDate(strDate[0]);
+						order.setCheckInTime(strDate[1]);
+						order.setStatus("implement");
+						getMakeOrderController().UpdateOrder(order);
+						if(!getMakeOrderController().getResult().equals("done"))
+							throw new Exception("Error: Cand update order");
+					}else{
+						String memberIDStr = textFieldMemberID.getText();
+						if(memberIDStr == null || memberIDStr.isEmpty() || memberIDStr.length() == 0){
+							throw new Exception("You didnt enter any member ID number");
+						}
+						Integer memberID;
+						try {
+							memberID = Integer.parseInt(memberIDStr);
+						} catch (Exception e2) {
+							throw new Exception("You didnt enter a valid member ID.");
+						}
+						subscribe = getCheckInController().getSubscribeByNum(memberID,carNum);
+						Date date = new Date();
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						departDateStr = dateFormat.format(date) + " " + subscribe.getDepartureTime();
+						
+						parkingInfo = getCheckInController().Algo(StringToDate(departDateStr));//Algorithm
+						pPlace = getParkingPlaceController().getParkingPlaceByCoordinate(parkingInfo);
+						pPlace.setSubscribeNum(subscribe.getSubscribeNum());
+						pPlace.setIdorder(null);
+					}
+					
+					pPlace.setStatus("occupy");
+					getParkingPlaceController().updateParkingPlace(pPlace);
+					if(!getMakeOrderController().getResult().equals("done"))
+						throw new Exception("Error: Cand update parking place");
+					getCheckInController().showSeccussesMsg("Check-in succeed");
+				} catch (Exception e2) {
+					getCheckInController().showWarningMsg(e2.getMessage());
+				}
+
+			}
+		});
+		
 	}
 
 	public JButton getBtnReturn() {
 		return btnReturn;
 	}
+
+	public VcpInfo getVcpInfo() {
+		return vcpInfo;
+	}
+
+	public CheckInController getCheckInController() {
+		if(checkInController == null){
+			checkInController = new CheckInController(host, port, getVcpInfo());
+		}
+		return checkInController;
+	}
+	
+	private Date StringToDate(String strDate) throws ParseException{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date departDate = format.parse(strDate);
+		return departDate;
+	}
+
+	public ParkingPlaceController getParkingPlaceController() {
+		if(parkingPlaceController == null){
+			parkingPlaceController = new ParkingPlaceController(host, port, getVcpInfo());
+		}
+		return parkingPlaceController;
+	}
+
+	public MakeOrderController getMakeOrderController() {
+		return makeOrderController;
+	}
+
 }

@@ -1,11 +1,12 @@
 package entity;
 
 public class Parking_Places implements Entity {
-	private int idparkinglot;
-	private int floor;
-	private int row;
-	private int column;
-	private int idorder;
+	private Integer idparkinglot;
+	private Integer floor;
+	private Integer row;
+	private Integer column;
+	private Integer idorder;
+	private Integer subscribeNum;
 	private String status;
 	private String query; 
 	
@@ -20,15 +21,15 @@ public class Parking_Places implements Entity {
 		this.status = status;
 	}
 
-	public int getIdorder() {
+	public Integer getIdorder() {
 		return idorder;
 	}
 
-	public void setIdorder(int idorder) {
+	public void setIdorder(Integer idorder) {
 		this.idorder = idorder;
 	}
 
-	public int getFloor() {
+	public Integer getFloor() {
 		return floor;
 	}
 
@@ -36,27 +37,27 @@ public class Parking_Places implements Entity {
 		this.floor = floor;
 	}
 
-	public int getRow() {
+	public Integer getRow() {
 		return row;
 	}
 
-	public void setRow(int row) {
+	public void setRow(Integer row) {
 		this.row = row;
 	}
 
-	public int getColumn() {
+	public Integer getColumn() {
 		return column;
 	}
 
-	public void setColumn(int column) {
+	public void setColumn(Integer column) {
 		this.column = column;
 	}
 
-	public int getIdparkinglot() {
+	public Integer getIdparkinglot() {
 		return idparkinglot;
 	}
 
-	public void setIdparkinglot(int idparkinglot) {
+	public void setIdparkinglot(Integer idparkinglot) {
 		this.idparkinglot = idparkinglot;
 	}
 
@@ -70,9 +71,22 @@ public class Parking_Places implements Entity {
 		this.query = command;
 	}
 
+	public Integer getSubscribeNum() {
+		return subscribeNum;
+	}
+
+	public void setSubscribeNum(Integer subscribeNum) {
+		this.subscribeNum = subscribeNum;
+	}
+
 	@Override
 	public Object[] toObject() {
-		Object[] toSend = {getQuery(),getIdorder(),getFloor(),getRow(),getColumn(),getStatus()};
+		if(getQuery().contains("UPDATE")){
+			Object[] toSend = {getQuery(),getIdorder(),getSubscribeNum(),getStatus(),getIdparkinglot(),getFloor(),getRow(),getColumn()};
+			return toSend;
+		}
+		
+		Object[] toSend = {getQuery(),getIdorder(),getSubscribeNum(),getFloor(),getRow(),getColumn(),getStatus()};
 		return toSend;
 	}
 }
