@@ -1,6 +1,11 @@
 package controler;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 import entity.Order;
 import entity.Parking_Lot;
@@ -10,8 +15,13 @@ import entity.Reservation;
 public class ParkingLot_controller extends Controller{
 	private ArrayList<Parking_Lot> parkingLotList;
 	private ArrayList<Parking_Places> parkingPlaces;
-	private ArrayList<Parking_Places> vaccantParkingPlaces=new ArrayList<Parking_Places>();
-	private ArrayList<Parking_Lot> availableParkingLots=new ArrayList<Parking_Lot>();
+	private ArrayList<Parking_Places> vaccantParkingPlaces;
+	private ArrayList<Parking_Lot> availableParkingLots;
+	private HashMap<Integer, Order>  ordersMap;
+	
+	public ParkingLot_controller(){
+		super();
+	}
 	
 	public ParkingLot_controller(ArrayList<Parking_Lot> parkingLot,String host,int port) {
 		super(host, port);
@@ -19,27 +29,52 @@ public class ParkingLot_controller extends Controller{
 	}
 
 	
-	public ParkingLot_controller(String host, int port, ArrayList<Parking_Places> parking_places) {
+	public ParkingLot_controller(String host, int port, ArrayList<Parking_Places> parking_places,HashMap<Integer, Order> orderMap) {
+		super(host, port);
+		this.parkingPlaces=parking_places; 
+		this.ordersMap=orderMap;
+	}
+	
+	public ParkingLot_controller(String host, int port, ArrayList<Parking_Places> parking_places){
 		super(host, port);
 		this.parkingPlaces=parking_places; 
 	}
-	
 	 
-	public ArrayList<Parking_Places>  getVaccantParkingPlaces(int parkinglotId){
+	public ArrayList<Parking_Places>  getVaccantParkingPlaces(int parkinglotId,String arrivalDate,String arrivalTime) throws ParseException{
+		SimpleDateFormat timeArrivalparser=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date timeArrival=timeArrivalparser.parse(arrivalDate+" "+arrivalTime);
+		vaccantParkingPlaces=new ArrayList<Parking_Places>();
 		
 		for(Parking_Places parkingplace:parkingPlaces){
+			
 			if(parkingplace.getIdparkinglot()==parkinglotId && parkingplace.getStatus().equals("vaccant"))
 				vaccantParkingPlaces.add(parkingplace);
+			
+			else if(parkingplace.getIdparkinglot()==parkinglotId && parkingplace.getStatus().equals("occipuy")){
+					Order order=ordersMap.get(parkingplace.getIdorder());
+					SimpleDateFormat departureTimeparser=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					Date departureDate=departureTimeparser.parse(order.getDepartureDate()+" "+order.getDepartureTime());
+				
+					if(parkingplace.getIdparkinglot()==parkinglotId && parkingplace.getIdorder()==order.getIdorder()){
+							if(timeArrival.after(departureDate))
+								vaccantParkingPlaces.add(parkingplace);
+												
+				}
+			}
 		}
 		
 		return vaccantParkingPlaces;
+	}
+	
+	public void updateParkingplaceAsNotSave(){
+		
 	}
 	
 	public void saveParkingPlace(int parkinglotId,String arrivalDate,String departureDate,
 			String arrivalTime,String departutreTime ,int parkingPlaceNum,int lineNum,int floorNum){
 		
 		ArrayList<Object> result = null;
-		Object[] svaeParkingPlace={ "UPDATE  vcp_db.parking_place SET status=? WHERE idparking=? and parkingNum=?;" 
+		Object[] svaeParkingPlace={"UPDATE  vcp_db.parking_place SET status=? WHERE idparking=? and parking_place.column=?;" 
 		,"save",parkinglotId,parkingPlaceNum};
 		sendQueryToServer(svaeParkingPlace);
 		result=getResult();

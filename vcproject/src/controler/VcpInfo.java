@@ -1,27 +1,47 @@
 package controler;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import controler.Reminder.RemindTask;
+import client.Client;
 import entity.*;
 
-public class VcpInfo extends Controller implements Runnable {
+public class VcpInfo extends Controller  {
 
 	private ArrayList<Parking_Lot> parkingLot;
 	private ArrayList<Parking_Places> parkingPlaces;
 	private HashMap<String,Employee> employeeMap=new HashMap<String,Employee>();
+	private HashMap<Integer,Order>orderMap;
 	private ArrayList<Order> allOrders;
 	private ArrayList<Car> allCars;
+	private ArrayList<ClientEntity> allClients;
 	private ArrayList<Subscribe> allSubscribed;
+	private HashMap<Integer,Reservation> reservationList;
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
 	private boolean systemEnable = false;
 
 	public VcpInfo(String host) {
 		super(host);
-		Thread t1 = new Thread(this);
+		getParkingLotInfo();
+		getParkingPlacesInfo();
+		getDefultParkingLot();
 		getEmployeeInfo();
+		getAllClients();
+		getAllOrders();
+		getAllSubscribed();
+		getReservationInfo();
+		getAllCars();
+		getParkingPricingInfo();
+		closeConnection();
 	}
-
+	public ArrayList<Car> getAllCars(){
 		if (allCars == null) {
 			Object[] getallcars = { "SELECT * FROM `vcp_db`.`car`;" };
 			sendQueryToServer(getallcars);
@@ -88,12 +108,12 @@ public class VcpInfo extends Controller implements Runnable {
 		this.allSubscribed = allSubscribed;
 	}
 
-	private ArrayList<Order> getAllOrders() {
-		if (allOrders == null) {
+	public HashMap<Integer, Order> getAllOrders() {
+		if (orderMap == null) {
 			Object[] getallorders = { "SELECT * FROM `vcp_db`.`order`;" };
 			sendQueryToServer(getallorders);
 			ArrayList<Object> result = getResult();
-			ArrayList<Order> tempOrderList = new ArrayList<Order>();
+			HashMap<Integer,Order>orderMap = new HashMap<Integer,Order>();
 			if (result != null && !result.get(0).equals("No Result")) {
 				for (int i = 0; i < result.size(); i++) {
 					Order order = new Order();
@@ -135,17 +155,17 @@ public class VcpInfo extends Controller implements Runnable {
 
 					order.setStatus(result.get(i++).toString());
 					order.setType(result.get(i).toString());
-					tempOrderList.add(order);
+					orderMap.put(order.getIdorder(),order);
 				}
 			}
-			setAllOrders(tempOrderList);
+			setAllOrders(orderMap);
 		}
 
-		return allOrders;
+		return orderMap;
 	}
 
-	public void setAllOrders(ArrayList<Order> allOrders) {
-		this.allOrders = allOrders;
+	public void setAllOrders(HashMap<Integer,Order> orderMap) {
+		this.orderMap = orderMap;
 	}
 
 	public ArrayList<ClientEntity> getAllClients() {
@@ -245,7 +265,7 @@ public class VcpInfo extends Controller implements Runnable {
 
 	private ArrayList<Parking_Places> getParkingPlacesInfo() {
 		if (parkingPlaces == null) {
-			Object[] parkingPlaceQuery = { "SELECT * FROM `vcp_db`.`parking_place`;" };
+			Object[] parkingPlaceQuery = { "SELECT * FROM `vcp_db`.`parking_place` ORDER BY idparking,floor,`vcp_db`.`parking_place`.row;" };
 			sendQueryToServer(parkingPlaceQuery);
 			ArrayList<Object> result = getResult();
 			ArrayList<Parking_Places> tempPlace = new ArrayList<Parking_Places>();
@@ -253,14 +273,15 @@ public class VcpInfo extends Controller implements Runnable {
 			if (result != null && !result.get(0).equals("No Result")) {
 				for (int i = 0; i < result.size(); i++) {
 					Parking_Places pLot = new Parking_Places();
-				pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
+					pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
 					String idOrder = result.get(i++).toString();
-					if(!idOrder.equals("no value"))
-						pLot.setIdorder(Integer.parseInt(result.get(i++).toString()));
+						if(!idOrder.equals("no value"))
+					pLot.setIdorder(Integer.parseInt(idOrder));
 					pLot.setFloor(Integer.parseInt(result.get(i++).toString()));
 					pLot.setRow(Integer.parseInt(result.get(i++).toString()));
 					pLot.setColumn(Integer.parseInt(result.get(i++).toString()));
-					pLot.setStatus(result.get(i).toString());
+					pLot.setStatus(result.get(i++).toString());
+				//	pLot.setSubscribeNum(Integer.parseInt(result.get(i).toString()));
 					tempPlace.add(pLot);
 				}
 				setParkingPlaces(tempPlace);
@@ -286,12 +307,43 @@ public class VcpInfo extends Controller implements Runnable {
 			employee.setPassword(result.get(i++).toString());
 			employee.setEmail(result.get(i++).toString());
 			employee.setLogin(result.get(i++).toString());
+			employee.setRelevance(result.get(i++).toString());
 			employeeMap.put(employee.getUserName(),employee);
 		}
 		
 		setEmployee(employeeMap);
 	}
-
+	
+	public void getReservationInfo(){
+		int i=0;
+		Object[] reservationQuery={"SELECT * FROM vcp_employ.reservation;"};
+		sendQueryToServer(reservationQuery);
+		ArrayList<Object> result = getResult();
+		HashMap<Integer,Reservation> reservationList=new HashMap<Integer,Reservation>();
+		while(i<result.size()){
+			
+			Reservation reservation=new Reservation();
+			reservation.setParkingPlaceNum(Integer.parseInt(result.get(i++).toString()));
+			reservation.setParkingLotNum(Integer.parseInt(result.get(i++).toString()));
+			reservation.setFloorNum(Integer.parseInt(result.get(i++).toString()));
+			reservation.setLineNum(Integer.parseInt(result.get(i++).toString()));
+			reservation.setArrivalDate(result.get(i++).toString());
+			reservation.setArrivalTime(result.get(i++).toString());
+			reservation.setDepartureDate(result.get(i++).toString());
+			reservation.setDepartureTime(result.get(i++).toString());
+			reservationList.put(reservation.getParkingPlaceNum(), reservation);
+		}
+		
+		setReservation(reservationList);
+	}
+	
+	public void setReservation(HashMap<Integer, Reservation> reservationList){
+		this.reservationList=reservationList;
+	}
+	
+	public HashMap<Integer, Reservation> getReservation(){
+		return reservationList;
+	}
 	public Parking_Lot getDefultParkingLot() {
 		return defultParkingLot;
 	}
@@ -307,18 +359,5 @@ public class VcpInfo extends Controller implements Runnable {
 
 	public void setSystemEnable(boolean systemEnable) {
 		this.systemEnable = systemEnable;
-	}
-
-	@Override
-	public void run() {
-		getParkingLotInfo();
-		getParkingPlacesInfo();
-		getDefultParkingLot();
-		getAllClients();
-		getAllOrders();
-		getAllSubscribed();
-		getAllCars();
-		getParkingPricingInfo();
-		closeConnection();
 	}
 }

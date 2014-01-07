@@ -533,7 +533,8 @@ public class VCP_Main_Frame extends JFrame {
 	public SavingParkingPlace_Panel getSavingParkingPlace_Panel(){
 		if(savingparkingplace==null)
 			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT,getVcpInfo().getParkingPlaces(),
-					getVcpInfo().getDefultParkingLot().getIdparkinglot());
+					getVcpInfo().getAllOrders(),getVcpInfo().getDefultParkingLot().getIdparkinglot(),
+					getVcpInfo().getReservation());
 		return savingparkingplace;
 	}
 	
