@@ -26,7 +26,7 @@ public class Scheduler {
 	public static void startDailyTask(){
 		task = new DailyStatistic(port, dbIp, dbUser, dbPassword);
         Timer timer = new Timer();  
-        timer.schedule(task,getMidnight().getTime(),ONCE_PER_DAY);// for your case u need to give 1000*60*60*24
+        timer.schedule(task,getMidnight().getTime(),ONCE_PER_DAY);
     }
 	
 	private static Calendar getMidnight(){

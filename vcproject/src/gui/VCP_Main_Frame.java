@@ -512,7 +512,7 @@ public class VCP_Main_Frame extends JFrame {
 	
 	public ParkingLot_Panel getParkingLot_Panel() {
 		if (parkingLotPanel == null)
-			parkingLotPanel = new ParkingLot_Panel(8);
+			parkingLotPanel = new ParkingLot_Panel(getVcpInfo());
 		return parkingLotPanel;
 	}
 

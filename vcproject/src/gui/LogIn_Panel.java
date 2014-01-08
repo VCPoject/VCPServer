@@ -29,8 +29,6 @@ public class LogIn_Panel extends JPanel{
 		initialize();
 	}
 	
-
-
 	private void initialize(){
 		this.setBounds(10, 11, 455, 342);
 		setBackground(Color.LIGHT_GRAY);
