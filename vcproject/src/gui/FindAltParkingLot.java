@@ -15,6 +15,7 @@ public class FindAltParkingLot extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private String host;
 	private int port;
+	private VcpInfo vcpInfo;
 	private ArrayList<Parking_Lot> parkingLot;
 	private ArrayList<Parking_Lot> altParkingLots;
 	private ParkingLot_controller ParkingLotController;
@@ -29,10 +30,11 @@ public class FindAltParkingLot extends JPanel{
 	private JButton btnExit;
 	private JButton btnSave;
 	
-	public FindAltParkingLot(String host,int port,ArrayList<Parking_Lot> parkingLot,int defaultParkingLot){
+	public FindAltParkingLot(String host,int port,VcpInfo vcpInfo){
 		super();
-		this.defaultParkingLot=defaultParkingLot;
-		this.parkingLot=parkingLot;
+		this.vcpInfo=vcpInfo;
+		this.defaultParkingLot=vcpInfo.getDefultParkingLot().getIdparkinglot();
+		this.parkingLot=vcpInfo.getParkingLot();
 		this.host=host;
 		this.port=port;
 		initalize();
@@ -158,7 +160,7 @@ public class FindAltParkingLot extends JPanel{
 	
 	public ParkingLot_controller getParkingLot_controller(){
 		if(ParkingLotController==null)
-			ParkingLotController=new ParkingLot_controller( parkingLot,host, port);
+			ParkingLotController=new ParkingLot_controller( host, port,vcpInfo);
 		
 		return ParkingLotController;
 	}

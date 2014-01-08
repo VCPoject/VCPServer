@@ -27,6 +27,7 @@ import controler.MakeOrderController;
 import controler.ParkingPlaceController;
 import controler.VcpInfo;
 import entity.Order;
+import entity.Parking_Lot;
 import entity.Parking_Places;
 import entity.Subscribe;
 
@@ -157,8 +158,8 @@ public class CheckIn_Panel extends JPanel {
 				try {
 					Subscribe subscribe = null;
 					Order order = null;
-					Parking_Places pPlace;
-					Integer[] parkingInfo;
+					Parking_Places pPlace = null;
+					Integer[] parkingInfo = null;
 					String departDateStr = "";
 					String carNumStr = textFieldCarNumber.getText();
 					//Check car number //
@@ -170,22 +171,27 @@ public class CheckIn_Panel extends JPanel {
 						order = getCheckInController().getCarOrder(carNum);
 						if(order == null)
 							throw new Exception("There is no order for car number: " + carNumStr);
+						for(Parking_Lot parkinglot:getVcpInfo().getParkingLot())
+							if(order.getIdparking()==parkinglot.getIdparkinglot())
+								parkingInfo = getCheckInController().Algo(getVcpInfo(),order,parkinglot);
+						
 						departDateStr = order.getDepartureDate() + " " + order.getDepartureTime();
-						parkingInfo = getCheckInController().Algo(StringToDate(departDateStr));
 						pPlace = getParkingPlaceController().getParkingPlaceByCoordinate(parkingInfo);
+						
+						
 						pPlace.setIdorder(order.getIdorder());
 						pPlace.setSubscribeNum(null);
 						
 						Date date = new Date();
 						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						String[] strDate = format.format(date).split("//s");
+						String[] strDate = format.format(date).split("\\s");
 						order.setCheckInDate(strDate[0]);
 						order.setCheckInTime(strDate[1]);
-						order.setStatus("implement");
+						order.setStatus("checked in");
 						getMakeOrderController().UpdateOrder(order);
 						if(!getMakeOrderController().getResult().equals("done"))
-							throw new Exception("Error: Cand update order");
-					}else{
+							throw new Exception("Error: Can't update order");
+					}/*else{
 						String memberIDStr = textFieldMemberID.getText();
 						if(memberIDStr == null || memberIDStr.isEmpty() || memberIDStr.length() == 0){
 							throw new Exception("You didnt enter any member ID number");
@@ -200,17 +206,18 @@ public class CheckIn_Panel extends JPanel {
 						Date date = new Date();
 						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						departDateStr = dateFormat.format(date) + " " + subscribe.getDepartureTime();
-						
-						parkingInfo = getCheckInController().Algo(StringToDate(departDateStr));//Algorithm
+						//for(Parking_Lot parkinglot:getVcpInfo().getParkingLot())
+						//	if(pPlace.getIdparkinglot()==parkinglot.getIdparkinglot())
+								//parkingInfo = getCheckInController().Algo(getVcpInfo(),subscribe,parkinglot);//Algorithm
 						pPlace = getParkingPlaceController().getParkingPlaceByCoordinate(parkingInfo);
 						pPlace.setSubscribeNum(subscribe.getSubscribeNum());
 						pPlace.setIdorder(null);
-					}
+					}*/
 					
 					pPlace.setStatus("occupy");
 					getParkingPlaceController().updateParkingPlace(pPlace);
 					if(!getMakeOrderController().getResult().equals("done"))
-						throw new Exception("Error: Cand update parking place");
+						throw new Exception("Error: Can't update parking place");
 					getCheckInController().showSeccussesMsg("Check-in succeed");
 				} catch (Exception e2) {
 					getCheckInController().showWarningMsg(e2.getMessage());
@@ -250,7 +257,11 @@ public class CheckIn_Panel extends JPanel {
 	}
 
 	public MakeOrderController getMakeOrderController() {
+		if(makeOrderController==null)
+			makeOrderController=new MakeOrderController(host, port);
+		
 		return makeOrderController;
+		
 	}
 
 }
