@@ -9,7 +9,6 @@ public class Parking_Places implements Entity {
 	private Integer subscribeNum;
 	private String status;
 	private String query; 
-	private int subscribeNum;
 	
 	public Parking_Places(){
 	}
@@ -72,9 +71,7 @@ public class Parking_Places implements Entity {
 		this.query = command;
 	}
 
-	public Integer getSubscribeNum() {
-		return subscribeNum;
-	}
+	
 
 	public void setSubscribeNum(Integer subscribeNum) {
 		this.subscribeNum = subscribeNum;

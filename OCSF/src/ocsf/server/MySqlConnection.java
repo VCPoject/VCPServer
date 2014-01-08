@@ -53,10 +53,10 @@ public class MySqlConnection {
 				} else if (command.contains("INSERT")) {
 					insertDB(conn, msg);
 				} else if (command.contains("DELETE")) {
-					deleteDB(conn, msg);
+					deleteDB1(conn, msg);
 				}
 			else if(command.contains("DELETE"))
-				deleteDB(conn, msg);
+				deleteDB1(conn, msg);
 				conn.close();
 			}
 		} catch (Exception e) {
@@ -187,7 +187,7 @@ public class MySqlConnection {
 
 	}
 	
-	private void deleteDB(Connection con, Object[] getStatment){
+	private void deleteDB1(Connection con, Object[] getStatment){
 		try {
 			PreparedStatement deleteData = con
 					.prepareStatement((String) getStatment[0]);

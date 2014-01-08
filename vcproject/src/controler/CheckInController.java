@@ -1,14 +1,20 @@
 package controler;
 
+import java.text.ParseException;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import entity.Order;
+import entity.Parking_Lot;
 import entity.Subscribe;
 
 public class CheckInController extends Controller {
 
 	private VcpInfo vcpInfo;
 	private RegisterController registerController;
+	Parking_Algorithem parkingAlgorithem;
 
 	public CheckInController(String host, int port, VcpInfo vcpInfo) {
 		super(host, port);
@@ -16,12 +22,17 @@ public class CheckInController extends Controller {
 	}
 
 	public Order getCarOrder(Integer carNum) throws Exception {
-		for (Order order : getVcpInfo().getAllOrders()) {
-			if (order.getCar().equals(carNum))
-				if (!order.getStatus().equals("implement"))
+		Order order;
+		Set<Entry<Integer, Order>> orderEntry=getVcpInfo().getAllOrders().entrySet();
+		Iterator<Entry<Integer, Order>> odrderIterator=orderEntry.iterator();
+		while(odrderIterator.hasNext()){
+			order=odrderIterator.next().getValue();
+			if (order.getCar().equals(carNum)){
+				if (!order.getStatus().equals("checked in"))
 					return order;
 				else
 					throw new Exception("Cant fint order");
+			}
 		}
 		throw new Exception("There is no order on car number: " + carNum);
 	}
@@ -54,13 +65,15 @@ public class CheckInController extends Controller {
 		return registerController;
 	}
 
-	public Integer[] Algo(Date date) {
-		Integer idParkingLot = 1;
-		Integer floor = 1;
-		Integer row = 2;
-		Integer column = 3;
-		Integer[] coordinate = { idParkingLot, floor, row, column };
+	public Integer[] Algo(VcpInfo vcpInfo,Order order,Parking_Lot parkingLot) throws ParseException {
+		Integer[] coordinate=getParking_Algorithem(order, parkingLot).findOptimParkingPlace();
 		return coordinate;
 	}
-
+	
+	public Parking_Algorithem getParking_Algorithem(Order order,Parking_Lot parkingLot) throws ParseException{
+		if(parkingAlgorithem==null)
+			parkingAlgorithem=new Parking_Algorithem(getVcpInfo(), order, parkingLot);
+	
+		return parkingAlgorithem;
+	}
 }

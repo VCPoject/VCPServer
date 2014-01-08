@@ -74,13 +74,13 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private HashMap<Integer, Order>  order; 
 	private static final long serialVersionUID = 1L;
 	
-	public SavingParkingPlace_Panel(String host, int port, ArrayList<Parking_Places> parkingPlaces, HashMap<Integer, Order> hashMap
-			,int defaultParkingLot,HashMap<Integer, Reservation>reservation){
+	public SavingParkingPlace_Panel(String host, int port, VcpInfo vcpInfo){
 		super();
-		this.defaultParkingLot=defaultParkingLot;
-		this.parkingPlaces=parkingPlaces;
-		this.order=hashMap;
-		this.reservation=reservation;
+		this.vcpInfo=vcpInfo;
+		this.defaultParkingLot=vcpInfo.getDefultParkingLot().getIdparkinglot();
+		this.parkingPlaces=vcpInfo.getParkingPlaces();
+		this.order=vcpInfo.getAllOrders();
+		this.reservation=vcpInfo.getReservation();
 		this.host=host;
 		this.port=port;
 		initialize();
@@ -499,7 +499,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 	
 	public ParkingLot_controller getParkingLot_controller(){
 		if(parkinglotcontroller==null)
-			parkinglotcontroller=new ParkingLot_controller(this.host,this.port,parkingPlaces,order);
+			parkinglotcontroller=new ParkingLot_controller(this.host,this.port,vcpInfo);
 		
 		return  parkinglotcontroller;
 	}
