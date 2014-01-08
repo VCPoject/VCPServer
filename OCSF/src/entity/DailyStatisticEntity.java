@@ -3,11 +3,11 @@ package entity;
 public class DailyStatisticEntity implements Entity {
 
 	private Integer statisticNum;
-	private Integer implementOrders;
-	private Integer canceledOrders;
-	private Integer memberCount;
-	private Integer memberCarsCount;
-	private Integer lateCount;
+	private Integer implementOrders = 0;
+	private Integer canceledOrders = 0;
+	private Integer memberCount = 0;
+	private Integer memberCarsCount = 0;
+	private Integer lateCount = 0;
 	private String date;
 	private String query;
 	
@@ -79,7 +79,7 @@ public class DailyStatisticEntity implements Entity {
 
 	@Override
 	public Object[] toObject() {
-		Object[] obj = {getQuery(),getStatisticNum(),getImplementOrders(),getCanceledOrders(),getMemberCount(),getMemberCarsCount(),getLateCount(),getDate()};
+		Object[] obj = {getQuery(),getImplementOrders(),getCanceledOrders(),getMemberCount(),getMemberCarsCount(),getLateCount()};
 		return obj;
 	}
 

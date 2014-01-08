@@ -24,8 +24,7 @@ public class MySqlConnection {
 		}
 
 		try {
-			conn = (Connection) DriverManager.getConnection("jdbc:mysql://"
-					+ dbIp + "/vcp_db", dbUser, dbPassword);
+			conn = (Connection) DriverManager.getConnection("jdbc:mysql://"	+ dbIp + "/vcp_db", dbUser, dbPassword);
 			conn.setAutoCommit(false);
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {/* handle any errors */

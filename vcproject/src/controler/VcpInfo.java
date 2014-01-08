@@ -224,8 +224,7 @@ public class VcpInfo extends Controller{
 			if (result != null && !result.get(0).equals("No Result")) {
 				for (int i = 0; i < result.size(); i++) {
 					Parking_Lot pLot = new Parking_Lot();
-					pLot.setIdparkinglot(Integer.parseInt(result.get(i++)
-							.toString()));
+					pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
 					pLot.setDepth(Integer.parseInt(result.get(i++).toString()));
 					pLot.setHight(Integer.parseInt(result.get(i++).toString()));
 					pLot.setWidth(Integer.parseInt(result.get(i++).toString()));
@@ -250,8 +249,7 @@ public class VcpInfo extends Controller{
 			if (result != null && !result.get(0).equals("No Result")) {
 				for (int i = 0; i < result.size(); i++) {
 					Parking_Places pLot = new Parking_Places();
-					pLot.setIdparkinglot(Integer.parseInt(result.get(i++)
-							.toString()));
+					pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
 					String idOrder = result.get(i++).toString();
 					if (!idOrder.equals("no value"))
 						pLot.setIdorder(Integer.parseInt(idOrder));
