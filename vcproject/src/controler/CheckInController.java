@@ -23,11 +23,12 @@ public class CheckInController extends Controller {
 
 	public Order getCarOrder(Integer carNum) throws Exception {
 		Order order;
-		Set<Entry<Integer, Order>> orderEntry=getVcpInfo().getAllOrders().entrySet();
-		Iterator<Entry<Integer, Order>> odrderIterator=orderEntry.iterator();
-		while(odrderIterator.hasNext()){
-			order=odrderIterator.next().getValue();
-			if (order.getCar().equals(carNum)){
+		Set<Entry<Integer, Order>> orderEntry = getVcpInfo().getAllOrders()
+				.entrySet();
+		Iterator<Entry<Integer, Order>> odrderIterator = orderEntry.iterator();
+		while (odrderIterator.hasNext()) {
+			order = odrderIterator.next().getValue();
+			if (order.getCar().equals(carNum)) {
 				if (!order.getStatus().equals("checked in"))
 					return order;
 				else
@@ -37,21 +38,18 @@ public class CheckInController extends Controller {
 		throw new Exception("There is no order on car number: " + carNum);
 	}
 
-	public Subscribe getSubscribeByNum(Integer memberID, Integer carNum)
-			throws Exception {
-		for (Subscribe subscribe : getVcpInfo().getAllSubscribed()) {
-			if (subscribe.getSubscribeNum().equals(memberID))
-				if (subscribe.getCarNum().equals(carNum))
-					if (!getRegisterController().isExpired(subscribe))
-						return subscribe;
-					else
-						throw new Exception("Subscribe is expired");
-				else
-					throw new Exception(
-							"Car number is not assign to member id: "
-									+ memberID);
-		}
-		throw new Exception("Member id " + memberID + " is not exists.");
+	public Subscribe getSubscribeByNum(Integer memberID, Integer carNum) throws Exception {
+		Subscribe subscribe = getVcpInfo().getAllSubscribed().get(memberID);
+		if (subscribe == null)
+			throw new Exception("Member id " + memberID + " is not exists.");
+		if (subscribe.getCarNum().equals(carNum))
+			if (!getRegisterController().isExpired(subscribe))
+				return subscribe;
+			else
+				throw new Exception("Subscribe is expired");
+		else
+			throw new Exception("Car number is not assign to member id: " + memberID);
+
 	}
 
 	public VcpInfo getVcpInfo() {
@@ -65,15 +63,19 @@ public class CheckInController extends Controller {
 		return registerController;
 	}
 
-	public Integer[] Algo(VcpInfo vcpInfo,Order order,Parking_Lot parkingLot) throws ParseException {
-		Integer[] coordinate=getParking_Algorithem(order, parkingLot).findOptimParkingPlace();
+	public Integer[] Algo(VcpInfo vcpInfo, Order order, Parking_Lot parkingLot)
+			throws ParseException {
+		Integer[] coordinate = getParking_Algorithem(order, parkingLot)
+				.findOptimParkingPlace();
 		return coordinate;
 	}
-	
-	public Parking_Algorithem getParking_Algorithem(Order order,Parking_Lot parkingLot) throws ParseException{
-		if(parkingAlgorithem==null)
-			parkingAlgorithem=new Parking_Algorithem(getVcpInfo(), order, parkingLot);
-	
+
+	public Parking_Algorithem getParking_Algorithem(Order order,
+			Parking_Lot parkingLot) throws ParseException {
+		if (parkingAlgorithem == null)
+			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), order,
+					parkingLot);
+
 		return parkingAlgorithem;
 	}
 }

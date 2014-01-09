@@ -21,7 +21,7 @@ public class VcpInfo extends Controller  {
 	private HashMap<String, Employee> employeeMap;
 	private ArrayList<Order> allOrders;
 	private ArrayList<Car> allCars;
-	private ArrayList<Subscribe> allSubscribed;
+	private HashMap<Integer, Subscribe> allSubscribed;
 	private HashMap<Integer, Reservation> reservationList;
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
@@ -36,7 +36,7 @@ public class VcpInfo extends Controller  {
 		getAllClients();
 		getAllOrders();
 		getAllSubscribed();
-		getReservationInfo();
+		//getReservationInfo();
 		getAllCars();
 		getParkingPricingInfo();
 		closeConnection();
@@ -67,12 +67,12 @@ public class VcpInfo extends Controller  {
 		this.allCars = allCars;
 	}
 
-	public ArrayList<Subscribe> getAllSubscribed() {
+	public HashMap<Integer, Subscribe> getAllSubscribed() {
 		if (allSubscribed == null) {
 			Object[] getallsubscribed = { "SELECT * FROM `vcp_db`.`subscribe`;" };
 			sendQueryToServer(getallsubscribed);
 			ArrayList<Object> result = getResult();
-			ArrayList<Subscribe> tempSubscribeList = new ArrayList<Subscribe>();
+			HashMap<Integer, Subscribe> tempSubscribeList = new HashMap<Integer, Subscribe>();
 
 			if (result != null && !result.get(0).equals("No Result")) {
 				for (int i = 0; i < result.size(); i++) {
@@ -93,7 +93,7 @@ public class VcpInfo extends Controller  {
 						i++;
 					if(!result.get(i).toString().equals("no value"))
 						addsubscribe.setEntriesDay(Integer.parseInt(result.get(i).toString()));
-					tempSubscribeList.add(addsubscribe);
+					tempSubscribeList.put(addsubscribe.getSubscribeNum(),addsubscribe);
 				}
 			}
 			setAllSubscribed(tempSubscribeList);
@@ -101,7 +101,7 @@ public class VcpInfo extends Controller  {
 		return allSubscribed;
 	}
 
-	public void setAllSubscribed(ArrayList<Subscribe> allSubscribed) {
+	public void setAllSubscribed(HashMap<Integer, Subscribe> allSubscribed) {
 		this.allSubscribed = allSubscribed;
 	}
 
@@ -262,16 +262,16 @@ public class VcpInfo extends Controller  {
 					Parking_Places pLot = new Parking_Places();
 					pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
 					String idOrder = result.get(i++).toString();
-						if(!idOrder.equals("no value"))
-					pLot.setIdorder(Integer.parseInt(idOrder));
-					////String subscribeNum = result.get(i++).toString();
-					//if(!subscribeNum.equals("no value"))
-					//	pLot.setSubscribeNum(Integer.parseInt(subscribeNum));
+					if(!idOrder.equals("no value"))
+						pLot.setIdorder(Integer.parseInt(idOrder));
+					String subscribeNum = result.get(i++).toString();
+					if(!subscribeNum.equals("no value"))
+						pLot.setSubscribeNum(Integer.parseInt(subscribeNum));
 					pLot.setFloor(Integer.parseInt(result.get(i++).toString()));
 					pLot.setRow(Integer.parseInt(result.get(i++).toString()));
 					pLot.setColumn(Integer.parseInt(result.get(i++).toString()));
-					pLot.setStatus(result.get(i++).toString());
-				//	pLot.setSubscribeNum(Integer.parseInt(result.get(i).toString()));
+					pLot.setStatus(result.get(i).toString());
+					//pLot.setSubscribeNum(Integer.parseInt(result.get(i).toString()));
 					tempPlace.add(pLot);
 				}
 				setParkingPlaces(tempPlace);
