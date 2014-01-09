@@ -29,6 +29,15 @@ public class ParkingLot_Panel extends JPanel {
 	private JComboBox<Integer> comboBoxSelectParkingLot;
 	private JButton btnShowStatus;
 	private Parking_Lot SelectedPlot;
+	private ParkingButton buttonSave;
+	private ParkingButton btnVacant;
+	private ParkingButton buttonOccupy;
+	private ParkingButton btnNotWorking;
+	private JLabel lblSaveSpace;
+	private JLabel lblVacant;
+	private JLabel lblOccupy;
+	private JLabel lblNotWorking;
+	private JButton btnReturn;
 
 	public ParkingLot_Panel(VcpInfo vcpInfo) {
 		super();
@@ -82,6 +91,51 @@ public class ParkingLot_Panel extends JPanel {
 
 		btnShowStatus.setBounds(628, 63, 93, 29);
 		add(btnShowStatus);
+		
+		buttonSave = new ParkingButton("");
+		buttonSave.setBounds(733, 215, 52, 40);
+		buttonSave.setSaveSpace();
+		add(buttonSave);
+		
+		btnVacant = new ParkingButton("");
+		btnVacant.setBounds(733, 266, 52, 40);
+		btnVacant.setVacant();
+		add(btnVacant);
+		
+		buttonOccupy = new ParkingButton("");
+		buttonOccupy.setBounds(733, 317, 52, 40);
+		buttonOccupy.setOccupy();
+		add(buttonOccupy);
+		
+		btnNotWorking = new ParkingButton("");
+		btnNotWorking.setBounds(733, 368, 52, 40);
+		btnNotWorking.setNotWorking();
+		add(btnNotWorking);
+		
+		lblSaveSpace = new JLabel("Save Space:");
+		lblSaveSpace.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblSaveSpace.setBounds(589, 225, 109, 22);
+		add(lblSaveSpace);
+		
+		lblVacant = new JLabel("Vacant:");
+		lblVacant.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblVacant.setBounds(628, 275, 70, 22);
+		add(lblVacant);
+		
+		lblOccupy = new JLabel("Occupy:");
+		lblOccupy.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblOccupy.setBounds(628, 325, 74, 22);
+		add(lblOccupy);
+		
+		lblNotWorking = new JLabel("Not Working:");
+		lblNotWorking.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblNotWorking.setBounds(577, 375, 121, 22);
+		add(lblNotWorking);
+		
+		btnReturn = new JButton("Return");
+		
+		btnReturn.setBounds(684, 524, 101, 40);
+		add(btnReturn);
 	}
 
 	private void listners() {
@@ -203,17 +257,31 @@ public class ParkingLot_Panel extends JPanel {
 		if (getSelectedPlot().getIdparkinglot().equals(pPlace.getIdparkinglot())) {
 			if (pPlace.getFloor() == 1) {
 				tempBtn = jbuttonArrFirst.get(pPlace.getColumn() - 1);
-				tempBtn.setWhoIsParking(pPlace);
+				if(pPlace.getIdorder() != null)
+					tempBtn.setWhoIsParking(getVcpInfo().getAllOrders().get(pPlace.getIdorder()));
+				else if(pPlace.getSubscribeNum() != null){
+					tempBtn.setWhoIsParking(getVcpInfo().getAllSubscribed().get(pPlace.getSubscribeNum()));
+				}
 			} else if (pPlace.getFloor() == 2) {
 				Integer first = 3 * getPlotSize();
 				tempBtn = jbuttonArrSecond.get(pPlace.getColumn() - (first + 1));
+				if(pPlace.getIdorder() != null)
+					tempBtn.setWhoIsParking(getVcpInfo().getAllOrders().get(pPlace.getIdorder()));
+				else{
+					tempBtn.setWhoIsParking(getVcpInfo().getAllSubscribed().get(pPlace.getSubscribeNum()));
+				}
 			} else {
 				Integer first = 2 * 3 * getPlotSize();
 				tempBtn = jbuttonArrThird.get(pPlace.getColumn() - first - 1);
+				if(pPlace.getIdorder() != null)
+					tempBtn.setWhoIsParking(getVcpInfo().getAllOrders().get(pPlace.getIdorder()));
+				else{
+					tempBtn.setWhoIsParking(getVcpInfo().getAllSubscribed().get(pPlace.getSubscribeNum()));
+				}
 			}
 
 			if (pPlace.getStatus().equals("occupy")) {
-				tempBtn.setOccupu();
+				tempBtn.setOccupy();
 			} else if (pPlace.getStatus().equals("not working")) {
 				tempBtn.setNotWorking();
 			} else if (pPlace.getStatus().equals("save")) {
@@ -221,9 +289,12 @@ public class ParkingLot_Panel extends JPanel {
 			} else if (pPlace.getStatus().equals("vaccant")) {
 				tempBtn.setVacant();
 			}
-			tempBtn.setWhoIsParking(pPlace);
 		}
 
+	}
+
+	public JButton getBtnReturn() {
+		return btnReturn;
 	}
 
 }

@@ -209,6 +209,17 @@ public class VCP_Main_Frame extends JFrame {
 									loginpanel=getLogIn_Frame().getLogIn_Panel();
 									loginpanel=null;
 									setContentPane(getEmployeePanel());
+									getEmployeePanel().getbtnParkingStatus().addActionListener(new ActionListener() {
+										public void actionPerformed(ActionEvent e) {
+											setContentPane(getParkingLot_Panel());
+											getParkingLot_Panel().getBtnReturn().addActionListener(new ActionListener() {
+												public void actionPerformed(ActionEvent e) {
+													setContentPane(getEmployeePanel());
+													parkingLotPanel = null;
+												}
+											});
+										}
+									});
 									
 								}
 							}
@@ -362,7 +373,6 @@ public class VCP_Main_Frame extends JFrame {
 		});
 		
 		getEmployeePanel().getbtnSignAsnotWorking().addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent e) {
 				setContentPane(getNotWorkingPlaces_Panel());
 				getNotWorkingPlaces_Panel().getbtnExit().addActionListener(new ActionListener() {
@@ -385,7 +395,6 @@ public class VCP_Main_Frame extends JFrame {
 		});
 		
 		getEmployeePanel().getbtnFindAltParkin().addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent e) {
 				setContentPane(getFindaltparkinglot());
 				getFindaltparkinglot().getbtnExit().addActionListener(new ActionListener() {
@@ -403,12 +412,6 @@ public class VCP_Main_Frame extends JFrame {
 							}
 					}
 				});
-			}
-		});
-		
-		getMainPanel().getBtnDofek().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setContentPane(getParkingLot_Panel());
 			}
 		});
 		

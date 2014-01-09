@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import entity.Parking_Places;
 
@@ -17,6 +19,7 @@ public class ParkingButton extends JButton {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Object whoIsParking;
+	private ShowWhoParkFrame showWhoParkFrame;
 	
 	public ParkingButton() {
 	}
@@ -30,7 +33,18 @@ public class ParkingButton extends JButton {
 		setVacant();
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				getShowWhoParkFrame();
+				try {
+					getShowWhoParkFrame().getBtnClose().addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							getShowWhoParkFrame().setVisible(false);
+							getShowWhoParkFrame().dispose();
+							showWhoParkFrame = null;
+						}
+					});
+				} catch (Exception e) {
+				}
+
 			}
 		});
 	}
@@ -55,7 +69,7 @@ public class ParkingButton extends JButton {
 		this.repaint();
 	}
 	
-	public void setOccupu(){
+	public void setOccupy(){
 		this.setBackground(Color.WHITE);
 		this.setEnabled(true);
 		this.repaint();
@@ -73,6 +87,13 @@ public class ParkingButton extends JButton {
 
 	public void setWhoIsParking(Object whoIsParking) {
 		this.whoIsParking = whoIsParking;
+	}
+
+	public ShowWhoParkFrame getShowWhoParkFrame() {
+		if(showWhoParkFrame == null && getWhoIsParking() != null){
+			showWhoParkFrame = new ShowWhoParkFrame(getWhoIsParking());
+		}
+		return showWhoParkFrame;
 	}
 
 }

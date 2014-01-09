@@ -88,7 +88,7 @@ public class Parking_Places implements Entity {
 		return toSend;
 	}
 
-	public int getSubscribeNum() {
+	public Integer getSubscribeNum() {
 		return subscribeNum;
 	}
 
