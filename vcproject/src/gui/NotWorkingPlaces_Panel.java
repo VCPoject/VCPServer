@@ -3,6 +3,7 @@ package gui;
 import javax.swing.*;
 
 import controler.ParkingLot_controller;
+import controler.VcpInfo;
 import entity.Parking_Places;
 
 import java.awt.Font;
@@ -31,16 +32,17 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	private int lineNum;
 	private int parkingplaceNum;
 	private int defaultParkingLot;
+	private VcpInfo vcpInfo;
 	private ArrayList<Parking_Places> parkingPlaces;
 	private JComboBox <String> comboBoxParkingLot;
 	private JComboBox <String> comboBoxParkingPlace;
 	private JComboBox <String> comboBoxLine;
 	private JComboBox <String> comboBoxFloor;
 	
-	public NotWorkingPlaces_Panel(String host,int port, ArrayList<Parking_Places> parkingPlaces,int defaultParkingLot){
+	public NotWorkingPlaces_Panel(String host,int port, VcpInfo vcpInfo){
 		super();
-		this.defaultParkingLot=defaultParkingLot;
-		this.parkingPlaces= parkingPlaces;
+		this.defaultParkingLot=vcpInfo.getDefultParkingLot().getIdparkinglot();
+		this.parkingPlaces= vcpInfo.getParkingPlaces();
 		this.host=host;
 		this.port=port;
 		initialize();
@@ -291,7 +293,7 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	
 	public ParkingLot_controller getParkingLot_controller(){
 		if(parkinglotcontroller==null)
-			parkinglotcontroller=new ParkingLot_controller(this.host,this.port,parkingPlaces);
+			parkinglotcontroller=new ParkingLot_controller(this.host,this.port,vcpInfo);
 		
 		return  parkinglotcontroller;
 	}

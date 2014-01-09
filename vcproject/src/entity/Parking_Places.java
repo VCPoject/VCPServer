@@ -72,9 +72,7 @@ public class Parking_Places implements Entity {
 		this.query = command;
 	}
 
-	public Integer getSubscribeNum() {
-		return subscribeNum;
-	}
+	
 
 	public void setSubscribeNum(Integer subscribeNum) {
 		this.subscribeNum = subscribeNum;

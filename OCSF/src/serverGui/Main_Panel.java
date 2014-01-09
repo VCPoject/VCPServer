@@ -1,16 +1,12 @@
 package serverGui; 
 
 import java.awt.SystemColor;
-
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-
 import java.awt.Font;
-
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -20,11 +16,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
 import javax.swing.JTextArea;
-
 import ocsf.server.TextAreaOutputStream;
-
 import javax.swing.border.TitledBorder;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -32,7 +25,6 @@ import javax.swing.UIManager;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.JPasswordField;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 

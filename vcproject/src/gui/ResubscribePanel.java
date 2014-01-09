@@ -30,6 +30,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -441,8 +444,10 @@ public class ResubscribePanel extends JPanel {
 							throw new Exception("You didnt enter car number");
 						Integer carNumber = Integer.parseInt(carNumberStr);
 
-						for (Subscribe findSubscribe : getVcpInfo()
-								.getAllSubscribed()) {
+						Set<Entry<Integer, Subscribe>> subscribeEntry = getVcpInfo().getAllSubscribed().entrySet();
+						Iterator<Entry<Integer, Subscribe>> subscribeIterator = subscribeEntry.iterator();
+						while (subscribeIterator.hasNext()) {
+							Subscribe findSubscribe = subscribeIterator.next().getValue();
 							if (findSubscribe.getCarNum().equals(carNumber)
 									&& findSubscribe.getIdClient().equals(
 											clientId)) {
@@ -464,20 +469,15 @@ public class ResubscribePanel extends JPanel {
 							throw new Exception(
 									"You didnt enter valid member number");
 						}
-						for (Subscribe findSubscribe : getVcpInfo()
-								.getAllSubscribed()) {
-							if (findSubscribe.getSubscribeNum()
-									.equals(memberID)) {
-								if (!getRegisterController().isExpired(
-										findSubscribe)) {
-									throw new Exception(
-											"No need to resubscribe. Subscribe is not expird yet");
-								}
-								canResubscribe = true;
-								subscribe = findSubscribe;
-								break;
+						Subscribe findSubscribe = getVcpInfo().getAllSubscribed().get(memberID);
+						if (findSubscribe != null) {
+							if (!getRegisterController().isExpired(findSubscribe)) {
+								throw new Exception("No need to resubscribe. Subscribe is not expird yet");
 							}
+							canResubscribe = true;
+							subscribe = findSubscribe;
 						}
+						
 					}
 
 					if (!canResubscribe) {

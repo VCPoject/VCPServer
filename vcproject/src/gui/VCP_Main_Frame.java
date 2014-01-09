@@ -525,7 +525,7 @@ public class VCP_Main_Frame extends JFrame {
 	
 	public ParkingLot_Panel getParkingLot_Panel() {
 		if (parkingLotPanel == null)
-			parkingLotPanel = new ParkingLot_Panel(8);
+			parkingLotPanel = new ParkingLot_Panel(getVcpInfo());
 		return parkingLotPanel;
 	}
 
@@ -545,23 +545,19 @@ public class VCP_Main_Frame extends JFrame {
 	
 	public SavingParkingPlace_Panel getSavingParkingPlace_Panel(){
 		if(savingparkingplace==null)
-			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT,getVcpInfo().getParkingPlaces(),
-					getVcpInfo().getAllOrders(),getVcpInfo().getDefultParkingLot().getIdparkinglot(),
-					getVcpInfo().getReservation());
+			savingparkingplace=new SavingParkingPlace_Panel(this.host, DEFAULT_PORT,getVcpInfo());
 		return savingparkingplace;
 	}
 	
 	public NotWorkingPlaces_Panel getNotWorkingPlaces_Panel(){
 		if(notworkingplaces==null)
-			notworkingplaces=new NotWorkingPlaces_Panel(host,DEFAULT_PORT,getVcpInfo().getParkingPlaces(),
-					getVcpInfo().getDefultParkingLot().getIdparkinglot());
+			notworkingplaces=new NotWorkingPlaces_Panel(host,DEFAULT_PORT,getVcpInfo());
 		return notworkingplaces;
 	}
 	
 	public FindAltParkingLot getFindaltparkinglot(){
 		if(findaltparkinglot==null)
-			findaltparkinglot=new FindAltParkingLot(host, DEFAULT_PORT, getVcpInfo().getParkingLot(),
-					getVcpInfo().getDefultParkingLot().getIdparkinglot());
+			findaltparkinglot=new FindAltParkingLot(host, DEFAULT_PORT, getVcpInfo());
 		return findaltparkinglot;
 	}
 	

@@ -17,6 +17,7 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import controller.Scheduler;
 import ocsf.server.ConnectionToClient;
 import ocsf.server.EchoServer;
 
@@ -29,6 +30,7 @@ public class Main_Frame extends JFrame {
 	private Main_Panel mainPanel;
 	private int port;
 	private EchoServer sv;
+	private Scheduler scheduler;
 	String dbIp;
 	String dbUser;
 	String dbPassword;
@@ -92,8 +94,7 @@ public class Main_Frame extends JFrame {
 
 	}
 
-	private void setConnection(int port, String dbIp, String dbUser,
-			String dbPassword) {
+	private void setConnection(int port, String dbIp, String dbUser,String dbPassword) {
 		sv = new EchoServer(port, dbIp, dbUser, dbPassword);
 
 		try {
@@ -164,6 +165,7 @@ public class Main_Frame extends JFrame {
 						getMainPanel().getTextFieldDBusername().setEditable(
 								false);
 						getMainPanel().getPasswordField().setEditable(false);
+						scheduler = new Scheduler(port, dbIp, dbUser, dbPassword);
 					}
 				});
 

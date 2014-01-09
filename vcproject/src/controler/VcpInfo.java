@@ -18,10 +18,10 @@ public class VcpInfo extends Controller  {
 	private ArrayList<Parking_Places> parkingPlaces;
 	private ArrayList<ClientEntity> allClients;
 	private HashMap<Integer,Order>orderMap;
+	private HashMap<String, Employee> employeeMap;
 	private ArrayList<Order> allOrders;
 	private ArrayList<Car> allCars;
-	private ArrayList<Subscribe> allSubscribed;
-	private HashMap<Integer,Reservation> reservationList;
+	private HashMap<Integer, Reservation> reservationList;
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
 	private boolean systemEnable = false;
@@ -68,12 +68,12 @@ public class VcpInfo extends Controller  {
 		this.allCars = allCars;
 	}
 
-	public ArrayList<Subscribe> getAllSubscribed() {
+	public HashMap<Integer, Subscribe> getAllSubscribed() {
 		if (allSubscribed == null) {
 			Object[] getallsubscribed = { "SELECT * FROM `vcp_db`.`subscribe`;" };
 			sendQueryToServer(getallsubscribed);
 			ArrayList<Object> result = getResult();
-			ArrayList<Subscribe> tempSubscribeList = new ArrayList<Subscribe>();
+			HashMap<Integer, Subscribe> tempSubscribeList = new HashMap<Integer, Subscribe>();
 
 			if (result != null && !result.get(0).equals("No Result")) {
 				for (int i = 0; i < result.size(); i++) {
@@ -94,7 +94,7 @@ public class VcpInfo extends Controller  {
 						i++;
 					if(!result.get(i).toString().equals("no value"))
 						addsubscribe.setEntriesDay(Integer.parseInt(result.get(i).toString()));
-					tempSubscribeList.add(addsubscribe);
+					tempSubscribeList.put(addsubscribe.getSubscribeNum(),addsubscribe);
 				}
 			}
 			setAllSubscribed(tempSubscribeList);
@@ -102,7 +102,7 @@ public class VcpInfo extends Controller  {
 		return allSubscribed;
 	}
 
-	public void setAllSubscribed(ArrayList<Subscribe> allSubscribed) {
+	public void setAllSubscribed(HashMap<Integer, Subscribe> allSubscribed) {
 		this.allSubscribed = allSubscribed;
 	}
 
@@ -236,8 +236,7 @@ public class VcpInfo extends Controller  {
 			if (result != null && !result.get(0).equals("No Result")) {
 				for (int i = 0; i < result.size(); i++) {
 					Parking_Lot pLot = new Parking_Lot();
-					pLot.setIdparkinglot(Integer.parseInt(result.get(i++)
-							.toString()));
+					pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
 					pLot.setDepth(Integer.parseInt(result.get(i++).toString()));
 					pLot.setHight(Integer.parseInt(result.get(i++).toString()));
 					pLot.setWidth(Integer.parseInt(result.get(i++).toString()));
@@ -286,7 +285,7 @@ public class VcpInfo extends Controller  {
 	
 	public void getReservationInfo(){
 		int i=0;
-		Object[] reservationQuery={"SELECT * FROM vcp_employ.reservation;"};
+		Object[] reservationQuery={"SELECT * FROM vcp_db.reservation;"};
 		sendQueryToServer(reservationQuery);
 		ArrayList<Object> result = getResult();
 		HashMap<Integer,Reservation> reservationList=new HashMap<Integer,Reservation>();

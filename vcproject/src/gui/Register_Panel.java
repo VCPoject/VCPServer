@@ -1,15 +1,22 @@
 package gui;
 
 import java.awt.SystemColor;
+
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
 import java.awt.Font;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
@@ -20,11 +27,16 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.SwingConstants;
+
+import com.sun.org.apache.xpath.internal.axes.SubContextList;
+
 import controler.RegisterController;
 import controler.VcpInfo;
 import entity.Car;
+import entity.Order;
 import entity.Parking_Lot;
 import entity.Subscribe;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -383,9 +395,10 @@ public class Register_Panel extends JPanel {
 									+ "is not associated with car number: "
 									+ carNumberStr);
 						}
-
-						for (Subscribe findSubscribe : getVcpInfo()
-								.getAllSubscribed()) {
+						Set<Entry<Integer, Subscribe>> subscribeEntry = getVcpInfo().getAllSubscribed().entrySet();
+						Iterator<Entry<Integer, Subscribe>> subscribeIterator = subscribeEntry.iterator();
+						while (subscribeIterator.hasNext()) {
+							Subscribe findSubscribe = subscribeIterator.next().getValue();
 							if (findSubscribe.getCarNum().equals(Integer.parseInt(carNumberStr)) && findSubscribe.getIdClient().equals(Integer.parseInt(idclient))) {
 								if (getRegisterController().isExpired(findSubscribe)) {
 									throw new Exception(carNumberStr + " is already registerd.\nYou can to make resubscribe to member id: " + findSubscribe.getSubscribeNum());
@@ -451,7 +464,7 @@ public class Register_Panel extends JPanel {
 						newSubscribe.setSubscribeNum(getVcpInfo()
 								.getAllSubscribed().size() + 1);
 						newSubscribe.setQuery(subscribeQuery);
-						getVcpInfo().getAllSubscribed().add(newSubscribe);
+						getVcpInfo().getAllSubscribed().put(getVcpInfo().getAllSubscribed().size(),newSubscribe);
 						getRegisterController().addNewSubscribe(newSubscribe);
 						if (!getRegisterController().getResult().get(0)
 								.equals("done"))
@@ -536,9 +549,12 @@ public class Register_Panel extends JPanel {
 	 * ok
 	 */
 	public boolean checkForClientValidity(Integer clientID) throws Exception {
-		for (Subscribe subscribe : getVcpInfo().getAllSubscribed()) {
+		Set<Entry<Integer, Subscribe>> subscribeEntry = getVcpInfo().getAllSubscribed().entrySet();
+		Iterator<Entry<Integer, Subscribe>> subscribeIterator = subscribeEntry.iterator();
+		while (subscribeIterator.hasNext()) {
+			Subscribe subscribe = subscribeIterator.next().getValue();
 			if (subscribe.getIdClient().equals(clientID)) {
-
+				return false;
 			}
 		}
 

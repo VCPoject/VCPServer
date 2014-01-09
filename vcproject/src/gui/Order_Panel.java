@@ -644,11 +644,13 @@ public class Order_Panel extends JPanel {
 						if (!checkIfCarExist(car)) {
 							result = null;
 							getMakeOrderController().addCarToDB(car);
+							getVcpInfo().getAllCars().add(car);
 						}
 					result = getMakeOrderController().getResult();
 					if (result.get(0) != null) {
 						getMakeOrderController().addNewOrder(order);
 						result = getMakeOrderController().getResult();
+						getVcpInfo().getAllOrders().put(getVcpInfo().getAllOrders().size()+1,order);
 					}
 
 					if (result.get(0).equals("done")) {

@@ -23,23 +23,14 @@ public class ParkingLot_controller extends Controller{
 		super();
 	}
 	
-	public ParkingLot_controller(ArrayList<Parking_Lot> parkingLot,String host,int port) {
-		super(host, port);
-		this.parkingLotList=parkingLot;
-	}
-
 	
-	public ParkingLot_controller(String host, int port, ArrayList<Parking_Places> parking_places,HashMap<Integer, Order> orderMap) {
+	public ParkingLot_controller(String host, int port, VcpInfo vcpInfo) {
 		super(host, port);
-		this.parkingPlaces=parking_places; 
-		this.ordersMap=orderMap;
+		this.parkingPlaces=vcpInfo.getParkingPlaces(); 
+		this.ordersMap=vcpInfo.getAllOrders();
 	}
 	
-	public ParkingLot_controller(String host, int port, ArrayList<Parking_Places> parking_places){
-		super(host, port);
-		this.parkingPlaces=parking_places; 
-	}
-	 
+	
 	public ArrayList<Parking_Places>  getVaccantParkingPlaces(int parkinglotId,String arrivalDate,String arrivalTime) throws ParseException{
 		SimpleDateFormat timeArrivalparser=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date timeArrival=timeArrivalparser.parse(arrivalDate+" "+arrivalTime);
