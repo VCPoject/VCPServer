@@ -53,10 +53,10 @@ public class MySqlConnection {
 				} else if (command.contains("INSERT")) {
 					insertDB(conn, msg);
 				} else if (command.contains("DELETE")) {
-					deleteDB1(conn, msg);
+					deleteDB(conn, msg);
 				}
 			else if(command.contains("DELETE"))
-				deleteDB1(conn, msg);
+				deleteDB(conn, msg);
 				conn.close();
 			}
 		} catch (Exception e) {
@@ -79,6 +79,8 @@ public class MySqlConnection {
 					selectData.setInt(i, (Integer) getStatment[i]);
 				else if (getStatment[i] instanceof Date)
 					selectData.setDate(i, (Date) getStatment[i]);
+				else if (getStatment[i] instanceof Timestamp)
+					selectData.setTimestamp(i, (Timestamp) getStatment[i]);
 			}
 			rs = selectData.executeQuery();
 			ArrayList<Object> list = new ArrayList<Object>();

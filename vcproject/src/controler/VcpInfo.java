@@ -25,7 +25,8 @@ public class VcpInfo extends Controller  {
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
 	private boolean systemEnable = false;
-	private HashMap<String, Employee>  employeeMap;
+	private HashMap<Integer, Subscribe> allSubscribed;
+
 
 	public VcpInfo(String host) {
 		super(host);

@@ -1,8 +1,15 @@
 package controler;  
 
-import java.text.ParseException;
+<<<<<<< HEAD
 import java.util.*;
 import java.util.Map.Entry;
+=======
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
+>>>>>>> refs/remotes/origin/master
 
 import entity.Order;
 import entity.Parking_Lot;
@@ -20,14 +27,24 @@ public class CheckInController extends Controller {
 	}
 
 	public Order getCarOrder(Integer carNum) throws Exception {
+<<<<<<< HEAD
 		Set<Entry<Integer, Order>> orderEntry=getVcpInfo().getAllOrders().entrySet();
 		Iterator<Entry<Integer, Order>> odrderIterator=orderEntry.iterator();
 		while(odrderIterator.hasNext())
 			if (odrderIterator.next().getValue().equals(carNum)){
 				if (!odrderIterator.next().getValue().equals("checked in"))
 					return odrderIterator.next().getValue();
+=======
+		Order order;
+		Set<Entry<Integer, Order>> orderEntry = getVcpInfo().getAllOrders()
+				.entrySet();
+		Iterator<Entry<Integer, Order>> odrderIterator = orderEntry.iterator();
+		while (odrderIterator.hasNext()) {
+			order = odrderIterator.next().getValue();
 			if (order.getCar().equals(carNum)) {
 				if (!order.getStatus().equals("checked in"))
+					return order;
+>>>>>>> refs/remotes/origin/master
 				else
 					throw new Exception("Cant fint order");
 			}

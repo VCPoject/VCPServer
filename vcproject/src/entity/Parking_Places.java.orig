@@ -5,17 +5,14 @@ public class Parking_Places implements Entity {
 	private Integer floor;
 	private Integer row;
 	private Integer column;
-	public Integer getSubscribeNum() {
-		return subscribeNum;
-	}
-
-
-
 	private Integer idorder;
 	private Integer subscribeNum;
 	private String status;
 	private String query; 
+<<<<<<< HEAD
 
+=======
+>>>>>>> refs/remotes/origin/master
 	
 	public Parking_Places(){
 	}

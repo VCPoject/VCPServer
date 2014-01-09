@@ -2,7 +2,7 @@ package entity;
 
 import java.sql.Timestamp;
 
-public class WeeklyStatsEntity {
+public class WeeklyStatsEntityTime {
 	
 	private String query;
 	private Timestamp date;
@@ -154,7 +154,7 @@ public class WeeklyStatsEntity {
 
  
 	public Object[] toObject() {
-		Object[] obj = {getQuery(), getDate().toString(),getoldDate().toString()};
+		Object[] obj = {getQuery(), getDate(),getoldDate()};
 		return obj;
 	}
 

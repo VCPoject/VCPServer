@@ -22,24 +22,26 @@ public class ManagerStats extends Controller {
 	private ArrayList<Integer>memberCount= new ArrayList<Integer>();
 	private ArrayList<Integer>memHasMorCar= new ArrayList<Integer>();
 	private ArrayList<Integer>lateCount= new ArrayList<Integer>();
+	private ArrayList<Integer> NotWork = new ArrayList<Integer>();
 	private ManagerStatsEntity statsEntity;
 	public ManagerStats(){
 		super();
 		statsEntity= new ManagerStatsEntity();
 	}
 	
-	protected void getRowData(){
-		
-		Object[] obj ={"SELECT * FROM vcp_employ.daily_statistic WHERE date < ? AND date > ?;"};
+	protected void getRowData(Date start,Date end){
+		Timestamp startDate = new Timestamp(start.getTime());
+		Timestamp endDate = new Timestamp(end.getTime());
+		Object[] obj ={"SELECT * FROM vcp_employ.daily_statistic WHERE date < ? AND date > ?;",endDate.toString(),startDate.toString()};
 		sendQueryToServer(obj);
 		for(int i=0;i<getResult().size();i++)
 		{
 			i++;
-			impOrder.add((int) getResult().get(i++));
-			cancelOrder.add((int) getResult().get(i++));
-			memberCount.add((int) getResult().get(i++));
-			memHasMorCar.add((int) getResult().get(i++));
-			lateCount.add((int) getResult().get(i));
+			impOrder.add(Integer.parseInt(getResult().get(i++).toString()));
+			cancelOrder.add(Integer.parseInt(getResult().get(i++).toString()));
+			memberCount.add(Integer.parseInt(getResult().get(i++).toString()));
+			memHasMorCar.add(Integer.parseInt(getResult().get(i++).toString()));
+			lateCount.add(Integer.parseInt(getResult().get(i).toString()));
 		}
 	}
 	
@@ -93,31 +95,31 @@ public class ManagerStats extends Controller {
 	}
 	
 
-	public Vector<Object> CalculetedNotWork(){
-		
+	public ArrayList<Integer> CalculetedNotWork(Date s,Date e){
+		Timestamp startDate = new Timestamp(s.getTime());
+		Timestamp endDate = new Timestamp(e.getTime());
+		int i=0;
 		long startSum=0;
 		long endSum=0;
-		Timestamp startDate;
-		Timestamp endDate;
-		ArrayList<Long> start = new ArrayList<Long>();
-		Object[] obj ={"SELECT startDate,endDate FROM vcp_db.not_working_places WHERE endDate < ? AND startDate > ?;"};
+		Object[] obj ={"SELECT startDate,endDate FROM vcp_db.not_working_places WHERE endDate < ? AND startDate > ?;",endDate.toString(),startDate.toString()};
 		sendQueryToServer(obj);
 		if(!getResult().get(0).equals("No Result"))
-			for(int i=0;i>getResult().size();i++){
+			for(i=0;i>getResult().size();i++){
 				startDate=(Timestamp)getResult().get(i++);
 				endDate = (Timestamp)getResult().get(i);
 				startSum= startSum + startDate.getTime();
 				endSum= endSum + endDate.getTime();
 				if(i%7==0){
-					start.add((endSum-startSum)/(60 * 60 * 1000));
-				}
-				if(i<=7){
-					start.add((endSum-startSum)/(60 * 60 * 1000));
+					Long l = (endSum-startSum)/(60 * 60 * 1000);
+					NotWork.add(Integer.parseInt(l.toString()));
 				}
 			}
-		Vector<Object> row=new Vector<Object>(start.size());
-		Collections.addAll(row, start);
-		return row; 
+		if(i<=7){
+			Long l = (endSum-startSum)/(60 * 60 * 1000);
+			NotWork.add(Integer.parseInt(l.toString()));
+		}
+		
+		return NotWork; 
 	}
 	
 	public Vector<String> obtainFieldsForNotWork(){
@@ -132,20 +134,42 @@ public class ManagerStats extends Controller {
 	}
 	
 	public Vector<Vector<Object>> ActivityReport(Date start,Date end){
-		getRowData();
+		getRowData(start,end);
+		CalculetedNotWork(start,end);
 		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
 		Vector<Object> row=new Vector<Object>(12);
 		row.add(MakeMedian(impOrder));
 		row.add(StiatTekken(impOrder));
-		Collections.addAll(row, StiatTekken(impOrder));
+		Collections.addAll(row, Incidence(impOrder));
 		result.add(row);
 		row=new Vector<Object>(12);
 		row.add(MakeMedian(cancelOrder));
 		row.add(StiatTekken(cancelOrder));
-		Collections.addAll(row, StiatTekken(cancelOrder));
+		Collections.addAll(row, Incidence(cancelOrder));
 		result.add(row);	
-
+		row=new Vector<Object>(12);
+		row.add(MakeMedian(NotWork));
+		row.add(StiatTekken(NotWork));
+		Collections.addAll(row, Incidence(NotWork));
+		result.add(row);	
 		return result;
+	}
+	
+	public Vector<String> obtainFields(){
+		Vector<String> s= new Vector<String>(12);
+		s.add("MakeMedian");
+		s.add("Standard deviation");
+		s.add("Frequency Distribution Decile1");
+		s.add("Frequency Distribution Decile2");
+		s.add("Frequency Distribution Decile3");
+		s.add("Frequency Distribution Decile4");
+		s.add("Frequency Distribution Decile5");
+		s.add("Frequency Distribution Decile6");
+		s.add("Frequency Distribution Decile7");
+		s.add("Frequency Distribution Decile8");
+		s.add("Frequency Distribution Decile9");
+		s.add("Frequency Distribution Decile10");
+		return s;
 	}
 
 }

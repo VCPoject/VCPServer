@@ -3,9 +3,10 @@ package gui;
 import java.awt.SystemColor;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
-
-import controler.WeeklyStats;
+import controller.WeeklyStats;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -23,6 +24,7 @@ public class Statistics extends JPanel {
 	private String host;
 	private int port = 5555;
 	private JButton btnDailyStatistics;
+	private JScrollPane scrollPane;
 
 	public Statistics(String host, int dEFAULT_PORT) {
 		super();
@@ -47,12 +49,12 @@ public class Statistics extends JPanel {
 		 lblStatistics.setBounds(331, 11, 123, 28);
 		 add(lblStatistics);
 		 
-		 btnWeeklyStatistics = new JButton("Weekly Statistics");
-		 btnWeeklyStatistics.setFont(new Font("Tahoma", Font.BOLD, 12));
-		 btnWeeklyStatistics.setBounds(157, 68, 137, 28);
-		 add(btnWeeklyStatistics);
+		 scrollPane = new JScrollPane();
+		 scrollPane.setBounds(10, 107, 765, 400);
+		 add(scrollPane);
+		// DefaultTableModel model= new DefaultTableModel(weekController.toVector(),weekController.obtainFields());
 		 
-		 table = new JTable(){
+		 table=new JTable(){
 			 /**
 			 * 
 			 */
@@ -64,9 +66,13 @@ public class Statistics extends JPanel {
 				
 			
 		 };
-		 table.setBounds(10, 107, 765, 400);
-		 add(table);
+		 scrollPane.setViewportView(table);
 		 
+		 btnWeeklyStatistics = new JButton("Weekly Statistics");
+		 btnWeeklyStatistics.setFont(new Font("Tahoma", Font.BOLD, 12));
+		 btnWeeklyStatistics.setBounds(157, 68, 137, 28);
+		 add(btnWeeklyStatistics);
+
 		 btnDailyStatistics = new JButton("Daily Statistics");
 		 btnDailyStatistics.setFont(new Font("Tahoma", Font.BOLD, 12));
 		 btnDailyStatistics.setBounds(10, 68, 137, 28);
@@ -78,19 +84,7 @@ public class Statistics extends JPanel {
 		getbtnWeeklyStatistics().addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent arg0) {
 		 		getWeeklyStats().getRowData();
-		 		table=new JTable(weekController.toVector(),weekController.obtainFields()){
-					 /**
-					 * 
-					 */
-					private static final long serialVersionUID = 1L;
-
-					public boolean isCellEditable(int data,int columnNames){
-						 return false;
-					 }
-						
-					
-				 };
-		 		
+		 		table.setModel(new DefaultTableModel(weekController.toVector(),weekController.obtainFields()));
 		 	}
 		 });
 		
