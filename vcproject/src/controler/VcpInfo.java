@@ -1,4 +1,4 @@
-package controler;
+package controler;   
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,12 +20,12 @@ public class VcpInfo extends Controller  {
 	private HashMap<Integer,Order>orderMap;
 	private ArrayList<Order> allOrders;
 	private ArrayList<Car> allCars;
-	private ArrayList<ClientEntity> allClients;
 	private ArrayList<Subscribe> allSubscribed;
 	private HashMap<Integer,Reservation> reservationList;
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
 	private boolean systemEnable = false;
+	private HashMap<String, Employee>  employeeMap;
 
 	public VcpInfo(String host) {
 		super(host);
@@ -36,7 +36,7 @@ public class VcpInfo extends Controller  {
 		getAllClients();
 		getAllOrders();
 		getAllSubscribed();
-		getReservationInfo();
+		//getReservationInfo();
 		getAllCars();
 		getParkingPricingInfo();
 		closeConnection();
@@ -44,7 +44,7 @@ public class VcpInfo extends Controller  {
 		closeConnection();
 	}
 	public ArrayList<Car> getAllCars(){
-	public Pricing getParkingPricingInfo() {
+	
 		if (allCars == null) {
 			Object[] getallcars = { "SELECT * FROM `vcp_db`.`car`;" };
 			sendQueryToServer(getallcars);
@@ -263,18 +263,16 @@ public class VcpInfo extends Controller  {
 				for (int i = 0; i < result.size(); i++) {
 					Parking_Places pLot = new Parking_Places();
 					pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
-							.toString()));
 					String idOrder = result.get(i++).toString();
-						if(!idOrder.equals("no value"))
-					pLot.setIdorder(Integer.parseInt(idOrder));
+					if (!idOrder.equals("no value"))
+						pLot.setIdorder(Integer.parseInt(idOrder));
 					String subscribeNum = result.get(i++).toString();
 					if(!subscribeNum.equals("no value"))
 						pLot.setSubscribeNum(Integer.parseInt(subscribeNum));
 					pLot.setFloor(Integer.parseInt(result.get(i++).toString()));
 					pLot.setRow(Integer.parseInt(result.get(i++).toString()));
 					pLot.setColumn(Integer.parseInt(result.get(i++).toString()));
-					pLot.setStatus(result.get(i++).toString());
-				//	pLot.setSubscribeNum(Integer.parseInt(result.get(i).toString()));
+					pLot.setStatus(result.get(i).toString());
 					tempPlace.add(pLot);
 				}
 				setParkingPlaces(tempPlace);
@@ -284,7 +282,7 @@ public class VcpInfo extends Controller  {
 
 	}
 
-			employee.setRelevance(result.get(i++).toString());
+		
 	
 	public void getReservationInfo(){
 		int i=0;

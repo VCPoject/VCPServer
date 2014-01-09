@@ -1,4 +1,4 @@
-package ocsf.server;
+package ocsf.server; 
 
 import java.util.ArrayList;
 import java.sql.Connection;
@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.ResultSetMetaData;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 public class MySqlConnection {
 
@@ -101,7 +102,8 @@ public class MySqlConnection {
 						list.add((Date)obj);
 					else if (obj instanceof Time)
 						list.add((Time)obj);
-					
+					else if (obj instanceof Timestamp)
+						list.add((Timestamp)obj);
 				}
 				thereIsRslt = true;
 			}
@@ -187,25 +189,7 @@ public class MySqlConnection {
 
 	}
 	
-	private void deleteDB(Connection con, Object[] getStatment){
-		try {
-			PreparedStatement deleteData = con
-					.prepareStatement((String) getStatment[0]);
-			for (int i = 1; i < getStatment.length; i++) {
-				if (getStatment[i] instanceof String)
-					deleteData.setString(i, (String) getStatment[i]);
-				else if (getStatment[i] instanceof Integer)
-					deleteData.setInt(i, (Integer) getStatment[i]);
-			}
-			deleteData.executeUpdate();
-			con.commit();
-			Thread.sleep(10);
-			setResult("done");
-		} catch (Exception e) {
-			System.out.println("deleteDB error:" + e.getMessage());
-			setResult("deleteDB error:" + e.getMessage());
-		}
-	}
+
 
 	private void deleteDB(Connection con, Object[] getStatment) {
 		try {

@@ -1,4 +1,4 @@
-package gui;
+package gui;  
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -40,8 +40,9 @@ public class VCP_Main_Frame extends JFrame {
 	private VcpInfo vcpInfo;
 	private ParkingLotInit parkinglotinit;
 	private int defaultParkinglotNum;
+	private Statistics stats;
 	
-	
+	 
 	public VCP_Main_Frame(String host) {
 		super();
 		this.host = host;
@@ -424,7 +425,19 @@ public class VCP_Main_Frame extends JFrame {
 			}
 		});
 			
-			
+		getEmployeePanel().getbtnStatistics().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setContentPane(getStatistics());
+				getStatistics().getBtnReturn().addActionListener(
+						new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								setContentPane(getEmployeePanel());
+								stats = null;
+							}
+						});
+
+			}
+		});	
 		
 	}
 
@@ -571,6 +584,13 @@ public class VCP_Main_Frame extends JFrame {
 			resubscribePanel = new ResubscribePanel(host, DEFAULT_PORT, getVcpInfo());
 		}
 		return resubscribePanel;
+	}
+	
+	public Statistics getStatistics() {
+		if(stats == null){
+			stats = new Statistics(host, DEFAULT_PORT);
+		}
+		return stats;
 	}
 	
 	
