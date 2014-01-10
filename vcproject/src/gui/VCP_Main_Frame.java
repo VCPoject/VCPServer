@@ -227,7 +227,6 @@ public class VCP_Main_Frame extends JFrame {
 											setContentPane(getParkingLot_Panel());
 											getParkingLot_Panel().getBtnMakePdf().addActionListener(new ActionListener() {
 												public void actionPerformed(ActionEvent e) {
-													//TODO
 													makePanelImage(getParkingLot_Panel().getPanelFloor1(),"Floor1");
 													makePanelImage(getParkingLot_Panel().getPanelFloor2(),"Floor2");
 													makePanelImage(getParkingLot_Panel().getPanelFloor3(),"Floor3");
