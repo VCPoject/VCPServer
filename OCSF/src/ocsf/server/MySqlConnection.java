@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.ResultSetMetaData;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 public class MySqlConnection {
 
@@ -100,6 +101,8 @@ public class MySqlConnection {
 						list.add((Date)obj);
 					else if (obj instanceof Time)
 						list.add((Time)obj);
+					else if (obj instanceof Timestamp)
+						list.add((Timestamp)obj);
 					
 				}
 				thereIsRslt = true;

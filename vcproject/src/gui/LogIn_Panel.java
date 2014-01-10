@@ -78,9 +78,8 @@ public class LogIn_Panel extends JPanel{
 		return btnexit;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public String getPswdText(){
-		return passwordField.getText();
+		return new String(passwordField.getPassword());
 	}
 	
 	public String getUserText(){
@@ -97,6 +96,5 @@ public class LogIn_Panel extends JPanel{
 			logIncontroller = new LogIn_controller(this.host,employeeMap,getUserText(),getPswdText());
 		}
 		return logIncontroller;
-		
 	}
 }

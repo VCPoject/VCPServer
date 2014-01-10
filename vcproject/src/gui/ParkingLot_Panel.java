@@ -38,6 +38,7 @@ public class ParkingLot_Panel extends JPanel {
 	private JLabel lblOccupy;
 	private JLabel lblNotWorking;
 	private JButton btnReturn;
+	private JButton btnMakePdf;
 
 	public ParkingLot_Panel(VcpInfo vcpInfo) {
 		super();
@@ -136,6 +137,10 @@ public class ParkingLot_Panel extends JPanel {
 		
 		btnReturn.setBounds(684, 524, 101, 40);
 		add(btnReturn);
+		
+		btnMakePdf = new JButton("Make PDF");
+		btnMakePdf.setBounds(553, 524, 109, 40);
+		add(btnMakePdf);
 	}
 
 	private void listners() {
@@ -295,6 +300,22 @@ public class ParkingLot_Panel extends JPanel {
 
 	public JButton getBtnReturn() {
 		return btnReturn;
+	}
+
+	public JButton getBtnMakePdf() {
+		return btnMakePdf;
+	}
+
+	public JPanel getPanelFloor1() {
+		return panelFloor1;
+	}
+
+	public JPanel getPanelFloor2() {
+		return panelFloor2;
+	}
+
+	public JPanel getPanelFloor3() {
+		return panelFloor3;
 	}
 
 }

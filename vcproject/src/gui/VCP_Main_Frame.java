@@ -4,19 +4,37 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+
 import java.awt.event.WindowAdapter;
+
 import javax.swing.UnsupportedLookAndFeelException;
+
 import controler.VcpInfo;
 import entity.Parking_Lot;
 
-import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Font;
+
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class VCP_Main_Frame extends JFrame {
-
 	
 	final public int DEFAULT_PORT = 5555;
 	final public String host;
@@ -37,10 +55,12 @@ public class VCP_Main_Frame extends JFrame {
 	private NotWorkingPlaces_Panel notworkingplaces;
 	private FindAltParkingLot findaltparkinglot;
 	private ResubscribePanel resubscribePanel;
+	private EmpComplainGui empComplainGui;
+	private ChangePricingPanel changePricingPanel;
+	private PricingRequestPanel pricingRequestPanel;
 	private VcpInfo vcpInfo;
 	private ParkingLotInit parkinglotinit;
 	private int defaultParkinglotNum;
-	
 	
 	public VCP_Main_Frame(String host) {
 		super();
@@ -104,15 +124,14 @@ public class VCP_Main_Frame extends JFrame {
 				
 		
 		getParkingLotInit().getbtnSave().addActionListener(new ActionListener(){
-
 			public void actionPerformed(ActionEvent e) {
 				for(Parking_Lot parkinglot: getVcpInfo().getParkingLot())
 					
 					if(parkinglot.getIdparkinglot()== defaultParkinglotNum){
 						getVcpInfo().setDefultParkingLot(parkinglot);
+						loginpanel=getLogIn_Frame().getLogIn_Panel();
 						getLogIn_Frame().closeLoginFrame();
 						loginframe=null;
-						loginpanel=getLogIn_Frame().getLogIn_Panel();
 						loginpanel=null;
 						initialize();
 					}
@@ -165,8 +184,7 @@ public class VCP_Main_Frame extends JFrame {
 			}
 		});
 
-		getMainPanel().getBtnEmploeyLogin().addActionListener(
-				new ActionListener() {
+		getMainPanel().getBtnEmploeyLogin().addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						getLogIn_Frame();
 						getLogIn_Frame().setVisible(true);
@@ -179,39 +197,44 @@ public class VCP_Main_Frame extends JFrame {
 							}
 						});
 					
-						getLogIn_Frame().getLogIn_Panel().getBtnExit()
-								.addActionListener(new ActionListener() {
-									public void actionPerformed(ActionEvent e) {
-										JFrame frame = new JFrame();
-										int result = JOptionPane
-												.showConfirmDialog(
-														frame,
-														"Are you sure you want to exit the application?",
-														"Exit Application",
-														JOptionPane.YES_NO_OPTION);
-										if (result == JOptionPane.YES_OPTION) {
-											frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-											getLogIn_Frame().closeLoginFrame();
-											loginframe = null;
-										}
-									}
-								});
-						
-						getLogIn_Frame().getLogIn_Panel().getBtnSubmit()
-						.addActionListener(new ActionListener() {
-							
+						getLogIn_Frame().getLogIn_Panel().getBtnExit().addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
-								
-								
-								if (getLogIn_Frame().getLogIn_Panel().checkValidity()){
+								JFrame frame = new JFrame();
+								int result = JOptionPane.showConfirmDialog(frame,
+												"Are you sure you want to exit the application?",
+												"Exit Application", JOptionPane.YES_NO_OPTION);
+								if (result == JOptionPane.YES_OPTION) {
+									frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 									getLogIn_Frame().closeLoginFrame();
-									loginframe=null;
+									loginframe = null;
+								}
+							}
+						});
+						
+						getLogIn_Frame().getLogIn_Panel().getBtnSubmit().addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								if (getLogIn_Frame().getLogIn_Panel().checkValidity()){
+									getEmployeePanel().setConectedEmployee(getLogIn_Frame().getConnectedEmployee());
+									/* set it up for employee permissions
+									getEmployeePanel().setBtnEnableByEmpRole();*/ 
+									getLogIn_Frame().closeLoginFrame();
 									loginpanel=getLogIn_Frame().getLogIn_Panel();
+									loginframe=null;
 									loginpanel=null;
 									setContentPane(getEmployeePanel());
 									getEmployeePanel().getbtnParkingStatus().addActionListener(new ActionListener() {
 										public void actionPerformed(ActionEvent e) {
 											setContentPane(getParkingLot_Panel());
+											getParkingLot_Panel().getBtnMakePdf().addActionListener(new ActionListener() {
+												public void actionPerformed(ActionEvent e) {
+													//TODO
+													makePanelImage(getParkingLot_Panel().getPanelFloor1(),"Floor1");
+													makePanelImage(getParkingLot_Panel().getPanelFloor2(),"Floor2");
+													makePanelImage(getParkingLot_Panel().getPanelFloor3(),"Floor3");
+													makePdfFile();
+													getVcpInfo().showSeccussesMsg("Export to PDF Done");
+												}
+											});
 											getParkingLot_Panel().getBtnReturn().addActionListener(new ActionListener() {
 												public void actionPerformed(ActionEvent e) {
 													setContentPane(getEmployeePanel());
@@ -221,6 +244,133 @@ public class VCP_Main_Frame extends JFrame {
 										}
 									});
 									
+									getEmployeePanel().getbtnSaveParkin().addActionListener(new ActionListener() {
+
+										public void actionPerformed(ActionEvent arg0) {
+											setContentPane(getSavingParkingPlace_Panel());
+											
+											getSavingParkingPlace_Panel().getBtnExit().addActionListener(new ActionListener() {
+												public void actionPerformed(ActionEvent e) {
+													JFrame frame = new JFrame();
+													int result = JOptionPane
+															.showConfirmDialog(
+																	frame,
+																	"Are you sure you want to exit the application?",
+																	"Exit Application",
+																	JOptionPane.YES_NO_OPTION);
+														if (result == JOptionPane.YES_OPTION) {
+															setContentPane(getEmployeePanel());
+															savingparkingplace=null;
+														}
+													}
+											});
+										}
+									});
+									
+									getEmployeePanel(). getbtnExit().addActionListener(new ActionListener() {
+										public void actionPerformed(ActionEvent e) {
+											JFrame frame = new JFrame();
+											int result = JOptionPane
+													.showConfirmDialog(
+															frame,
+															"Are you sure you want to exit the application?",
+															"Exit Application",
+															JOptionPane.YES_NO_OPTION);
+											if (result == JOptionPane.YES_OPTION) {
+												setContentPane(getMainPanel());
+												getLogIn_Frame().getLogIn_Panel().getLogincontroller().updateAsNotLoggedIn();
+												
+											}
+										}
+									});
+									
+									getEmployeePanel().getbtnSignAsnotWorking().addActionListener(new ActionListener() {
+										public void actionPerformed(ActionEvent e) {
+											setContentPane(getNotWorkingPlaces_Panel());
+											getNotWorkingPlaces_Panel().getbtnExit().addActionListener(new ActionListener() {
+												public void actionPerformed(ActionEvent e) {
+													JFrame frame = new JFrame();
+													int result = JOptionPane
+															.showConfirmDialog(
+																	frame,
+																	"Are you sure you want to exit the application?",
+																	"Exit Application",
+																	JOptionPane.YES_NO_OPTION);
+														if (result == JOptionPane.YES_OPTION) {
+															setContentPane(getEmployeePanel());
+															notworkingplaces=null;
+														}
+													}
+											});
+											
+										}
+									});
+									
+									getEmployeePanel().getbtnFindAltParkin().addActionListener(new ActionListener() {
+										public void actionPerformed(ActionEvent e) {
+											setContentPane(getFindaltparkinglot());
+											getFindaltparkinglot().getbtnExit().addActionListener(new ActionListener() {
+												public void actionPerformed(ActionEvent e) {
+													JFrame frame = new JFrame();
+													int result = JOptionPane
+															.showConfirmDialog(
+																	frame,
+																	"Are you sure you want to exit the application?",
+																	"Exit Application",
+																	JOptionPane.YES_NO_OPTION);
+														if (result == JOptionPane.YES_OPTION) {
+															findaltparkinglot=null;
+															setContentPane(getEmployeePanel());
+														}
+												}
+											});
+										}
+									});
+									
+									/* 	Setting complains panel and listener to return button */
+									getEmployeePanel().getbtnComplains().addActionListener(new ActionListener() {
+										public void actionPerformed(ActionEvent e) {
+											setContentPane(getEmpComplainGui());
+											getEmpComplainGui().getBtnReturn().addActionListener(new ActionListener() {
+												public void actionPerformed(ActionEvent e) {
+													setContentPane(getEmployeePanel());
+													empComplainGui = null;
+												}
+											});
+										}
+									});
+									
+									getEmployeePanel().getBtnChangePricing().addActionListener(new ActionListener() {
+										public void actionPerformed(ActionEvent e) {
+											getChangePricingPanel();
+											getChangePricingPanel().setConectedEmployee(getEmployeePanel().getConectedEmployee());
+											setContentPane(getChangePricingPanel());
+											/* button return listener */
+											getChangePricingPanel().getBtnReturn().addActionListener(new ActionListener() {
+												public void actionPerformed(ActionEvent e) {
+													setContentPane(getEmployeePanel());
+													getChangePricingPanel().getPricingController().closeConnection();
+													changePricingPanel = null;
+												}
+											});
+											
+										}
+									});
+									
+									getEmployeePanel().getBtnReviewPricingRequests().addActionListener(new ActionListener() {
+										public void actionPerformed(ActionEvent e) {
+											setContentPane(getPricingRequestPanel());
+											getPricingRequestPanel().getBtnReturn().addActionListener(new ActionListener() {
+												public void actionPerformed(ActionEvent e) {
+													setContentPane(getEmployeePanel());
+													getPricingRequestPanel().getPricingController().closeConnection();
+													pricingRequestPanel = null;
+												}
+											});
+										}
+									});
+									
+									
 								}
 							}
 						});
@@ -229,8 +379,8 @@ public class VCP_Main_Frame extends JFrame {
 					}
 				});
 
-		getMainPanel().getBtnMakeOrder().addActionListener(
-				new ActionListener() {/* Main Panel Make Order Button Listener */
+		/* Main Panel Make Order Button Listener */
+		getMainPanel().getBtnMakeOrder().addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						setContentPane(getOrderPanel());
 						getOrderPanel().getBtnReturn().addActionListener(
@@ -326,92 +476,6 @@ public class VCP_Main_Frame extends JFrame {
 							}
 						});
 
-			}
-		});
-		
-		getEmployeePanel().getbtnSaveParkin().addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent arg0) {
-				setContentPane(getSavingParkingPlace_Panel());
-				
-				getSavingParkingPlace_Panel().getBtnExit().addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						JFrame frame = new JFrame();
-						int result = JOptionPane
-								.showConfirmDialog(
-										frame,
-										"Are you sure you want to exit the application?",
-										"Exit Application",
-										JOptionPane.YES_NO_OPTION);
-							if (result == JOptionPane.YES_OPTION) {
-								setContentPane(getEmployeePanel());
-								savingparkingplace=null;
-							}
-						}
-				});
-				
-				
-			}
-			
-		});
-		
-		getEmployeePanel(). getbtnExit().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFrame frame = new JFrame();
-				int result = JOptionPane
-						.showConfirmDialog(
-								frame,
-								"Are you sure you want to exit the application?",
-								"Exit Application",
-								JOptionPane.YES_NO_OPTION);
-				if (result == JOptionPane.YES_OPTION) {
-					setContentPane(getMainPanel());
-					getLogIn_Frame().getLogIn_Panel().getLogincontroller().updateAsNotLoggedIn();
-					
-				}
-			}
-		});
-		
-		getEmployeePanel().getbtnSignAsnotWorking().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setContentPane(getNotWorkingPlaces_Panel());
-				getNotWorkingPlaces_Panel().getbtnExit().addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						JFrame frame = new JFrame();
-						int result = JOptionPane
-								.showConfirmDialog(
-										frame,
-										"Are you sure you want to exit the application?",
-										"Exit Application",
-										JOptionPane.YES_NO_OPTION);
-							if (result == JOptionPane.YES_OPTION) {
-								setContentPane(getEmployeePanel());
-								notworkingplaces=null;
-							}
-						}
-				});
-				
-			}
-		});
-		
-		getEmployeePanel().getbtnFindAltParkin().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setContentPane(getFindaltparkinglot());
-				getFindaltparkinglot().getbtnExit().addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						JFrame frame = new JFrame();
-						int result = JOptionPane
-								.showConfirmDialog(
-										frame,
-										"Are you sure you want to exit the application?",
-										"Exit Application",
-										JOptionPane.YES_NO_OPTION);
-							if (result == JOptionPane.YES_OPTION) {
-								findaltparkinglot=null;
-								setContentPane(getEmployeePanel());
-							}
-					}
-				});
 			}
 		});
 		
@@ -570,6 +634,83 @@ public class VCP_Main_Frame extends JFrame {
 			resubscribePanel = new ResubscribePanel(host, DEFAULT_PORT, getVcpInfo());
 		}
 		return resubscribePanel;
+	}
+
+
+
+	public EmpComplainGui getEmpComplainGui() {
+		if(empComplainGui == null){
+			empComplainGui = new EmpComplainGui(host, DEFAULT_PORT);
+		}
+		return empComplainGui;
+	}
+
+
+
+	public ChangePricingPanel getChangePricingPanel() {
+		if(changePricingPanel == null){
+			changePricingPanel = new ChangePricingPanel(host, DEFAULT_PORT);
+		}
+		return changePricingPanel;
+	}
+
+
+
+	public PricingRequestPanel getPricingRequestPanel() {
+		if(pricingRequestPanel == null){
+			pricingRequestPanel = new PricingRequestPanel(host, DEFAULT_PORT,getVcpInfo().getParkingPricingInfo());
+		}
+		return pricingRequestPanel;
+	}
+	
+	private void makePanelImage(Component panel,String filename)
+    {
+        Dimension size = panel.getSize();
+        BufferedImage image = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = image.createGraphics();
+        panel.paint(g2);
+        try
+        {
+            ImageIO.write(image, "bmp", new File(filename + ".bmp"));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+	
+	private void makePdfFile(){
+		Document doc = new Document();
+		doc.setPageSize(PageSize.A4);
+		Image img;
+		try {
+			PdfWriter.getInstance(doc, new FileOutputStream("Parking Lot Pic.pdf"));
+			
+			doc.open();
+			Font font = new Font(Font.FontFamily.COURIER,30, Font.BOLD, new BaseColor(0,0,0));
+			Paragraph title = new Paragraph("Parking Lot Picture", font);
+			title.setAlignment(Element.TITLE);
+			doc.add(title);
+			String[] pic = {"buttons.jpg","Floor1.bmp","Floor2.bmp","Floor3.bmp"};
+			for (int i = 0; i < pic.length; i++) {
+	            img = Image.getInstance(String.format(pic[i]));
+	            img.setAlignment(Element.ALIGN_CENTER);
+	            if (img.getScaledWidth() > 521 || img.getScaledHeight() > 200) {
+	                img.scaleToFit(520, 200);
+	            }
+	            doc.add(img);
+	        }
+			Date date = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			Font footerFont = new Font(Font.FontFamily.COURIER,11, Font.NORMAL, new BaseColor(173,173,173));
+			Paragraph footer = new Paragraph("Vcp Parking Status Picture Created On: " + format.format(date), footerFont);
+			footer.setAlignment(Element.ALIGN_BOTTOM);
+			doc.add(footer);
+			doc.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

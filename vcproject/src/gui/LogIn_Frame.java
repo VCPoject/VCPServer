@@ -78,6 +78,9 @@ public class LogIn_Frame extends JFrame{
 		if(vcpInfo == null)
 			vcpInfo = new VcpInfo(host);
 		return vcpInfo;
+	}
 	
+	public Employee getConnectedEmployee(){
+		return getLogincontroller().getConnectedEmployee();
 	}
 }

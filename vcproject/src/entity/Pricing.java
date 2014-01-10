@@ -4,6 +4,7 @@ public class Pricing implements Entity {
 
 	private Float occasional;
 	private Float oneTime;
+	private Integer idPricing = 1;
 	private String query;
 	
 	public Float getOccasional() {
@@ -38,6 +39,14 @@ public class Pricing implements Entity {
 		return 70*getOneTime()*numOfCars;
 	}
 
+	public Integer getIdPricing() {
+		return idPricing;
+	}
+
+	public void setIdPricing(Integer idPricing) {
+		this.idPricing = idPricing;
+	}
+
 	@Override
 	public String getQuery() {
 		return query;
@@ -51,7 +60,7 @@ public class Pricing implements Entity {
 
 	@Override
 	public Object[] toObject() {
-		Object[] obj = {getQuery(),getOccasional(),getOneTime()};
+		Object[] obj = {getQuery(),getIdPricing(),getOccasional(),getOneTime()};
 		return obj;
 	}
 

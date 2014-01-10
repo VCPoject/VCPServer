@@ -10,6 +10,7 @@ public class LogIn_controller extends Controller{
 	private String username;
 	private String password;
 	private HashMap<String,Employee> employeeMap;
+	private Employee connectedEmployee;
 	
 	public LogIn_controller(String host, HashMap<String, Employee> employeeMap, String username, String password) {
 		super(host);
@@ -22,10 +23,10 @@ public class LogIn_controller extends Controller{
 	public boolean checkValidity() {
 		
 		
-		if (username.equals(employeeMap.get(getUsername()).getUserName())
-				&& password.equals(employeeMap.get(getUsername()).getPassword())) {
+		if (username.equals(employeeMap.get(getUsername()).getUserName()) && password.equals(employeeMap.get(getUsername()).getPassword())) {
 			
 			if (checkedIfAlreadyLoggedIn(employeeMap.get(getUsername()).getLogin()) == false) {
+				setConnectedEmployee(employeeMap.get(getUsername()));
 				updateAsLoggedIn(username);
 				showSeccussesMsg("Login was seccessfully acomplished");
 				return true;
@@ -80,6 +81,16 @@ public class LogIn_controller extends Controller{
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+
+	public Employee getConnectedEmployee() {
+		return connectedEmployee;
+	}
+
+
+	public void setConnectedEmployee(Employee connectedEmployee) {
+		this.connectedEmployee = connectedEmployee;
 	}
 
 }

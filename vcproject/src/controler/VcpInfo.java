@@ -19,7 +19,6 @@ public class VcpInfo extends Controller  {
 	private ArrayList<ClientEntity> allClients;
 	private HashMap<Integer,Order>orderMap;
 	private HashMap<String, Employee> employeeMap;
-	private ArrayList<Order> allOrders;
 	private ArrayList<Car> allCars;
 	private HashMap<Integer, Subscribe> allSubscribed;
 	private HashMap<Integer, Reservation> reservationList;
@@ -38,8 +37,6 @@ public class VcpInfo extends Controller  {
 		getAllSubscribed();
 		//getReservationInfo();
 		getAllCars();
-		getParkingPricingInfo();
-		closeConnection();
 		getParkingPricingInfo();
 		closeConnection();
 	}
@@ -193,10 +190,12 @@ public class VcpInfo extends Controller  {
 
 	public Pricing getParkingPricingInfo() {
 		if (pricing == null) {
-			PricingController pricingController = new PricingController();
 			pricing = new Pricing();
-			pricing.setOccasional(pricingController.getOccasional());
-			pricing.setOneTime(pricingController.getOneTime());
+			Object[] getPriceOccasional = {"SELECT * FROM `vcp_db`.`pricing`;"};
+			sendQueryToServer(getPriceOccasional);
+			ArrayList<Object> result = getResult();
+			pricing.setOccasional(Float.parseFloat(result.get(1).toString()));
+			pricing.setOneTime(Float.parseFloat(result.get(2).toString()));
 		}
 		return pricing;
 	}
