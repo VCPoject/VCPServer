@@ -4,22 +4,15 @@ package gui;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
-
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import controler.LogIn_controller;
 import controler.Reminder;
 import controler.VcpInfo;
 import entity.Employee;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.HashMap;
- 
 public class LogIn_Frame extends JFrame{
 
 	private static final long serialVersionUID = 1L;

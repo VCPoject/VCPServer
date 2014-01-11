@@ -70,7 +70,6 @@ public class Order_Panel extends JPanel {
 	private JComboBox<String> comboBoxDepartureHour;
 	private JComboBox<String> comboBoxDepartureMin;
 	private VcpInfo vcpInfo;
-	private Payment_Frame paymentFrame;
 	private FinancialCard fCard;
 	private Float timeToPay;
 	private JFormattedTextField frmtdtxtfldCreditCard;
@@ -727,13 +726,6 @@ public class Order_Panel extends JPanel {
 		return true;
 	}
 
-	public Payment_Frame getPaymentFrame(Float payment) {
-		if (paymentFrame == null) {
-			paymentFrame = new Payment_Frame(payment);
-		}
-		return paymentFrame;
-	}
-
 	public JButton getBtnSubmit() {
 		return btnSubmit;
 	}
@@ -779,8 +771,6 @@ public class Order_Panel extends JPanel {
 
 		// Get msec from each, and subtract.
 		long diff = d2.getTime() - d1.getTime();
-		long diffSeconds = diff / 1000;
-		long diffMinutes = diff / (60 * 1000);
 		long diffHours = diff / (60 * 60 * 1000);
 		if (diffHours < 1) {
 			return (long) 1;

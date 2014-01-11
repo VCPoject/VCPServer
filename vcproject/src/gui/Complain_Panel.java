@@ -44,7 +44,7 @@ public class Complain_Panel extends JPanel {
 		 
 		 JLabel lblCancelOrder = new JLabel("Complain");
 		 lblCancelOrder.setFont(new Font("Tahoma", Font.BOLD, 24));
-		 lblCancelOrder.setBounds(316, 11, 153, 29);
+		 lblCancelOrder.setBounds(336, 11, 112, 29);
 		 add(lblCancelOrder);
 		 
 		 btnReturn = new JButton("Return");

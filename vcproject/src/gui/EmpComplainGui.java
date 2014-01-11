@@ -1,9 +1,6 @@
 package gui;
 
-import java.awt.SystemColor;
-
 import javax.swing.*;
-
 import controler.EmpComplainController;
 import java.awt.Font;
 import java.awt.event.ActionListener;

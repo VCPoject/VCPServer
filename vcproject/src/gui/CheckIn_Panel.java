@@ -1,17 +1,13 @@
 package gui;
 
 import java.awt.SystemColor;
-
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-
 import java.awt.Font;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.swing.JFormattedTextField;
 import javax.swing.text.MaskFormatter;
 import javax.swing.SwingConstants;
@@ -21,7 +17,6 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
-
 import controler.CheckInController;
 import controler.MakeOrderController;
 import controler.ParkingPlaceController;
@@ -30,7 +25,6 @@ import entity.Order;
 import entity.Parking_Lot;
 import entity.Parking_Places;
 import entity.Subscribe;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 

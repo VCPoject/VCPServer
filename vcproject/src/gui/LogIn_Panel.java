@@ -2,8 +2,6 @@ package gui;
  
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -30,42 +28,41 @@ public class LogIn_Panel extends JPanel{
 	}
 	
 	private void initialize(){
-		this.setBounds(10, 11, 455, 342);
+		this.setBounds(10, 11, 494, 372);
 		setBackground(Color.LIGHT_GRAY);
 		setLayout(null);
 		
 		usertxtfieled = new JTextField();
 		usertxtfieled.setText("sapir");
-		usertxtfieled.setBounds(136, 132, 228, 20);
+		usertxtfieled.setBounds(170, 130, 228, 22);
 		add(usertxtfieled);
 		usertxtfieled.setColumns(10);
 		
 		btnsubmmit = new JButton("Submmit");
-		btnsubmmit.setBounds(307, 274, 138, 56);
+		btnsubmmit.setBounds(346, 305, 138, 56);
 		add(btnsubmmit);
 		
 		btnexit= new JButton("Exit\r\n");
-		btnexit.setBounds(10, 274, 138, 56);
+		btnexit.setBounds(10, 305, 138, 56);
 		add(btnexit); 
 		
-		JLabel lblUserName = new JLabel("Username\r\n");
+		JLabel lblUserName = new JLabel("Username\r\n:");
 		lblUserName.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 18));
-		lblUserName.setBounds(22, 123, 104, 33);
+		lblUserName.setBounds(55, 130, 104, 22);
 		add(lblUserName);
 		
-		JLabel lblPassword = new JLabel("Password");
+		JLabel lblPassword = new JLabel("Password:");
 		lblPassword.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 18));
-		lblPassword.setBounds(22, 216, 94, 17);
+		lblPassword.setBounds(55, 170, 104, 17);
 		add(lblPassword);
 		
 		JLabel lblLogIn = new JLabel("Log In");
-		lblLogIn.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 36));
-		lblLogIn.setBounds(158, 39, 138, 46);
+		lblLogIn.setFont(new Font("Tahoma", Font.BOLD, 36));
+		lblLogIn.setBounds(188, 11, 117, 44);
 		add(lblLogIn);
 		
 		passwordField = new JPasswordField();
-		passwordField.setToolTipText("1234");
-		passwordField.setBounds(136, 217, 228, 20);
+		passwordField.setBounds(170, 170, 228, 22);
 		add(passwordField);
 	}
 	

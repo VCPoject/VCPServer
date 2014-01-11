@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.SystemColor;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -12,23 +11,17 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-
 import controler.RegisterController;
 import controler.VcpInfo;
-
 import javax.swing.JLabel;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
-
-import entity.Car;
 import entity.Parking_Lot;
 import entity.Subscribe;
-
 import java.awt.Font;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -37,6 +30,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class ResubscribePanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String host;
 	private int port;
 	private VcpInfo vcpInfo;
@@ -53,7 +50,6 @@ public class ResubscribePanel extends JPanel {
 	private JComboBox<String> comboBoxDepartureMin;
 	private JRadioButton rdbtnFull;
 	private JRadioButton rdbtnPartial;
-	private ArrayList<Car> cars;
 	private JLabel lblCreditCard;
 	private JPanel PayPan;
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
@@ -381,8 +377,7 @@ public class ResubscribePanel extends JPanel {
 		panelSearchIdAndCar.add(lblCarNumber);
 		lblCarNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
 		try {
-			formattedTextFieldCarNumber = new JFormattedTextField(
-					new MaskFormatter("##-###-##"));
+			formattedTextFieldCarNumber = new JFormattedTextField(new MaskFormatter("##-###-##"));
 		} catch (ParseException e) {
 			JOptionPane.showMessageDialog(this,
 					"Formatter error: " + e.getMessage(), "Formatter ERRORE",

@@ -3,16 +3,11 @@ package gui;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.JLabel;
 
 public class ShowWhoParkFrame extends JFrame {
 	
@@ -53,7 +48,6 @@ public class ShowWhoParkFrame extends JFrame {
 		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
 				/ 2 - this.getSize().height / 2);
 		this.setContentPane(getShowWhoParkPanel());
-		
 	}
 
 	public ShowWhoParkPanel getShowWhoParkPanel() {
@@ -61,11 +55,6 @@ public class ShowWhoParkFrame extends JFrame {
 			showWhoParkPanel = new ShowWhoParkPanel(entity);
 		}
 		return showWhoParkPanel;
-	}
-	
-	private void closeMainFrame() {
-		this.setVisible(false);
-		this.dispose();
 	}
 	
 	public JButton getBtnClose(){

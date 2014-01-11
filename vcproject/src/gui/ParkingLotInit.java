@@ -17,38 +17,39 @@ import entity.Parking_Lot;
 
 public class ParkingLotInit extends JPanel{
 	private static final long serialVersionUID = 1L;
-	private JRadioButton rdbtnParkingLotNum;
 	private JComboBox <String> comboBoxParkingLot;
 	private JButton btnExit;
 	private JButton btnSave;
 	private VcpInfo vcpInfo;
 	private String host;
+	private JLabel lblParkigLot;
 	
 	public ParkingLotInit(String host, ArrayList<Parking_Lot> parkingLotInfo) {
 		super();
 		this.host=host;
 		initialize();
 		setLayout(null);
+		
+		lblParkigLot = new JLabel("Parkig lot:");
+		lblParkigLot.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblParkigLot.setBounds(144, 190, 93, 22);
+		add(lblParkigLot);
 	}
 
 	private void initialize() {
 		this.setSize(500, 400);
 		JLabel lblParkingLotInIt= new JLabel("Parking lot initialization");
 		lblParkingLotInIt.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 36));
-		lblParkingLotInIt.setBounds(51, 29, 456, 63);
+		lblParkingLotInIt.setBounds(48, 11, 404, 43);
 		add(lblParkingLotInIt);
 		
 		JLabel lblChooseParkingLot = new JLabel("Please choose parking lot:");
 		lblChooseParkingLot.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
-		lblChooseParkingLot.setBounds(20, 103, 191, 32);
+		lblChooseParkingLot.setBounds(20, 134, 191, 32);
 		add(lblChooseParkingLot);
 		
-		rdbtnParkingLotNum = new JRadioButton("New radio button");
-		rdbtnParkingLotNum.setBounds(20, 168, 109, 23);
-		add(rdbtnParkingLotNum);
-		
 		comboBoxParkingLot = new JComboBox <String>();
-		comboBoxParkingLot.setBounds(154, 169, 271, 20);
+		comboBoxParkingLot.setBounds(247, 190, 90, 20);
 		add(comboBoxParkingLot);
 		fillcomboBoxParkinLot();
 		
@@ -73,10 +74,6 @@ public class ParkingLotInit extends JPanel{
 	
 	public JButton getbtnSave(){
 		return btnSave;
-	}
-	
-	public JRadioButton getrdbtnParkingLotNum(){
-		return rdbtnParkingLotNum;
 	}
 	
 	public JComboBox <String> getcomboBoxParkingLot(){

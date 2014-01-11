@@ -1,44 +1,22 @@
 package gui;
 
 import javax.swing.*;
-
 import controler.ParkingLot_controller;
 import controler.VcpInfo;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-
-import javax.swing.AbstractButton;
-import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-
-import entity.Order;
-import entity.Parking_Lot;
 import entity.Parking_Places;
-import entity.Reservation;
-
-import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
+import javax.swing.border.TitledBorder;
 
 public class SavingParkingPlace_Panel extends JPanel {
-	
-	private JRadioButton rdbtnParkinLot;
-	private JRadioButton rdbtnFloor;
-	private JRadioButton rdbtnLine;
-	private JRadioButton rdbtnArrivalDate;
-	private JRadioButton rdbtnaDepartureDate;
-	private JRadioButton rdbtnArrivalTime;
-	private JRadioButton rdbtnaDepartureTime;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private JRadioButton rdbtnParkingPlaceNo;
 	private JButton btnSave;
 	private JButton btnExit;
 	private JComboBox <String> comboBoxParkinglot;
@@ -51,7 +29,6 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private JComboBox<String> comboBoxDepartureHour;
 	private ParkingLot_controller parkinglotcontroller;
 	private ArrayList<Parking_Places> parkingPlaces;
-	private ArrayList<Parking_Places> parkingPlaces1;
 	private int parkinglotId;
 	private int floorNum;
 	private int lineNum;
@@ -68,19 +45,24 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private  String arrivalTimeHour; 
 	private String departureTimeMin;
 	private String departureTimeHour;
-	private HashMap<Integer,Reservation>reservation;
 	private Date ArrivalDate;
 	private Date DepartureDate;
-	private HashMap<Integer, Order>  order; 
 	private static final long serialVersionUID = 1L;
+	private JLabel lblArrivalDate;
+	private JLabel lblDepartureDate;
+	private JLabel lblArrivalTime;
+	private JLabel lblDepartureTime;
+	private JLabel lblParkingLot;
+	private JLabel lblFloor;
+	private JLabel lblLine;
+	private JLabel lblParkingPlaceNumber;
+	private JPanel panel;
 	
 	public SavingParkingPlace_Panel(String host, int port, VcpInfo vcpInfo){
 		super();
 		this.vcpInfo=vcpInfo;
 		this.defaultParkingLot=vcpInfo.getDefultParkingLot().getIdparkinglot();
 		this.parkingPlaces=vcpInfo.getParkingPlaces();
-		this.order=vcpInfo.getAllOrders();
-		this.reservation=vcpInfo.getReservation();
 		this.host=host;
 		this.port=port;
 		initialize();
@@ -91,106 +73,111 @@ public class SavingParkingPlace_Panel extends JPanel {
 		this.setSize(785, 575);
 		setLayout(null);
 		JLabel lblReserv = new JLabel("Reservation");
-		lblReserv.setBounds(176, 34, 231, 52);
+		lblReserv.setBounds(280, 11, 225, 44);
 		lblReserv.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 36));
 		lblReserv.setHorizontalAlignment(SwingConstants.CENTER);
 		add(lblReserv);
 		
-		rdbtnParkinLot = new JRadioButton("parking lot");
-		rdbtnParkinLot.setBounds(338, 150, 109, 23);
-		buttonGroup.add(rdbtnParkinLot);
-		add(rdbtnParkinLot);
-		
-		rdbtnFloor = new JRadioButton("floor");
-		rdbtnFloor.setBounds(338, 201, 109, 23);
-		buttonGroup.add(rdbtnFloor);
-		add(rdbtnFloor);
-		
-		rdbtnLine = new JRadioButton("line");
-		rdbtnLine.setBounds(338, 260, 109, 23);
-		buttonGroup.add(rdbtnLine);
-		add(rdbtnLine);
-		
-		rdbtnParkingPlaceNo = new JRadioButton("parking place no.");
-		rdbtnParkingPlaceNo.setBounds(338, 323, 109, 23);
-		buttonGroup.add(rdbtnParkingPlaceNo);
-		add(rdbtnParkingPlaceNo);
-		
 		btnSave = new JButton("Save");
-		btnSave.setBounds(462, 413, 89, 43);
+		btnSave.setBounds(348, 329, 89, 43);
 		add(btnSave);
 		
 		btnExit = new JButton("Exit");
-		btnExit.setBounds(51, 413, 89, 43);
+		btnExit.setBounds(6, 521, 89, 43);
 		add(btnExit);
 		
+		panel = new JPanel();
+		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Reservation", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(120, 134, 544, 165);
+		add(panel);
+		panel.setLayout(null);
+		
 		comboBoxParkinglot = new JComboBox<String> ();
-		comboBoxParkinglot.setBounds(469, 151, 82, 20);
-		add(comboBoxParkinglot);
-		comboBoxParkinglot.addItem(" ");
-		fillParkinglotcombobox();
+		comboBoxParkinglot.setBounds(456, 16, 82, 20);
+		panel.add(comboBoxParkinglot);
 		
 		comboBoxFloor = new JComboBox<String> ();
-		comboBoxFloor.setBounds(469, 202, 82, 20);
-		add(comboBoxFloor);
-		comboBoxFloor.addItem(" ");
-		fillFloorcomboBox();
+		comboBoxFloor.setBounds(456, 56, 82, 20);
+		panel.add(comboBoxFloor);
 		
 		comboBoxLine = new JComboBox<String> ();
-		comboBoxLine.setBounds(469, 261, 82, 20);
-		add(comboBoxLine);
-		comboBoxLine.addItem(" ");
-		fillLinecomboBox();
+		comboBoxLine.setBounds(456, 96, 82, 20);
+		panel.add(comboBoxLine);
 		
 		comboBoxParkingPlace = new JComboBox<String>();
-		comboBoxParkingPlace.setBounds(469, 324, 82, 20);
-		add(comboBoxParkingPlace);
+		comboBoxParkingPlace.setBounds(456, 136, 82, 20);
+		panel.add(comboBoxParkingPlace);
 		
 		arrivalDate= new JDateChooser();
-		arrivalDate.setBounds(166, 150, 87, 20);
-		add(arrivalDate);
+		arrivalDate.setBounds(176, 19, 87, 20);
+		panel.add(arrivalDate);
 		
 		departureDate = new JDateChooser();
-		departureDate.setBounds(166, 201, 87, 20);
-		add(departureDate);
-		
-		rdbtnArrivalDate = new JRadioButton("arrival date\r\n");
-		rdbtnArrivalDate.setBounds(51, 150, 109, 23);
-		buttonGroup.add(rdbtnArrivalDate);
-		add(rdbtnArrivalDate);
-		
-		rdbtnaDepartureDate = new JRadioButton("departure date");
-		rdbtnaDepartureDate.setBounds(51, 201, 109, 23);
-		buttonGroup.add(rdbtnaDepartureDate);
-		add(rdbtnaDepartureDate);
-		
-		rdbtnArrivalTime = new JRadioButton("arrival time");
-		rdbtnArrivalTime.setBounds(51, 260, 109, 23);
-		buttonGroup.add(rdbtnArrivalTime);
-		add(rdbtnArrivalTime);
+		departureDate.setBounds(176, 56, 87, 20);
+		panel.add(departureDate);
 		
 		
 		comboBoxArrivalHour = new JComboBox<String>();
-		comboBoxArrivalHour.setBounds(168, 261, 48, 20);
-		add(comboBoxArrivalHour);
+		comboBoxArrivalHour.setBounds(163, 96, 48, 20);
+		panel.add(comboBoxArrivalHour);
 		
 		comboBoxArrivalMin = new JComboBox<String>();
-		comboBoxArrivalMin.setBounds(220, 261, 48, 20);
-		add(comboBoxArrivalMin);
-		
-		
-		rdbtnaDepartureTime = new JRadioButton("departure time");
-		rdbtnaDepartureTime.setBounds(51, 323, 109, 23);
-		buttonGroup.add(rdbtnaDepartureTime);
-		add(rdbtnaDepartureTime);
+		comboBoxArrivalMin.setBounds(215, 96, 48, 20);
+		panel.add(comboBoxArrivalMin);
 		
 		comboBoxDepartureHour = new JComboBox<String>();
-		comboBoxDepartureHour.setBounds(168, 324, 48, 20);
-		add(comboBoxDepartureHour);
+		comboBoxDepartureHour.setBounds(163, 136, 48, 20);
+		panel.add(comboBoxDepartureHour);
 		
 		comboBoxDepartureMin = new JComboBox<String>();
-		comboBoxDepartureMin.setBounds(220, 324, 48, 20);
-		add(comboBoxDepartureMin);
+		comboBoxDepartureMin.setBounds(215, 136, 48, 20);
+		panel.add(comboBoxDepartureMin);
+		
+		lblArrivalDate = new JLabel("Arrival date:");
+		lblArrivalDate.setBounds(6, 16, 111, 22);
+		panel.add(lblArrivalDate);
+		lblArrivalDate.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		lblDepartureDate = new JLabel("Departure date:");
+		lblDepartureDate.setBounds(6, 56, 145, 22);
+		panel.add(lblDepartureDate);
+		lblDepartureDate.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		lblArrivalTime = new JLabel("Arrival time:");
+		lblArrivalTime.setBounds(6, 96, 111, 22);
+		panel.add(lblArrivalTime);
+		lblArrivalTime.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		lblDepartureTime = new JLabel("Departure time:");
+		lblDepartureTime.setBounds(7, 136, 145, 22);
+		panel.add(lblDepartureTime);
+		lblDepartureTime.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		lblParkingLot = new JLabel("Parking lot:");
+		lblParkingLot.setBounds(294, 16, 105, 22);
+		panel.add(lblParkingLot);
+		lblParkingLot.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		lblFloor = new JLabel("Floor:");
+		lblFloor.setBounds(294, 56, 52, 22);
+		panel.add(lblFloor);
+		lblFloor.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		lblLine = new JLabel("Line:");
+		lblLine.setBounds(294, 96, 45, 22);
+		panel.add(lblLine);
+		lblLine.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		lblParkingPlaceNumber = new JLabel("Parking place no:");
+		lblParkingPlaceNumber.setBounds(293, 136, 158, 22);
+		panel.add(lblParkingPlaceNumber);
+		lblParkingPlaceNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
+		comboBoxLine.addItem(" ");
+		comboBoxFloor.addItem(" ");
+		comboBoxParkinglot.addItem(" ");
+		fillParkinglotcombobox();
+		fillFloorcomboBox();
+		fillLinecomboBox();
 		fillcomboBoxHour();
 		fillcomboBoxMin();
 	}
@@ -243,84 +230,6 @@ public class SavingParkingPlace_Panel extends JPanel {
 	
 	
 	public void listners(){
-		
-		rdbtnParkinLot.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				comboBoxParkinglot.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e) {
-						try{
-						parkinglotId =Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
-						String arrivalTime=arrivalTimeHour+":"+arrivalTimeMin+":"+"00";
-						SimpleDateFormat timedateparser=new SimpleDateFormat("yyyy-MM-dd");
-						String ArrivalDate=timedateparser.format(arrivalDate.getDate());
-						parkingPlaces1=new ArrayList<Parking_Places>();
-						parkingPlaces1=getParkingLot_controller().getVaccantParkingPlaces(parkinglotId,ArrivalDate,arrivalTime);
-						}
-						
-						catch(Exception e1){
-							parkinglotId=0;
-						}
-						
-					}
-				});
-			}
-		});
-		
-		rdbtnFloor.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				comboBoxFloor.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e) {
-						try{
-						floorNum =Integer.parseInt(comboBoxFloor.getSelectedItem().toString());
-						}
-						
-						catch(Exception e1){
-							floorNum=0;
-						}
-					}
-				});
-			}
-		});
-		
-
-		rdbtnLine.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				comboBoxLine.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e) {
-						try{
-							lineNum =Integer.parseInt(comboBoxLine.getSelectedItem().toString());
-							fillParkingPlacecombox();
-						}
-						
-						catch(Exception e1){
-							lineNum=0;
-						}
-							
-					}
-					
-					
-				});
-			}
-		});
-		
-		rdbtnParkingPlaceNo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				comboBoxParkingPlace.addActionListener(new ActionListener(){
-					
-					public void actionPerformed(ActionEvent e) {
-						try{
-							parkingplaceNum=Integer.parseInt(comboBoxParkingPlace.getSelectedItem().toString());
-						}
-						
-						catch(Exception e1){
-							parkingplaceNum=0;
-						}
-					}
-				});
-			}
-		});
 		
 		btnSave.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
@@ -404,83 +313,6 @@ public class SavingParkingPlace_Panel extends JPanel {
 				}
 			}
 		});
-		
-		rdbtnArrivalDate.addActionListener(new ActionListener() {
-			
-	
-			public void actionPerformed(ActionEvent arg0) {
-				try{
-					ArrivalDate=arrivalDate.getDate();
-					
-				}
-				
-				catch(Exception e){
-					ArrivalDate=null;
-				}
-				
-			}
-		});
-	
-	
-	
-		rdbtnaDepartureDate.addActionListener(new ActionListener() {
-		
-		public void actionPerformed(ActionEvent arg0) {
-				try{
-					DepartureDate=departureDate.getDate();
-					
-				}
-			
-				catch(Exception e){
-					DepartureDate=null;;
-				}
-			
-			}
-		});
-		
-		rdbtnArrivalTime.addActionListener(new ActionListener() {
-		
-		public void actionPerformed(ActionEvent e) {
-			
-			comboBoxArrivalMin.addActionListener(new ActionListener() {
-				
-					public void actionPerformed(ActionEvent e) {
-						arrivalTimeMin=comboBoxArrivalMin.getSelectedItem().toString();
-					}
-				});
-			
-			comboBoxArrivalHour.addActionListener(new ActionListener() {
-				
-				public void actionPerformed(ActionEvent e) {
-					arrivalTimeHour=comboBoxArrivalHour.getSelectedItem().toString();
-				}
-			});
-			
-			}
-		});	
-		
-		
-		rdbtnaDepartureTime.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				
-				comboBoxDepartureMin.addActionListener(new ActionListener() {
-						
-						public void actionPerformed(ActionEvent e) {
-							departureTimeMin=comboBoxDepartureMin.getSelectedItem().toString();
-						}
-					});
-				
-				comboBoxDepartureHour.addActionListener(new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e) {
-						departureTimeHour=comboBoxDepartureHour.getSelectedItem().toString();
-					
-					}
-				});
-				
-			}
-		});	
 			
 	
 
@@ -491,7 +323,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 	
 		comboBoxParkingPlace.removeAllItems();
 		comboBoxParkingPlace.addItem(" ");
-			for(Parking_Places parking_place: parkingPlaces1)
+			for(Parking_Places parking_place: parkingPlaces)
 				if(parking_place.getFloor()==floorNum && parking_place.getRow()==lineNum)
 					comboBoxParkingPlace.addItem((Integer.toString(parking_place.getColumn())));
 	}

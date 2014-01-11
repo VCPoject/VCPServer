@@ -1,14 +1,13 @@
 package gui;
 
 import javax.swing.*;
-
 import controler.*;
 import entity.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import javax.swing.border.TitledBorder;
 
 public class FindAltParkingLot extends JPanel{
 	
@@ -19,16 +18,17 @@ public class FindAltParkingLot extends JPanel{
 	private ArrayList<Parking_Lot> parkingLot;
 	private ArrayList<Parking_Lot> altParkingLots;
 	private ParkingLot_controller ParkingLotController;
-	private JRadioButton rdbtnparkingLotNum1;
-	private JRadioButton rdbtnparkingLotNum2;
 	private JComboBox <String> comboBoxParkingLot1;
 	private JComboBox <String> comboBoxParkingLot2;
 	private int fullParkingLotId;
 	private int altParkingLotId;
 	private int defaultParkingLot;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JButton btnExit;
 	private JButton btnSave;
+	private JLabel lblParkingLotNumber;
+	private JLabel lblParkingLotNumber_1;
+	private JPanel panel;
+	private JPanel panel_1;
 	
 	public FindAltParkingLot(String host,int port,VcpInfo vcpInfo){
 		super();
@@ -46,45 +46,57 @@ public class FindAltParkingLot extends JPanel{
 		this.setSize(785, 575);
 		JLabel lbFindAltParkinLot = new JLabel("Find alt. parking lot");
 		lbFindAltParkinLot.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 36));
-		lbFindAltParkinLot.setBounds(135, 26, 364, 65);
+		lbFindAltParkinLot.setBounds(223, 11, 339, 43);
 		add(lbFindAltParkinLot);
 		
-		JLabel lblSignInFullLot = new JLabel("Please sign in the full parking lot:");
-		lblSignInFullLot.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
-		lblSignInFullLot.setBounds(10, 125, 266, 27);
-		add(lblSignInFullLot);
+		panel = new JPanel();
+		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Full parking lot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(236, 109, 313, 100);
+		add(panel);
+		panel.setLayout(null);
 		
-		rdbtnparkingLotNum1 = new JRadioButton("parking lot no.");
-		rdbtnparkingLotNum1.setBounds(10, 177, 109, 23);
-		add(rdbtnparkingLotNum1);
-		buttonGroup.add(rdbtnparkingLotNum1);
+		JLabel lblSignInFullLot = new JLabel("Please sign in the full parking lot:");
+		lblSignInFullLot.setBounds(6, 16, 266, 27);
+		panel.add(lblSignInFullLot);
+		lblSignInFullLot.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
 		
 		comboBoxParkingLot1 = new JComboBox<String>();
-		comboBoxParkingLot1.setBounds(103, 178, 364, 20);
-		add(comboBoxParkingLot1);
+		comboBoxParkingLot1.setBounds(217, 71, 90, 22);
+		panel.add(comboBoxParkingLot1);
+		
+		lblParkingLotNumber = new JLabel("Parking lot number:");
+		lblParkingLotNumber.setBounds(6, 71, 181, 22);
+		panel.add(lblParkingLotNumber);
+		lblParkingLotNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
 		comboBoxParkingLot1.addItem(" ");
 		fillParkinglotcombobox();
 		
-		JLabel lblPleaseChooseAlternative = new JLabel("Please choose alternative parking lot\r\n:");
-		lblPleaseChooseAlternative.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
-		lblPleaseChooseAlternative.setBounds(10, 264, 266, 27);
-		add(lblPleaseChooseAlternative);
+		panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Alternative parking lot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_1.setBounds(236, 248, 313, 121);
+		add(panel_1);
+		panel_1.setLayout(null);
 		
-		rdbtnparkingLotNum2 = new JRadioButton("parking lot no.");
-		rdbtnparkingLotNum2.setBounds(10, 333, 109, 23);
-		add(rdbtnparkingLotNum2);
-		buttonGroup.add(rdbtnparkingLotNum2);
+		JLabel lblPleaseChooseAlternative = new JLabel("Please choose alternative parking lot\r\n:");
+		lblPleaseChooseAlternative.setBounds(6, 16, 266, 27);
+		panel_1.add(lblPleaseChooseAlternative);
+		lblPleaseChooseAlternative.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
 		
 		comboBoxParkingLot2 = new JComboBox<String>();
-		comboBoxParkingLot2.setBounds(125, 334, 364, 20);
-		add(comboBoxParkingLot2);
+		comboBoxParkingLot2.setBounds(217, 92, 90, 20);
+		panel_1.add(comboBoxParkingLot2);
 		
-		btnExit = new JButton("Exit");
-		btnExit.setBounds(31, 436, 109, 45);
+		lblParkingLotNumber_1 = new JLabel("Parking lot number:");
+		lblParkingLotNumber_1.setBounds(6, 92, 181, 22);
+		panel_1.add(lblParkingLotNumber_1);
+		lblParkingLotNumber_1.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		btnExit = new JButton("Return");
+		btnExit.setBounds(10, 519, 109, 45);
 		add(btnExit);
 		
 		btnSave = new JButton("Save\r\n");
-		btnSave.setBounds(470, 436, 109, 45);
+		btnSave.setBounds(338, 390, 109, 45);
 		add(btnSave);
 		btnSave.setEnabled(false);
 		
@@ -101,45 +113,6 @@ public class FindAltParkingLot extends JPanel{
 	}
 
 	public void listners(){
-		rdbtnparkingLotNum1.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				comboBoxParkingLot1.addActionListener(new ActionListener() {
-				
-					public void actionPerformed(ActionEvent arg0) {
-						try{
-							fullParkingLotId=Integer.parseInt(comboBoxParkingLot1.getSelectedItem().toString());
-							getParkingLot_controller().updateParkingLotAsFull(fullParkingLotId);
-							fillAltParkinglotcombox();
-							btnSave.setEnabled(true);
-						}
-					
-						catch(Exception e1){
-							fullParkingLotId=0;
-							btnSave.setEnabled(false);
-						}
-					}
-				});
-			}
-		});
-		
-		rdbtnparkingLotNum2.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				comboBoxParkingLot2.addActionListener(new ActionListener() {
-				
-					public void actionPerformed(ActionEvent arg0) {
-						try{
-							altParkingLotId=Integer.parseInt(comboBoxParkingLot2.getSelectedItem().toString());
-						}
-					
-						catch(Exception e1){
-							altParkingLotId=0;
-						}
-					}
-				});
-			}
-		});
 		
 		btnSave.addActionListener(new ActionListener() {
 			

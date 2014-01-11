@@ -10,16 +10,13 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.border.TitledBorder;
 
 public class NotWorkingPlaces_Panel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	private JRadioButton rdbtnParkingLot;
 	private JRadioButton rdbtnParkingPlace;
-	private JRadioButton rdbtnParkingLot1;
-	private JRadioButton rdbtnFloorNo;
-	private JRadioButton rdbtnLineNo;
-	private JRadioButton rdbtnParkingPlaceNo;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private final ButtonGroup buttonGroup1 = new ButtonGroup();
 	private JButton btnSave;
@@ -38,6 +35,12 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	private JComboBox <String> comboBoxParkingPlace;
 	private JComboBox <String> comboBoxLine;
 	private JComboBox <String> comboBoxFloor;
+	private JPanel panel;
+	private JLabel lblParkingLot;
+	private JLabel lblFloorNumber;
+	private JLabel lblLineNumber;
+	private JLabel lblParkingPlaceNumber;
+	private JPanel panel_1;
 	
 	public NotWorkingPlaces_Panel(String host,int port, VcpInfo vcpInfo){
 		super();
@@ -55,83 +58,94 @@ public class NotWorkingPlaces_Panel extends JPanel {
 		JLabel lblNotWorkingPalces = new JLabel("Not working places\r\n");
 		lblNotWorkingPalces.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 36));
 		lblNotWorkingPalces.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNotWorkingPalces.setBounds(140, 25, 354, 54);
+		lblNotWorkingPalces.setBounds(227, 16, 330, 43);
 		add(lblNotWorkingPalces);
 		
 		JLabel lblChooseParkingLot = new JLabel("Choose parking lot/place:");
 		lblChooseParkingLot.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
-		lblChooseParkingLot.setBounds(26, 90, 189, 25);
+		lblChooseParkingLot.setBounds(222, 131, 189, 25);
 		add(lblChooseParkingLot);
 		
+		panel = new JPanel();
+		panel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Select Lot/Place", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(436, 107, 121, 72);
+		add(panel);
+		panel.setLayout(null);
+		
 		rdbtnParkingPlace = new JRadioButton("parking place");
-		rdbtnParkingPlace.setBounds(139, 139, 109, 23);
+		rdbtnParkingPlace.setSelected(true);
+		rdbtnParkingPlace.setBounds(6, 16, 109, 23);
+		panel.add(rdbtnParkingPlace);
 		buttonGroup1.add(rdbtnParkingPlace);
-		add(rdbtnParkingPlace);
 		
 		rdbtnParkingLot = new JRadioButton("parking lot");
-		rdbtnParkingLot.setBounds(345, 139, 109, 23);
+		rdbtnParkingLot.setBounds(6, 42, 109, 23);
+		panel.add(rdbtnParkingLot);
 		buttonGroup1.add(rdbtnParkingLot);
-		add(rdbtnParkingLot);
 		
-		rdbtnParkingLot1 = new JRadioButton("parking lot");
-		rdbtnParkingLot1.setBounds(6, 200, 109, 23);
-		buttonGroup.add(rdbtnParkingLot1);
-		add(rdbtnParkingLot1);
-		rdbtnParkingLot1.setVisible(false);
+		panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Not working place", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_1.setBounds(230, 223, 325, 165);
+		add(panel_1);
+		panel_1.setLayout(null);
 		
 		
 		comboBoxParkingLot = new JComboBox <String>();
-		comboBoxParkingLot.setBounds(118, 201, 364, 20);
-		add(comboBoxParkingLot);
-		comboBoxParkingLot.addItem(" ");
-		fillParkinglotcombobox();
-		comboBoxParkingLot.setVisible(false);
-		
-		rdbtnFloorNo = new JRadioButton("floor no.");
-		rdbtnFloorNo.setBounds(6, 262, 109, 23);
-		buttonGroup.add(rdbtnFloorNo);
-		add(rdbtnFloorNo);
-		rdbtnFloorNo.setVisible(false);
+		comboBoxParkingLot.setBounds(229, 19, 90, 22);
+		panel_1.add(comboBoxParkingLot);
 		
 		comboBoxFloor = new JComboBox <String>();
-		comboBoxFloor.setBounds(118, 263, 364, 20);
-		add(comboBoxFloor);
-		comboBoxFloor.addItem(" ");
-		fillFloorcomboBox();
-		comboBoxFloor.setVisible(false);
-		
-		rdbtnLineNo = new JRadioButton("Line no.");
-		rdbtnLineNo.setBounds(6, 324, 109, 23);
-		buttonGroup.add(rdbtnLineNo );
-		add(rdbtnLineNo);
-		rdbtnLineNo.setVisible(false);
+		comboBoxFloor.setBounds(229, 56, 90, 22);
+		panel_1.add(comboBoxFloor);
 		
 		comboBoxLine = new JComboBox <String>();
-		comboBoxLine.setBounds(118, 325, 364, 20);
-		add(comboBoxLine);
-		comboBoxLine.addItem(" ");
-		fillLinecomboBox();
-		comboBoxLine.setVisible(false);
-		
-		rdbtnParkingPlaceNo = new JRadioButton("parking place no.");
-		rdbtnParkingPlaceNo.setBounds(6, 380, 109, 23);
-		buttonGroup.add(rdbtnParkingPlaceNo );
-		add(rdbtnParkingPlaceNo);
-		rdbtnParkingPlaceNo.setVisible(false);
+		comboBoxLine.setBounds(229, 96, 90, 22);
+		panel_1.add(comboBoxLine);
 		
 		comboBoxParkingPlace = new JComboBox <String>();
-		comboBoxParkingPlace.setBounds(118, 381, 364, 20);
-		add(comboBoxParkingPlace);
+		comboBoxParkingPlace.setBounds(229, 136, 90, 20);
+		panel_1.add(comboBoxParkingPlace);
+		
+		lblParkingLot = new JLabel("Parking lot:");
+		lblParkingLot.setBounds(6, 16, 105, 22);
+		panel_1.add(lblParkingLot);
+		lblParkingLot.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		lblFloorNumber = new JLabel("Floor number:");
+		lblFloorNumber.setBounds(6, 56, 128, 22);
+		panel_1.add(lblFloorNumber);
+		lblFloorNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		lblLineNumber = new JLabel("Line number:");
+		lblLineNumber.setBounds(6, 96, 121, 22);
+		panel_1.add(lblLineNumber);
+		lblLineNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
+		
+		lblParkingPlaceNumber = new JLabel("Parking place number:");
+		lblParkingPlaceNumber.setBounds(6, 136, 206, 22);
+		panel_1.add(lblParkingPlaceNumber);
+		lblParkingPlaceNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
 		comboBoxParkingPlace.addItem(" ");
 		comboBoxParkingPlace.setVisible(false);
+		comboBoxLine.addItem(" ");
+		comboBoxLine.setVisible(false);
+		comboBoxFloor.addItem(" ");
+		comboBoxFloor.setVisible(false);
+		comboBoxParkingLot.addItem(" ");
+		comboBoxParkingLot.setVisible(false);
+		fillParkinglotcombobox();
+		fillFloorcomboBox();
+		fillLinecomboBox();
 		
 		btnSave = new JButton("Save");
-		btnSave.setBounds(473, 443, 109, 56);
+		btnSave.setBounds(338, 418, 109, 56);
 		add(btnSave);
 		
 		btnExit = new JButton("Exit");
-		btnExit.setBounds(51, 443, 109, 56);
+		btnExit.setBounds(6, 508, 109, 56);
 		add(btnExit);
+		
+		setParkingPlaceAsNotWorking();
 	}
 	
 
@@ -164,82 +178,6 @@ public class NotWorkingPlaces_Panel extends JPanel {
 			}
 		});
 		
-		rdbtnParkingLot1.addActionListener(new ActionListener() {
-			
-			
-			public void actionPerformed(ActionEvent e) {
-				
-				comboBoxParkingLot.addActionListener(new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e) {
-						try{
-						parkingLotNum=Integer.parseInt(comboBoxParkingLot.getSelectedItem().toString());
-						parkingPlaces=getParkingLot_controller().getAllparkingLotplaces(parkingLotNum);
-						}
-						
-						catch(Exception e1){
-							parkingLotNum=0;
-						}
-					}
-				});
-			}
-		});
-		
-		rdbtnFloorNo.addActionListener(new ActionListener() {
-			
-			
-			public void actionPerformed(ActionEvent e) {
-				comboBoxFloor.addActionListener(new ActionListener() {
-				
-					public void actionPerformed(ActionEvent e) {
-						try{
-						floorNum=Integer.parseInt(comboBoxFloor.getSelectedItem().toString());
-						}
-						
-						catch(Exception e1){
-							floorNum=0;
-						}
-					}
-				});
-				
-			}
-		});
-		
-		rdbtnLineNo.addActionListener(new ActionListener() {
-			
-			
-			public void actionPerformed(ActionEvent e) {
-				comboBoxLine.addActionListener(new ActionListener() {
-					
-					public void actionPerformed(ActionEvent e) {
-						try{
-						lineNum=Integer.parseInt(comboBoxLine.getSelectedItem().toString());
-						fillParkingPlacecombox();
-						}
-						catch(Exception e1){
-							lineNum=0;
-						}
-					}
-				});
-			}
-		});
-		
-		rdbtnParkingPlaceNo.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				comboBoxParkingPlace.addActionListener(new ActionListener() {
-				
-					public void actionPerformed(ActionEvent arg0) {
-						try{
-							parkingplaceNum=Integer.parseInt(comboBoxParkingPlace.getSelectedItem().toString());
-						}
-					
-						catch(Exception e1){parkingplaceNum=0;}
-					}
-				});
-			}
-		});
-		
 		btnSave.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
 					if(rdbtnParkingPlace.isSelected())
@@ -252,25 +190,23 @@ public class NotWorkingPlaces_Panel extends JPanel {
 		}
 	
 	private void setParkingPlaceAsNotWorking(){
-		rdbtnParkingLot1.setVisible(true);
 		comboBoxParkingLot.setVisible(true);
-		rdbtnFloorNo.setVisible(true);
-		rdbtnLineNo.setVisible(true);
-		rdbtnParkingPlaceNo.setVisible(true);
 		comboBoxFloor.setVisible(true);
 		comboBoxLine.setVisible(true);
 		comboBoxParkingPlace.setVisible(true);
+		lblFloorNumber.setVisible(true);
+		lblLineNumber.setVisible(true);
+		lblParkingPlaceNumber.setVisible(true);
 	}
 	
 	private void setParkingLotsNotWorking(){
-		rdbtnParkingLot1.setVisible(true);
 		comboBoxParkingLot.setVisible(true);
-		rdbtnFloorNo.setVisible(false);
-		rdbtnLineNo.setVisible(false);
-		rdbtnParkingPlaceNo.setVisible(false);
 		comboBoxFloor.setVisible(false);
 		comboBoxLine.setVisible(false);
 		comboBoxParkingPlace.setVisible(false);
+		lblFloorNumber.setVisible(false);
+		lblLineNumber.setVisible(false);
+		lblParkingPlaceNumber.setVisible(false);
 	}
 	
 	public void fillParkingPlacecombox(){

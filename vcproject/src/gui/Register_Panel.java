@@ -5,7 +5,6 @@ import java.awt.SystemColor;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-
 import java.awt.Font;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,10 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
-
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
@@ -27,16 +24,11 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.SwingConstants;
-
-import com.sun.org.apache.xpath.internal.axes.SubContextList;
-
 import controler.RegisterController;
 import controler.VcpInfo;
 import entity.Car;
-import entity.Order;
 import entity.Parking_Lot;
 import entity.Subscribe;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 

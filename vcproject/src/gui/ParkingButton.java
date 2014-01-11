@@ -7,10 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
-import entity.Parking_Places;
 
 public class ParkingButton extends JButton {
 
@@ -60,24 +57,28 @@ public class ParkingButton extends JButton {
 	public void setSaveSpace(){
 		this.setBackground(Color.BLUE);
 		this.setEnabled(true);
+		this.setToolTipText("Saved place");
 		this.repaint();
 	}
 	
 	public void setVacant(){
 		this.setBackground(Color.GREEN);
 		this.setEnabled(false);
+		this.setToolTipText("Vacant");
 		this.repaint();
 	}
 	
 	public void setOccupy(){
 		this.setBackground(Color.WHITE);
 		this.setEnabled(true);
+		this.setToolTipText("Occupy");
 		this.repaint();
 	}
 	
 	public void setNotWorking(){
 		this.setBackground(Color.RED);
 		this.setEnabled(false);
+		this.setToolTipText("Not working");
 		this.repaint();
 	}
 
