@@ -4,7 +4,7 @@ import java.awt.SystemColor;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+
 
 import controler.WeeklyStats;
 
