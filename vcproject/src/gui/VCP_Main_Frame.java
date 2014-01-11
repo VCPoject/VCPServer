@@ -617,8 +617,6 @@ public class VCP_Main_Frame extends JFrame {
 			stats = new Statistics(host, DEFAULT_PORT);
 		}
 		return stats;
-		}
-		return empComplainGui;
 	}
 
 
@@ -688,6 +686,16 @@ public class VCP_Main_Frame extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+
+
+	public EmpComplainGui getEmpComplainGui() {
+		if(empComplainGui == null)
+		{
+			empComplainGui = new EmpComplainGui(host, DEFAULT_PORT);
+		}
+		return empComplainGui;
 	}
 	
 	

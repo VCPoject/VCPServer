@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import controller.WeeklyStats;
+import controler.WeeklyStats;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;

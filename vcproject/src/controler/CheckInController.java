@@ -20,20 +20,21 @@ public class CheckInController extends Controller {
 	}
 
 	public Order getCarOrder(Integer carNum) throws Exception {
-		Set<Entry<Integer, Order>> orderEntry=getVcpInfo().getAllOrders().entrySet();
-		Iterator<Entry<Integer, Order>> odrderIterator=orderEntry.iterator();
-		while(odrderIterator.hasNext())
-			if (odrderIterator.next().getValue().equals(carNum)){
-				if (!odrderIterator.next().getValue().equals("checked in"))
-					return odrderIterator.next().getValue();
-			if (order.getCar().equals(carNum)) {
-				if (!order.getStatus().equals("checked in"))
-				else
-					throw new Exception("Cant fint order");
-			}
-		}
-		throw new Exception("There is no order on car number: " + carNum);
-	}
+        Order order;
+        Set<Entry<Integer, Order>> orderEntry = getVcpInfo().getAllOrders()
+                        .entrySet();
+        Iterator<Entry<Integer, Order>> odrderIterator = orderEntry.iterator();
+        while (odrderIterator.hasNext()) {
+                order = odrderIterator.next().getValue();
+                if (order.getCar().equals(carNum)) {
+                        if (!order.getStatus().equals("checked in"))
+                                return order;
+                        else
+                                throw new Exception("Cant fint order");
+                }
+        }
+        throw new Exception("There is no order on car number: " + carNum);
+}
 
 	public Subscribe getSubscribeByNum(Integer memberID, Integer carNum) throws Exception {
 		Subscribe subscribe = getVcpInfo().getAllSubscribed().get(memberID);
