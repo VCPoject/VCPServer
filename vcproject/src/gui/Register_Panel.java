@@ -33,9 +33,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class Register_Panel extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private String host;
 	private int port;
@@ -53,7 +51,17 @@ public class Register_Panel extends JPanel {
 	private JComboBox<String> comboBoxDepartureMin;
 	private JRadioButton rdbtnFull;
 	private JRadioButton rdbtnPartial;
+	/** vcpInfo is a controller that run on start-up of the 
+	 * application and download all the info form the DB
+	 * its contains all:
+	 * order,subscribed,reservation,employees,parking lot,
+	 * parking places,clients,default parking lot,cars
+	 */
 	private VcpInfo vcpInfo;
+	
+	/**
+	 * cars contains all cars info
+	 */
 	private ArrayList<Car> cars;
 	private JLabel lblCreditCard;
 	private JPanel PayPan;
@@ -72,6 +80,12 @@ public class Register_Panel extends JPanel {
 	private JRadioButton rdbtnPrivate;
 	private JRadioButton rdbtnBusiness;
 
+	/**
+	 * This panel is for make register.
+	 * @param host for make connection with server side
+	 * @param port for make connection with server side
+	 * @param vcpInfo for get info from DB
+	 */
 	public Register_Panel(String host, int port, VcpInfo vcpInfo) {
 		super();
 		this.host = host;
@@ -81,6 +95,9 @@ public class Register_Panel extends JPanel {
 		listners();
 	}
 
+	/**
+	 * Initialize the panel of register.
+	 */
 	private void initialize() {
 		this.setSize(785, 575);
 		setBackground(SystemColor.activeCaption);
@@ -350,7 +367,10 @@ public class Register_Panel extends JPanel {
 			comboBoxYear.addItem(finalDate.toString());
 		}
 	}
-
+	
+	/**
+	 * Listeners of the GUI components.
+	 */
 	private void listners() {
 		btnAddCar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -536,9 +556,12 @@ public class Register_Panel extends JPanel {
 		});
 	}
 
-	/*
-	 * return true if client is not subscribe but in the system and his car is
-	 * ok
+
+	/**
+	 * Check if the client was registered by the client id. 
+	 * @param clientID is the ID of the client
+	 * @return true if client is not subscribe but in the system and his car is
+	 * @throws Exception
 	 */
 	public boolean checkForClientValidity(Integer clientID) throws Exception {
 		Set<Entry<Integer, Subscribe>> subscribeEntry = getVcpInfo().getAllSubscribed().entrySet();
@@ -561,6 +584,11 @@ public class Register_Panel extends JPanel {
 		return btnSubmit;
 	}
 
+	
+	/**
+	 * Getting all cars info
+	 * @return ArrayList with all the cars that in the system.
+	 */
 	public ArrayList<Car> getCars() {
 		if (cars == null)
 			cars = new ArrayList<Car>();
@@ -579,21 +607,21 @@ public class Register_Panel extends JPanel {
 		return registerController;
 	}
 
+	/**
+	 * Change the amount of payment by type of register and the number of cars
+	 * The amount is insert to textFieldAmount.
+	 */
 	private void changePayment() {
 		String payment;
 		if (rdbtnFull.isSelected())
 			if (comboBoxAddCar.getItemCount() > 1)
-				payment = getVcpInfo().getParkingPricingInfo()
-						.getFull(comboBoxAddCar.getItemCount()).toString();
+				payment = getVcpInfo().getParkingPricingInfo().getFull(comboBoxAddCar.getItemCount()).toString();
 			else
-				payment = getVcpInfo().getParkingPricingInfo().getFullOneCar()
-						.toString();
+				payment = getVcpInfo().getParkingPricingInfo().getFullOneCar().toString();
 		else if (comboBoxAddCar.getItemCount() > 1)
-			payment = getVcpInfo().getParkingPricingInfo()
-					.getPartially(comboBoxAddCar.getItemCount()).toString();
+			payment = getVcpInfo().getParkingPricingInfo().getPartially(comboBoxAddCar.getItemCount()).toString();
 		else
-			payment = getVcpInfo().getParkingPricingInfo().getPartiallyOneCar()
-					.toString();
+			payment = getVcpInfo().getParkingPricingInfo().getPartiallyOneCar().toString();
 		textFieldAmount.setText(payment);
 	}
 }

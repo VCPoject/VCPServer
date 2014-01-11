@@ -2,28 +2,34 @@ package gui;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
-
 import controler.VcpInfo;
 import entity.Parking_Lot;
 
 public class ParkingLotInit extends JPanel{
 	private static final long serialVersionUID = 1L;
+	
 	private JComboBox <String> comboBoxParkingLot;
 	private JButton btnExit;
 	private JButton btnSave;
+	/** vcpInfo is a controller that run on start-up of the 
+	 * application and download all the info form the DB
+	 * its contains all:
+	 * order,subscribed,reservation,employees,parking lot,
+	 * parking places,clients,default parking lot,cars
+	 */
 	private VcpInfo vcpInfo;
 	private String host;
 	private JLabel lblParkigLot;
-	
+
+	/**
+	 * Initialize the system to know which parking lot is the default.
+	 * @param host for make connection with server side
+	 * @param parkingLotInfo contains all the parking lots from the DB
+	 */
 	public ParkingLotInit(String host, ArrayList<Parking_Lot> parkingLotInfo) {
 		super();
 		this.host=host;
@@ -36,6 +42,9 @@ public class ParkingLotInit extends JPanel{
 		add(lblParkigLot);
 	}
 
+	/**
+	 * Initialize the panel of ParkingLotInite
+	 */
 	private void initialize() {
 		this.setSize(500, 400);
 		JLabel lblParkingLotInIt= new JLabel("Parking lot initialization");
@@ -63,6 +72,10 @@ public class ParkingLotInit extends JPanel{
 		
 	}
 	
+	
+	/**
+	 * Fill the parking lot combobox with the number of available parking lot.
+	 */
 	public void fillcomboBoxParkinLot() {
 		for(Integer i=1;i<7;i++)
 			comboBoxParkingLot.addItem(i.toString());

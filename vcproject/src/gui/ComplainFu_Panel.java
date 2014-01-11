@@ -16,7 +16,7 @@ import controler.ComplainFuController;
 public class ComplainFu_Panel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JButton btnReturn;
-	private JLabel lblCarNumber ;
+	private JLabel lblCarNumber;
 	private JLabel lblIdNumber;
 	private JButton btnSubmit;
 	private JButton btnSubmit1;
@@ -31,6 +31,11 @@ public class ComplainFu_Panel extends JPanel {
 	private ComplainFuController complainController;
 	private JScrollPane scrollPane;
 	
+	/**
+	 * This panel is for client to follow theirs complains
+	 * @param host for connect to server side
+	 * @param port for connect to server side
+	 */
 	public ComplainFu_Panel(String host, int port) {
 		super();
 		this.host = host;
@@ -38,7 +43,9 @@ public class ComplainFu_Panel extends JPanel {
 		initialize();
 		listners();
 	}
-	
+	/**
+	 * Initialize the panel of saving parking place
+	 */
 	private void initialize(){
 		setLayout(null);
 		this.setSize(785, 575);
@@ -130,9 +137,10 @@ public class ComplainFu_Panel extends JPanel {
 			
 		
 	}
-	
+	/**
+	 * Listeners of the GUI components.
+	 */
 	private void listners(){
-		
 		getBtnSubmit().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int idnum = Integer.parseInt(textFieldIdNumber.getText());

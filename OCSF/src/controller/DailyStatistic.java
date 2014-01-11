@@ -36,7 +36,7 @@ public class DailyStatistic extends TimerTask {
 			ArrayList<Object> todayOrder = getTodayOrders();
 			for (int i = 0; i < todayOrder.size(); i++) {
 				String status = todayOrder.get(i++).toString();
-				if (status.equals("checked in")) {
+				if (status.equals("checked in") || status.equals("implement")) {
 					numberOfImplement++;
 					String arrivalDate = todayOrder.get(i++).toString();
 					String arrivalTime = todayOrder.get(i++).toString();

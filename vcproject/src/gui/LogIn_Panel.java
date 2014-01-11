@@ -20,13 +20,20 @@ public class LogIn_Panel extends JPanel{
 	private JPasswordField passwordField;
 	private HashMap<String,Employee> employeeMap;
 
+	/**
+	 * This panel is for the login screen of the employees
+	 * @param host for connecting to server side
+	 * @param employeeMap contains all the employees from DB
+	 */
 	public LogIn_Panel(String host,HashMap<String,Employee> employeeMap){
 		super();
 		this.employeeMap=employeeMap;
 		this.host = host;
 		initialize();
 	}
-	
+	/**
+	 * Initialize the panel of saving parking place
+	 */
 	private void initialize(){
 		this.setBounds(10, 11, 494, 372);
 		setBackground(Color.LIGHT_GRAY);

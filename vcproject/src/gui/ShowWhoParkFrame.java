@@ -15,21 +15,28 @@ public class ShowWhoParkFrame extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * The panel to display in the frame
+	 */
 	private ShowWhoParkPanel showWhoParkPanel;
+	/**
+	 * entity contain instance of Order or Subscribe
+	 */
 	private Object entity;
 
+	/**
+	 * This frame display info about Order or Subscribe
+	 * @param entity contains entity of Order or Subscribe
+	 */
 	public ShowWhoParkFrame(Object entity) {
 		super();
 		this.entity = entity;
 		initialize();
-		listners();
 	}
 
-	private void listners() {
-		
-		
-	}
-
+	/**
+	 * Initialize the GUI of the frame
+	 */
 	private void initialize() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

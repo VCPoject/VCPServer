@@ -23,6 +23,9 @@ public class ChangePricingPanel extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * conectedEmployee is the connected employee that use the panel
+	 */
 	private Employee conectedEmployee;
 	private PricingController pricingController;
 	private JTextField textFieldOccasional;
@@ -32,6 +35,11 @@ public class ChangePricingPanel extends JPanel {
 	private String host;
 	private int port;
 
+	/**
+	 * This panel is for create request to change the parking lot pricing
+	 * @param host for make connection with server side
+	 * @param port for make connection with server side
+	 */
 	public ChangePricingPanel(String host,int port) {
 		super();
 		this.host = host;
@@ -39,7 +47,9 @@ public class ChangePricingPanel extends JPanel {
 		initialize();
 		listners();
 	}
-
+	/**
+	 * Initialize the panel of saving parking place
+	 */
 	private void initialize() {
 		setLayout(null);
 		this.setSize(785, 575);
@@ -84,7 +94,9 @@ public class ChangePricingPanel extends JPanel {
 		btnConfirm.setBounds(60, 82, 123, 45);
 		panelChange.add(btnConfirm);
 	}
-	
+	/**
+	 * Listeners of the GUI components.
+	 */
 	private void listners() {
 		btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

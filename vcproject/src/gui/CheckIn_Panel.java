@@ -42,11 +42,23 @@ public class CheckIn_Panel extends JPanel {
 	private JButton btnCheckin;
 	private String host;
 	private int port;
+	/** vcpInfo is a controller that run on start-up of the 
+	 * application and download all the info form the DB
+	 * its contains all:
+	 * order,subscribed,reservation,employees,parking lot,
+	 * parking places,clients,default parking lot,cars
+	 */
 	private VcpInfo vcpInfo;
 	private CheckInController checkInController;
 	private ParkingPlaceController parkingPlaceController;
 	private MakeOrderController makeOrderController;
 
+	/**
+	 * This panel is for make check in to parking lot.
+	 * @param host for make connection with server side
+	 * @param port for make connection with server side
+	 * @param vcpInfo for get info from DB
+	 */
 	public CheckIn_Panel(String host,int port, VcpInfo vcpInfo) {
 		super();
 		this.host = host;
@@ -55,7 +67,9 @@ public class CheckIn_Panel extends JPanel {
 		initialize();
 		listners();
 	}
-	
+	/**
+	 * Initialize the panel of saving parking place
+	 */
 	private void initialize() {
 		this.setBounds(10, 11, 464, 340);
 		setLayout(null);
@@ -63,7 +77,7 @@ public class CheckIn_Panel extends JPanel {
 
 		JLabel lblCheckIn = new JLabel("Check - In");
 		lblCheckIn.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblCheckIn.setBounds(170, 11, 123, 29);
+		lblCheckIn.setBounds(170, 0, 123, 29);
 		add(lblCheckIn);
 
 		JLabel lblCarNumber = new JLabel("Car number:");
@@ -132,7 +146,9 @@ public class CheckIn_Panel extends JPanel {
 		add(lblCheckinType);
 
 	}
-
+	/**
+	 * Listeners of the GUI components.
+	 */
 	private void listners() {
 		rdbtnOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -237,6 +253,12 @@ public class CheckIn_Panel extends JPanel {
 		return checkInController;
 	}
 	
+	/**
+	 * StringToDate convert String with date to Date instance
+	 * @param strDate is String with a date
+	 * @return the String in Date format
+	 * @throws ParseException
+	 */
 	private Date StringToDate(String strDate) throws ParseException{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date departDate = format.parse(strDate);

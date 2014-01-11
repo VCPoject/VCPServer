@@ -16,18 +16,36 @@ import entity.Employee;
 public class LogIn_Frame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * loginpanel is the login panel to set in this frame
+	 */
 	private LogIn_Panel loginpanel;
-	private Reminder r;
+	/**
+	 * reminder if no action takes for 5 minutes
+	 */
+	private Reminder reminder;
 	private String host;
+	/** vcpInfo is a controller that run on start-up of the 
+	 * application and download all the info form the DB
+	 * its contains all:
+	 * order,subscribed,reservation,employees,parking lot,
+	 * parking places,clients,default parking lot,cars
+	 */
 	private VcpInfo vcpInfo;
 	
-	
+	/**
+	 * This panel is for the login screen of the employees
+	 * @param host for connecting to server side
+	 * @param employeeMap contains all the employees from DB
+	 */
 	public LogIn_Frame(String host){
 		super();
 		this.host = host;
 		initialize();
 	}
-	
+	/**
+	 * Initialize the frame of saving parking place
+	 */
 	private void initialize() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -45,7 +63,7 @@ public class LogIn_Frame extends JFrame{
 		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
 				/ 2 - this.getSize().height / 2);
 		this.setContentPane(getLogIn_Panel());
-		r=new Reminder(120,this);
+		reminder=new Reminder(120,this);
 	}
 	 
 	public LogIn_Panel getLogIn_Panel() { 
@@ -56,10 +74,13 @@ public class LogIn_Frame extends JFrame{
 		return loginpanel; 
 	}
 	
+	/**
+	 * Close the frame and stop the reminder
+	 */
 	public void closeLoginFrame() {
 		this.setVisible(false);
 		this.dispose();
-		r.timer.cancel();
+		reminder.timer.cancel();
 	}
 	
 	public LogIn_controller getLogincontroller(){

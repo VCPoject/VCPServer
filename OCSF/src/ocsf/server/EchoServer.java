@@ -65,8 +65,7 @@ public class EchoServer extends AbstractServer {
 			toDB.update(toDB.getConn(), (Object[]) msg);
 			this.sendToAllClients(toDB.getResult());
 		} catch (Exception e) {
-			System.out.println("handleMessageFromClient error:"
-					+ e.getMessage());
+			System.out.println("handleMessageFromClient error:"	+ e.getMessage());
 		}
 
 	}
@@ -78,8 +77,7 @@ public class EchoServer extends AbstractServer {
 			this.sendToAllClients(toDB.getResult());
 			toDB.resultReset();
 		} catch (Exception e) {
-			System.out.println("handleMessageFromClient error:"
-					+ e.getMessage());
+			System.out.println("handleMessageFromClient error:"	+ e.getMessage());
 		}
 
 	}

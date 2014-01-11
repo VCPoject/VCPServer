@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 import javax.swing.JTextArea;
 import controler.ComplainController;
+import javax.swing.SwingConstants;
 
 public class Complain_Panel extends JPanel {
 
@@ -24,12 +25,17 @@ public class Complain_Panel extends JPanel {
 	private JButton btnSubmit;
 	private JTextField textFieldIdNumber;
 	private JFormattedTextField textFieldCarNumber;
-	private JTextArea textArea;
+	private JTextArea textAreaComplainDetails;
 	private String host;
 	private int port = 5555;
 	private ComplainController complainController;
 	
 	
+	/**
+	 * This panel is for add complain from the clients
+	 * @param host for connecting to server side
+	 * @param port for connecting to server side
+	 */
 	public Complain_Panel(String host, int port) {
 		super();
 		this.host = host;
@@ -37,6 +43,9 @@ public class Complain_Panel extends JPanel {
 		initialize();
 		listners();
 	}
+	/**
+	 * Initialize the panel of saving parking place
+	 */
 	private void initialize(){
 		setLayout(null);
 		this.setSize(785, 575);
@@ -57,6 +66,7 @@ public class Complain_Panel extends JPanel {
 			add(lblIdNumber);
 			
 			textFieldIdNumber = new JTextField();
+			textFieldIdNumber.setHorizontalAlignment(SwingConstants.CENTER);
 			textFieldIdNumber.setBounds(441, 131, 137, 24);
 			add(textFieldIdNumber);
 			textFieldIdNumber.setColumns(10);
@@ -70,6 +80,7 @@ public class Complain_Panel extends JPanel {
 				MaskFormatter formatter = new MaskFormatter("##-###-##");
 				formatter.setValidCharacters("0123456789");
 				textFieldCarNumber = new JFormattedTextField(formatter);
+				textFieldCarNumber.setHorizontalAlignment(SwingConstants.CENTER);
 			} catch (ParseException e) {
 				JOptionPane.showMessageDialog(this,"Formatter error: " + e.getMessage() , "Formatter ERRORE", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
@@ -83,9 +94,9 @@ public class Complain_Panel extends JPanel {
 			btnSubmit.setBounds(366, 386, 103, 38);
 			add(btnSubmit);
 			
-			textArea = new JTextArea();
-			textArea.setBounds(352, 233, 228, 130);
-			add(textArea);
+			textAreaComplainDetails = new JTextArea();
+			textAreaComplainDetails.setBounds(352, 233, 228, 130);
+			add(textAreaComplainDetails);
 			
 			JLabel lblComplainDetails = new JLabel("Complain Details:");
 			lblComplainDetails.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -93,15 +104,15 @@ public class Complain_Panel extends JPanel {
 			add(lblComplainDetails);
 		
 	}
-	
+	/**
+	 * Listeners of the GUI components.
+	 */
 	private void listners(){
-		
-
 		getBtnSubmit().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int idnum = Integer.parseInt(textFieldIdNumber.getText());
 				int carnum = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
-				String complain = textArea.getText();
+				String complain = textAreaComplainDetails.getText();
 				if(getComplainController().checkValidity(idnum,carnum,complain))
 				{
 				complainController.sendAck(idnum,complain);

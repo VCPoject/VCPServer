@@ -36,6 +36,12 @@ public class ResubscribePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private String host;
 	private int port;
+	/** vcpInfo is a controller that run on start-up of the 
+	 * application and download all the info form the DB
+	 * its contains all:
+	 * order,subscribed,reservation,employees,parking lot,
+	 * parking places,clients,default parking lot,cars
+	 */
 	private VcpInfo vcpInfo;
 	private RegisterController registerController;
 	private JButton btnReturn;
@@ -76,8 +82,18 @@ public class ResubscribePanel extends JPanel {
 	private JLabel lblMemberId;
 	private JTextField textFieldMemberID;
 	private JPanel panelNewSubscribe;
+	
+	/**
+	 * subscribe entity for contains all the subscribe info
+	 */
 	private Subscribe subscribe = null;
 
+	/**
+	 * This panel is for saving parking place.
+	 * @param host for make connection with server side
+	 * @param port for make connection with server side
+	 * @param vcpInfo for get info from DB
+	 */
 	public ResubscribePanel(String host, int port, VcpInfo vcpInfo) {
 		this.host = host;
 		this.port = port;
@@ -86,6 +102,9 @@ public class ResubscribePanel extends JPanel {
 		listners();
 	}
 
+	/**
+	 * Initialize the panel of ResubscribePanel
+	 */
 	private void initialize() {
 		this.setSize(785, 575);
 		setBackground(SystemColor.activeCaption);
@@ -96,7 +115,6 @@ public class ResubscribePanel extends JPanel {
 		lblResubscribe.setBounds(320, 0, 144, 29);
 		add(lblResubscribe);
 
-		// ////////////////////////////////////////////
 		btnReturn = new JButton("Return");
 		btnReturn.setBounds(10, 519, 93, 35);
 		add(btnReturn);
@@ -409,6 +427,9 @@ public class ResubscribePanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Listeners of the GUI components.
+	 */
 	private void listners() {
 		rdbtnIdCar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -608,14 +629,16 @@ public class ResubscribePanel extends JPanel {
 
 	}
 
+	
+	/**
+	 * changePayment is fill the amount to pay in textFieldAmount
+	 */
 	private void changePayment() {
 		String payment;
 		if (rdbtnFull.isSelected())
-			payment = getVcpInfo().getParkingPricingInfo().getFullOneCar()
-					.toString();
+			payment = getVcpInfo().getParkingPricingInfo().getFullOneCar().toString();
 		else
-			payment = getVcpInfo().getParkingPricingInfo().getPartiallyOneCar()
-					.toString();
+			payment = getVcpInfo().getParkingPricingInfo().getPartiallyOneCar().toString();
 		textFieldAmount.setText(payment);
 	}
 

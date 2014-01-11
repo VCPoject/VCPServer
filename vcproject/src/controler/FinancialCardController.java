@@ -32,5 +32,15 @@ public class FinancialCardController extends Controller {
 		}
 		return null;
 	}
+	
+	public boolean updateFinancialCard(FinancialCard fCard){
+		String fCardUpdate = "UPDATE `vcp_employ`.`financial_card` SET `amount` = ? WHERE `idclient` = ?;";
+		fCard.setQuery(fCardUpdate);
+		sendQueryToServer(fCard);
+		if(getResult().get(0).equals("done"))
+			return true;
+		return false;
+		
+	}
 
 }

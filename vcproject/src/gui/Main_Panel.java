@@ -7,9 +7,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 
 public class Main_Panel extends JPanel {
-	/**
-	 * 
-	 */
+
+
 	private static final long serialVersionUID = 1L;
 	private JButton btnExit;
 	private JButton btnEmploeyLogin;
@@ -22,12 +21,17 @@ public class Main_Panel extends JPanel {
 	private JButton btnComplainFu;
 	private JButton btnResubscribe;
 	
+	/**
+	 * This is the main pane of the system.
+	 */
 	public Main_Panel() {
 		super();
 		setLayout(null);
 		initialize();
 	}
-
+	/**
+	 * Initialize the panel of saving parking place
+	 */
 	private void initialize() {
 		this.setSize(785, 575);
 		 setBackground(SystemColor.activeCaption);
