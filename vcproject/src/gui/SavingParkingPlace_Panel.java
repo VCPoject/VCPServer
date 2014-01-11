@@ -68,10 +68,8 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private  String arrivalTimeHour; 
 	private String departureTimeMin;
 	private String departureTimeHour;
-	private HashMap<Integer,Reservation>reservation;
 	private Date ArrivalDate;
 	private Date DepartureDate;
-	private HashMap<Integer, Order>  order; 
 	private static final long serialVersionUID = 1L;
 	
 	public SavingParkingPlace_Panel(String host, int port, VcpInfo vcpInfo){
@@ -79,8 +77,6 @@ public class SavingParkingPlace_Panel extends JPanel {
 		this.vcpInfo=vcpInfo;
 		this.defaultParkingLot=vcpInfo.getDefultParkingLot().getIdparkinglot();
 		this.parkingPlaces=vcpInfo.getParkingPlaces();
-		this.order=vcpInfo.getAllOrders();
-		this.reservation=vcpInfo.getReservation();
 		this.host=host;
 		this.port=port;
 		initialize();

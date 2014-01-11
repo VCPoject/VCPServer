@@ -80,7 +80,7 @@ public class Parking_Places implements Entity {
 	@Override
 	public Object[] toObject() {
 		if(getQuery().contains("UPDATE")){
-			Object[] toSend = {getQuery(),getIdorder(),getSubscribeNum(),getStatus(),getIdparkinglot(),getFloor(),getRow(),getColumn()};
+			Object[] toSend = {getQuery(),getIdparkinglot(),getIdorder(),getFloor(),getRow(),getColumn(),getStatus(),getSubscribeNum()};
 			return toSend;
 		}
 		

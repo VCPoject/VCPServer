@@ -30,6 +30,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -441,8 +444,12 @@ public class ResubscribePanel extends JPanel {
 							throw new Exception("You didnt enter car number");
 						Integer carNumber = Integer.parseInt(carNumberStr);
 
-						for (Subscribe findSubscribe : getVcpInfo()
-								.getAllSubscribed()) {
+						Set<Entry<Integer, Subscribe>>subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
+						Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
+						Subscribe findSubscribe;
+						
+						while(subscribeIterator.hasNext()){
+						findSubscribe=subscribeIterator.next().getValue();
 							if (findSubscribe.getCarNum().equals(carNumber)
 									&& findSubscribe.getIdClient().equals(
 											clientId)) {
@@ -464,8 +471,12 @@ public class ResubscribePanel extends JPanel {
 							throw new Exception(
 									"You didnt enter valid member number");
 						}
-						for (Subscribe findSubscribe : getVcpInfo()
-								.getAllSubscribed()) {
+						Set<Entry<Integer, Subscribe>>subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
+						Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
+						Subscribe findSubscribe;
+						while(subscribeIterator.hasNext()){
+						findSubscribe=subscribeIterator.next().getValue();
+						
 							if (findSubscribe.getSubscribeNum()
 									.equals(memberID)) {
 								if (!getRegisterController().isExpired(
@@ -485,7 +496,7 @@ public class ResubscribePanel extends JPanel {
 								"There is no member like you enter, contact administrator");
 					}
 
-					if (subscribe.getSubscribType().equals("Partial")) {
+					if (subscribe.getSubscribeType().equals("Partial")) {
 						rdbtnFull.setSelected(false);
 						rdbtnPartial.setSelected(true);
 						comboBoxParkingLot.setSelectedIndex(subscribe
@@ -565,7 +576,7 @@ public class ResubscribePanel extends JPanel {
 					}
 					
 					if (rdbtnPartial.isSelected()) {
-						subscribe.setSubscribType(rdbtnPartial.getText());
+						subscribe.setSubscribeType(rdbtnPartial.getText());
 						String departureTime = comboBoxDepartureHour
 								.getSelectedItem()
 								+ ":"
@@ -576,7 +587,7 @@ public class ResubscribePanel extends JPanel {
 								.parseInt(comboBoxParkingLot.getSelectedItem()
 										.toString()));
 					}else{
-						subscribe.setSubscribType(rdbtnFull.getText());
+						subscribe.setSubscribeType(rdbtnFull.getText());
 						subscribe.setDepartureTime(null);
 						subscribe.setIdparking(null);
 					}

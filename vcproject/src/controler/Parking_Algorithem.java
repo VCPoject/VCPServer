@@ -5,193 +5,268 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import entity.Order;
 import entity.Parking_Lot;
 import entity.Parking_Places;
 import entity.Reservation;
+import entity.Subscribe;
 
 public class Parking_Algorithem extends Controller{
 	private ArrayList <Parking_Places> parkingPlacesList;
-	private VcpInfo vcpInfo; 
 	private HashMap<Integer, Order>  orderMap;
-	private ArrayList<Parking_Places> sortedParkingPlaces=null;
+	private HashMap<Integer, Object>  checkInorderMap;
+	private HashMap<Integer,Subscribe>subscribeMap;
+	private HashMap<Integer,Object>checkInsubscribeMap;
+	private ArrayList<Parking_Places> sortedParkingPlaces;
+	private HashMap <Integer,Parking_Places> parkingPlacesMap;
 	private HashMap<Integer,Reservation> reservation;
 	private Parking_Lot parkingLot;
-	private Order order;
-	private Parking_Places parkingPlace;
-	private int parkingLotSize;
+	private int count=0;
+	private Object checkIn;
 	
-	
-	public Parking_Algorithem(VcpInfo vcpInfo,Order order,Parking_Lot parkingLot) throws ParseException{
-		this.vcpInfo=vcpInfo;
+	public Parking_Algorithem(VcpInfo vcpInfo,Object checkIn) throws ParseException{
 		this.parkingPlacesList=vcpInfo.getParkingPlaces();
-		this.parkingLot=parkingLot;
-		parkingLotSize=parkingLot.getDepth()*parkingLot.getHight()*parkingLot.getWidth();
+		this.parkingLot=vcpInfo.getDefultParkingLot();
 		this.reservation=vcpInfo.getReservation();
-		this.order=order;
 		this.orderMap=vcpInfo.getAllOrders();
+		this.subscribeMap=vcpInfo.getAllSubscribed();
+		if(checkIn instanceof Order)
+			this.checkIn=(Order)checkIn;
+		
+		else if(checkIn instanceof Subscribe)
+			this.checkIn=(Subscribe)checkIn;
+		
+		getCheckedInOrders();
+		getParkingLotParkingPalces();
 		sortedParkingPlaceInIt();
-		fillParkingPlaces();
-		fillSavedandNotWorkingPlaces();
-		
+		sortOrders();
 	}
 	
-	public void setParkingPlace(Parking_Places parkingPlace){
-		this.parkingPlace=parkingPlace;
-	}
-	
-	public Parking_Places getParkingPalce(){
-		return parkingPlace;
-	}
-	
-	public void fillParkingPlaces(){
-		for(int i=0;i<sortedParkingPlaces.size();i++)
-			if(sortedParkingPlaces.get(i)==null)
-				sortedParkingPlaces.remove(i);
-		
-		for(int i=sortedParkingPlaces.size();i<parkingLotSize;i++)
-			sortedParkingPlaces.add(null);
-	}
-	
-	public void fillSavedandNotWorkingPlaces(){
+	public void getParkingLotParkingPalces() {
+		parkingPlacesMap=new HashMap<Integer,Parking_Places>();
 		for(Parking_Places parkingplace:parkingPlacesList)
 			if(parkingplace.getIdparkinglot()==parkingLot.getIdparkinglot())
-				if(parkingplace.getStatus().equals("save") || parkingplace.getStatus().equals(" not working"))
-					sortedParkingPlaces.set(parkingplace.getColumn(), parkingplace);
+					parkingPlacesMap.put(parkingplace.getColumn(), parkingplace);
 	}
 	
-	public Integer[] findOptimParkingPlace() throws ParseException{
-		
-		if(sortedParkingPlaces==null){//If the parking lot is empty
-			int count=0;
+	public void getCheckedInOrders(){
+		Order checkedInOrder;
+		Subscribe checkedInSubscribe;
+		checkInorderMap=new HashMap<Integer,Object>();
+		checkInsubscribeMap=new HashMap<Integer,Object>();
+		Set<Entry<Integer, Order>>orderEntry=orderMap.entrySet();
+		Iterator<Entry<Integer, Order>> orderIterator=orderEntry.iterator();
+		Set<Entry<Integer, Subscribe>>subscribeEntry=subscribeMap.entrySet();
+		Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
+		while(orderIterator.hasNext() || subscribeIterator.hasNext()){
 			
-			do{//Find parking place for car.
-				if(parkingPlacesList.get(count).getStatus().equals("vaccant")){
-					sortedParkingPlaces.set(count,parkingPlacesList.get(count));
-					parkCar(parkingPlacesList.get(count));
-					Integer[] coordinate={parkingPlacesList.get(count).getIdparkinglot(),
-						parkingPlacesList.get(count).getIdparkinglot(),parkingPlacesList.get(count).getFloor(),
-						parkingPlacesList.get(count).getRow(),parkingPlacesList.get(count).getColumn()};
-					return coordinate;
-					}
-					
-				else if(parkingPlacesList.get(count).equals("save")){
-					Reservation parkingPlacereservation=reservation.get(parkingPlacesList.get(count).getColumn());
-					String departureTime=parkingPlacereservation.getArrivalDate()+" "+
-					parkingPlacereservation.getArrivalTime();
-					Date ArrivalDate=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(departureTime);
-					String orderDate=order.getDepartureDate()+" "+order.getDepartureTime();
-					Date orderDeaprture=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(orderDate);
-					
-					if(orderDeaprture.after(ArrivalDate)){
-						sortedParkingPlaces.set(count,parkingPlacesList.get(count));
-						parkCar(parkingPlacesList.get(count));
-					}
-				}
-		
-		count++;
-		}while(sortedParkingPlaces.get(count)!=null);
-	}
-		
-		else{
-			for(int i=0;i<sortedParkingPlaces.size();i++){
-				
-			String parkingOrder=orderMap.get(sortedParkingPlaces.get(i).getIdorder()).getDepartureDate()+" "+
-			orderMap.get(sortedParkingPlaces.get(i).getIdorder()).getDepartureTime();
-			Date departureParkingOrder=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(parkingOrder);
-			ArrayList<Parking_Places> tempPlace=new ArrayList<Parking_Places>();
-			String currOrder=this.order.getDepartureDate()+" "+this.order.getDepartureTime();
-			Date departureCurrOrder=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(currOrder);
-				if(departureCurrOrder.before(departureParkingOrder)){
-					for(int j=i;j<sortedParkingPlaces.size();j++){
-						if(sortedParkingPlaces.get(j)!=null)
-							tempPlace.add(sortedParkingPlaces.get(j));
-					}
-					swapParkingplaces(i,tempPlace);
-				}
+			if(orderIterator.hasNext()){
+				checkedInOrder=orderIterator.next().getValue();
+				if(checkedInOrder.getStatus().equals("checked in"))
+				checkInorderMap.put(checkedInOrder.getIdorder(),checkedInOrder);
 			}
 			
-			if(sortedParkingPlaces.size()!=parkingLotSize){
-				parkCar(sortedParkingPlaces.get(sortedParkingPlaces.size()));
-				Integer[] coordinate={parkingPlacesList.get(sortedParkingPlaces.size()).getIdparkinglot(),
-						parkingPlacesList.get(sortedParkingPlaces.size()).getIdparkinglot()
-						,parkingPlacesList.get(sortedParkingPlaces.size()).getFloor()
-						,parkingPlacesList.get(sortedParkingPlaces.size()).getRow()
-						,parkingPlacesList.get(sortedParkingPlaces.size()).getColumn()};
-					return coordinate;
+			
+			
+			if(subscribeIterator.hasNext()){
+				checkedInSubscribe=subscribeIterator.next().getValue();
+				if(checkedInSubscribe.getStatus().equals("checked in"))
+					checkInsubscribeMap.put(checkedInSubscribe.getSubscribeNum(),checkedInSubscribe);
 			}
 		}
 		
+		if(checkIn instanceof Order)
+		checkInorderMap.put(((Order) checkIn).getIdorder(), checkIn);
 		
-		return null;
+		else if(checkIn instanceof Subscribe)
+			checkInsubscribeMap.put( ((Subscribe) checkIn).getSubscribeNum(), checkIn);
 	}
 	
-	public void sortedParkingPlaceInIt() {
-		sortedParkingPlaces=new ArrayList<Parking_Places>();
-			for(Parking_Places parkingPlace:parkingPlacesList){
+	public void sortOrders() throws ParseException{
+		
+		while(checkInorderMap.size()!=0 ||checkInsubscribeMap.size()!=0){
+			Object tempOrder,tempSubscribe = null,minOrder = null;
+			Date tempOrderDate=null,minOrderDate=null,tempSubscribeDate=null;
+			Set<Entry<Integer, Object>>orderEntry=checkInorderMap.entrySet();
+			Iterator<Entry<Integer, Object>> orderIterator=orderEntry.iterator();
+			Set<Entry<Integer, Object>>subscribeEntry=checkInsubscribeMap.entrySet();
+			Iterator<Entry<Integer, Object>> subscribeIterator=subscribeEntry.iterator();
+			
+			if(orderIterator.hasNext()){
+			minOrder=orderIterator.next().getValue();
+			minOrderDate=StringToDate(((Order) minOrder).getDepartureDate()
+			,((Order) minOrder).getDepartureTime());
+			}
+			
+			else if(subscribeIterator.hasNext()){
+				minOrder=subscribeIterator.next().getValue();
+				if(((Subscribe)minOrder).getSubscribeType().equals("partially")){
+					Date currentDate=new Date();
+					SimpleDateFormat timedateparser=new SimpleDateFormat("yyyy-MM-dd");
+					String dateCurrent=timedateparser.format(currentDate);
+					minOrderDate=StringToDate(dateCurrent,
+					((Subscribe)minOrder).getDepartureTime());
+				}
 				
-				if(parkingPlace.getIdparkinglot()==parkingLot.getIdparkinglot()){
+				else
+					minOrderDate=StringToDate(((Subscribe)minOrder).getEndDate(), "24:00:00");
+				
+			}
+			
+			while(orderIterator.hasNext() || subscribeIterator.hasNext()){
+				
+				if(orderIterator.hasNext()){	
+				tempOrder=orderIterator.next().getValue();
+				tempOrderDate=StringToDate(((Order) tempOrder).getDepartureDate(),
+				((Order) tempOrder).getDepartureTime());
+				
+					if(tempOrderDate.before(minOrderDate)){
+					minOrder=tempOrder;
+					minOrderDate= tempOrderDate;
+					}
+				}
+				
+				if(subscribeIterator.hasNext()){
+					tempSubscribe=subscribeIterator.next().getValue();
 					
-					if(parkingPlace.getStatus().equals("occupy"))
-						sortedParkingPlaces.add(parkingPlace);
+					if(((Subscribe)tempSubscribe).getSubscribeType().equals("partially")){
+						Date currentDate=new Date();
+						SimpleDateFormat timedateparser=new SimpleDateFormat("yyyy-MM-dd");
+						String dateCurrent=timedateparser.format(currentDate);
+						tempSubscribeDate=StringToDate(dateCurrent,
+						((Subscribe)tempSubscribe).getDepartureTime());
+					}
 					
 					else
-						sortedParkingPlaces.add(null);
+						tempSubscribeDate=StringToDate(((Subscribe)tempSubscribe).getEndDate(), "24:00:00");
+					
+						
+						if(tempSubscribeDate.before(minOrderDate)){
+						minOrder=tempSubscribe;
+						minOrderDate= tempSubscribeDate;
+						}
 				}
 			}
+			
+			if(minOrder instanceof Order){
+				checkInorderMap.remove(((Order) minOrder).getIdorder());
+				findOptimParkingPlace(minOrderDate,minOrder);
+			}
+			
+			else{
+				checkInsubscribeMap.remove(((Subscribe) minOrder).getSubscribeNum());
+				findOptimParkingPlace(minOrderDate,minOrder);
+			}
+		}
+	}
+	
+	
+	public void findOptimParkingPlace(Date orderDeaprture,Object order) throws ParseException{
+		int flag=0;
+		
+		while( count<sortedParkingPlaces.size() && flag==0){
+				
+				if(sortedParkingPlaces.get(count)==null){
+					Parking_Places parkingplace=parkingPlacesMap.get(count+1);
+			
+					if(parkingplace.getStatus().equals("save") || parkingplace.getStatus().equals("save but occupy")){
+					Reservation parkingPlacereservation=reservation.get(parkingPlacesMap.get(count+1).getColumn());
+					Date arrival=StringToDate(parkingPlacereservation.getArrivalDate(),
+					parkingPlacereservation.getArrivalTime());
+					
+					if(orderDeaprture.before(arrival)){
+						sortedParkingPlaces.set(count, parkingplace);
+						parkCar(parkingplace,order);
+						flag=1;
+					}
+				}
+				
+					else if(!parkingplace.getStatus().equals("not working")){
+						sortedParkingPlaces.set(count, parkingplace);
+						parkCar(parkingplace,order);
+						flag=1;
+					}
+				}
+				
+			count++;
+			}
+		}
+	
+		
+	public void sortedParkingPlaceInIt() {
+		sortedParkingPlaces=new ArrayList<Parking_Places>();
+		Set<Entry<Integer, Parking_Places>> parkingPlaceEntry=parkingPlacesMap.entrySet();
+		Iterator<Entry<Integer, Parking_Places>> ParkingPlaceIterator=parkingPlaceEntry.iterator();
+		while(ParkingPlaceIterator.hasNext()){
+			sortedParkingPlaces.add(null);
+			ParkingPlaceIterator.next();
+		}
+	}
+	
+	public Date StringToDate(String strDate,String strTime) throws ParseException{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date departDate = format.parse(strDate+" "+strTime);
+		return departDate;
 	}
 
-	public void swapParkingplaces(int index,ArrayList<Parking_Places> tempPlace) throws ParseException{
-		int count=0;
+
+	public void parkCar(Parking_Places parkingplace,Object order) {
 		
-		for(int j=index;j<sortedParkingPlaces.size()-1;j++){
-				if(sortedParkingPlaces.get(j)!=null)
-					sortedParkingPlaces.set(j,tempPlace.get(count));
-					parkCar(sortedParkingPlaces.get(j));
-					count++;
+		if(order instanceof Order){
+			
+			if(parkingplace.getStatus().equals("save") ||parkingplace.getStatus().equals("save but occupy")){
+				Object[] updateParkingPlace={"UPDATE  vcp_db.parking_place SET status=?,idorder=?,subScribeNum=?"
+				+ " WHERE idparking=? and parking_place.column=?;" 
+				,"save but occupy",((Order) order).getIdorder(),null,parkingplace.getIdparkinglot()
+				,parkingplace.getColumn()};
+				sendQueryToServer(updateParkingPlace);
+				parkingplace.setIdorder(((Order) order).getIdorder());
+				parkingplace.setStatus("save but occupy");
+				parkingplace.setSubscribeNum(null);
+			}
+		
+			else{
+				Object[] updateParkingPlace={"UPDATE  vcp_db.parking_place SET status=?,idorder=?,subScribeNum=?"
+				+ " WHERE idparking=? and parking_place.column=?;" 
+				,"occupy",((Order) order).getIdorder(),null,parkingplace.getIdparkinglot(),parkingplace.getColumn()};
+				sendQueryToServer(updateParkingPlace);
+				parkingplace.setIdorder(((Order) order).getIdorder());
+				parkingplace.setStatus("occupy");
+				parkingplace.setSubscribeNum(null);
+			}
 		}
 		
-		do{
+		else if(order instanceof Subscribe){
 			
-			if(parkingPlace.getIdparkinglot()==parkingLot.getIdparkinglot()){
-				if(parkingPlacesList.get(index+1).getStatus().equals("vaccant"))
-					sortedParkingPlaces.set(index+1,tempPlace.get(count));
-					parkCar(sortedParkingPlaces.get(index+1));
+			if(parkingplace.getStatus().equals("save") || parkingplace.getStatus().equals("save but occupy")){
+			Object[] updateParkingPlace={"UPDATE  vcp_db.parking_place SET status=?,subScribeNum=?,idorder=?"
+			+ " WHERE idparking=? and parking_place.column=?;" 
+			,"save but occupy",((Subscribe) order).getSubscribeNum(),null,parkingplace.getIdparkinglot()
+			,parkingplace.getColumn()};
+			sendQueryToServer(updateParkingPlace);
+			parkingplace.setSubscribeNum(((Subscribe)order).getSubscribeNum());
+			parkingplace.setStatus("save but occupy");
+			parkingplace.setIdorder(null);
 			}
 			
-			else if(parkingPlacesList.get(index+1).getStatus().equals("save")){
-				SimpleDateFormat departureTimeparser=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Reservation reservationOrder=reservation.get(parkingPlacesList.get(index+1).getIdorder());
-				Date ArrivalDate=departureTimeparser.parse(reservationOrder.getArrivalDate()+" "+
-				reservationOrder.getDepartureTime());
-				SimpleDateFormat tempTimeparser=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Order tempOrder=orderMap.get(tempPlace.get(count).getIdorder());
-				Date tempDate=tempTimeparser.parse(tempOrder.getDepartureDate()+" "+tempOrder.getDepartureTime());
-				
-				if(tempDate.before(ArrivalDate)){
-					sortedParkingPlaces.set(index+1,tempPlace.get(count));
-					parkCar(sortedParkingPlaces.get(index+1));
-				}
-			}
-			
-			index++;
-		}while(sortedParkingPlaces.get(index+1)==null);
-			
-	}
-	
-	
-		
-	public Parking_Places parkCar(Parking_Places parkingplace) {
-		ArrayList<Object> result=null;
-		Object[] updateParkingPlace={"UPDATE  vcp_db.parking_place SET status=?,idorder=?"
+			else{
+				Object[] updateParkingPlace={"UPDATE  vcp_db.parking_place SET status=?,subScribeNum=?,idorder=?"
 				+ " WHERE idparking=? and parking_place.column=?;" 
-				,"occipuy",order.getIdorder(),parkingplace.getIdparkinglot(),parkingplace.getColumn()};
-		sendQueryToServer(updateParkingPlace);
-		result=getResult();
-		parkingplace.setIdorder(order.getIdorder());
-		parkingplace.setStatus("occupy");
-		return parkingplace;
+				,"occupy",((Subscribe) order).getSubscribeNum(),null,
+				parkingplace.getIdparkinglot(),parkingplace.getColumn()};
+				sendQueryToServer(updateParkingPlace);
+				parkingplace.setSubscribeNum(((Subscribe)order).getSubscribeNum());
+				parkingplace.setStatus("occupy");
+				parkingplace.setIdorder(null);
+			}
+		
+		}
+		
+		//closeConnection();
 	}
 	
 	

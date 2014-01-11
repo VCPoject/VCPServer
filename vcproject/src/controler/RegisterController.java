@@ -22,7 +22,7 @@ public class RegisterController extends Controller {
 				"UPDATE `vcp_db`.`subscribe` SET `idparking` = ?, `startDate` = ?, `subscribType` = ?"
 						+ ",`customerType` = ?, `leavingTime` = ?  WHERE `subscribeNum` = ?;",
 				reSubscribed.getIdparking(), reSubscribed.getStartDate(),
-				reSubscribed.getSubscribType(), reSubscribed.getCustomerType(),
+				reSubscribed.getSubscribeType(), reSubscribed.getCustomerType(),
 				reSubscribed.getDepartureTime(), reSubscribed.getSubscribeNum() };
 		sendQueryToServer(updateResubscribe);
 
