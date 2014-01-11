@@ -1,4 +1,4 @@
-package controler;
+package controler;   
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,11 +20,12 @@ public class VcpInfo extends Controller  {
 	private HashMap<Integer,Order>orderMap;
 	private HashMap<String, Employee> employeeMap;
 	private ArrayList<Car> allCars;
-	private HashMap<Integer, Subscribe> allSubscribed;
 	private HashMap<Integer, Reservation> reservationList;
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
 	private boolean systemEnable = false;
+	private HashMap<Integer, Subscribe> allSubscribed;
+
 
 	public VcpInfo(String host) {
 		super(host);
@@ -41,6 +42,7 @@ public class VcpInfo extends Controller  {
 		closeConnection();
 	}
 	public ArrayList<Car> getAllCars(){
+	
 		if (allCars == null) {
 			Object[] getallcars = { "SELECT * FROM `vcp_db`.`car`;" };
 			sendQueryToServer(getallcars);
@@ -261,7 +263,7 @@ public class VcpInfo extends Controller  {
 					Parking_Places pLot = new Parking_Places();
 					pLot.setIdparkinglot(Integer.parseInt(result.get(i++).toString()));
 					String idOrder = result.get(i++).toString();
-					if(!idOrder.equals("no value"))
+					if (!idOrder.equals("no value"))
 						pLot.setIdorder(Integer.parseInt(idOrder));
 					String subscribeNum = result.get(i++).toString();
 					if(!subscribeNum.equals("no value"))
@@ -270,7 +272,6 @@ public class VcpInfo extends Controller  {
 					pLot.setRow(Integer.parseInt(result.get(i++).toString()));
 					pLot.setColumn(Integer.parseInt(result.get(i++).toString()));
 					pLot.setStatus(result.get(i).toString());
-					//pLot.setSubscribeNum(Integer.parseInt(result.get(i).toString()));
 					tempPlace.add(pLot);
 				}
 				setParkingPlaces(tempPlace);
@@ -280,6 +281,7 @@ public class VcpInfo extends Controller  {
 
 	}
 
+		
 	
 	public void getReservationInfo(){
 		int i=0;

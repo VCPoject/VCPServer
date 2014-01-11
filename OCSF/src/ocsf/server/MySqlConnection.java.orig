@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.ResultSetMetaData;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 public class MySqlConnection {
 
@@ -23,8 +25,7 @@ public class MySqlConnection {
 		}
 
 		try {
-			conn = (Connection) DriverManager.getConnection(
-					"jdbc:mysql://"+dbIp+"/vcp_db", dbUser, dbPassword);
+			conn = (Connection) DriverManager.getConnection("jdbc:mysql://"	+ dbIp + "/vcp_db", dbUser, dbPassword);
 			conn.setAutoCommit(false);
 			System.out.println("SQL connection succeed");
 		} catch (SQLException ex) {/* handle any errors */
@@ -42,19 +43,24 @@ public class MySqlConnection {
 	}
 
 	public void update(Connection conn, Object[] msg) {
-		String command = (String) msg[0];
 		try {
-			if (command.contains("SELECT")) {
-				readDB(conn, msg);
+			if (msg != null) {
+				String command = (String) msg[0];
+				if (command.contains("SELECT")) {
+					readDB(conn, msg);
+				} else if (command.contains("UPDATE")) {
+					updateDB(conn, msg);
+				} else if (command.contains("INSERT")) {
+					insertDB(conn, msg);
+				} else if (command.contains("DELETE")) {
+					deleteDB(conn, msg);
+				}
+			else if(command.contains("DELETE"))
+				deleteDB(conn, msg);
+				conn.close();
 			}
-			else if (command.contains("UPDATE")) {
-				updateDB(conn, msg);
-			} else if (command.contains("INSERT")) {
-				insertDB(conn, msg);
-			}
-			conn.close();
 		} catch (Exception e) {
-			setResult("update error:" + e.getMessage());
+			setResult("DataBase error:" + e.getMessage());
 		}
 
 	}
@@ -69,31 +75,40 @@ public class MySqlConnection {
 					selectData.setString(i, (String) getStatment[i]);
 				else if (getStatment[i] instanceof Integer)
 					selectData.setInt(i, (Integer) getStatment[i]);
-				else if(getStatment[i] instanceof Date)
+				else if (getStatment[i] instanceof Float)
+					selectData.setInt(i, (Integer) getStatment[i]);
+				else if (getStatment[i] instanceof Date)
 					selectData.setDate(i, (Date) getStatment[i]);
+				else if (getStatment[i] instanceof Timestamp)
+					selectData.setTimestamp(i, (Timestamp) getStatment[i]);
 			}
 			rs = selectData.executeQuery();
 			ArrayList<Object> list = new ArrayList<Object>();
 			ResultSetMetaData metadata = rs.getMetaData();
 			int numberOfColumns = metadata.getColumnCount();
 			while (rs.next()) {
-				for (int i = 1; i <= numberOfColumns; i++){
+				for (int i = 1; i <= numberOfColumns; i++) {
 					Object obj = rs.getObject(i);
-					if(obj == null)
+					if (obj == null)
 						obj = "no value".toString();
-					if(obj instanceof String)
-						list.add((String)obj);
+					if (obj instanceof String)
+						list.add((String) obj);
 					else if (obj instanceof Integer)
-						list.add((Integer)obj);
+						list.add((Integer) obj);
 					else if (obj instanceof Long)
-						list.add((Long)obj);
-					else if (obj instanceof Double)
-						list.add((Double)obj);
-<<<<<<< HEAD
-=======
+						list.add((Long) obj);
 					else if (obj instanceof Float)
-						list.add((Float)obj);
->>>>>>> branch 'master' of local repository
+						list.add((Float) obj);
+					else if (obj instanceof Date)
+						list.add((Date)obj);
+					else if (obj instanceof Time)
+						list.add((Time)obj);
+					else if (obj instanceof Timestamp)
+						list.add((Timestamp)obj);
+<<<<<<< HEAD
+					
+=======
+>>>>>>> refs/remotes/origin/Haim
 				}
 				thereIsRslt = true;
 			}
@@ -115,39 +130,63 @@ public class MySqlConnection {
 
 	private void updateDB(Connection con, Object[] getStatment) {
 		try {
-			PreparedStatement updataData = con
-					.prepareStatement((String) getStatment[0]);
-			for (int i = 1; i < getStatment.length; i++) {
-				if (getStatment[i] instanceof String)
-					updataData.setString(i, (String) getStatment[i]);
-				else if (getStatment[i] instanceof Integer)
-					updataData.setInt(i, (Integer) getStatment[i]);
-				else if(getStatment[i] instanceof Date)
-					updataData.setDate(i, (Date) getStatment[i]);
+			if (getStatment != null) {
+				PreparedStatement updataData = con
+						.prepareStatement((String) getStatment[0]);
+				for (int i = 1; i < getStatment.length; i++) {
+					if (getStatment[i] instanceof String)
+						updataData.setString(i, (String) getStatment[i]);
+					else if (getStatment[i] instanceof Integer)
+						updataData.setInt(i, (Integer) getStatment[i]);
+					else if (getStatment[i] instanceof Float)
+						updataData.setFloat(i, (Float) getStatment[i]);
+					else if (getStatment[i] instanceof Date)
+						updataData.setDate(i, (Date) getStatment[i]);
+					else if (getStatment[i] == null){
+						try {
+							updataData.setNull(i, java.sql.Types.VARCHAR);
+						} catch (Exception e) {
+							updataData.setNull(i, java.sql.Types.INTEGER);
+						}
+						
+					}
+				}
+				
+				int result=updataData.executeUpdate();
+				con.commit();
+				
+				if(result!=0)
+					setResult("done");
+				else
+					setResult("update failed");
 			}
-			updataData.executeUpdate();
-			con.commit();
-			setResult("done");
 		} catch (Exception e) {
 			System.out.println("updateDB error:" + e.getMessage());
 			setResult("updateDB error:" + e.getMessage());
 		}
+		
 	}
 
 	private void insertDB(Connection con, Object[] getStatment) {
 		try {
-			PreparedStatement updataData = con
-					.prepareStatement((String) getStatment[0]);
-			for (int i = 1; i < getStatment.length; i++) {
-				if (getStatment[i] instanceof String)
-					updataData.setString(i, (String) getStatment[i]);
-				else if (getStatment[i] instanceof Integer)
-					updataData.setInt(i, (Integer) getStatment[i]);
+			if (getStatment != null) {
+				PreparedStatement updataData = con
+						.prepareStatement((String) getStatment[0]);
+				for (int i = 1; i < getStatment.length; i++) {
+					if (getStatment[i] instanceof String)
+						updataData.setString(i, (String) getStatment[i]);
+					else if (getStatment[i] instanceof Integer)
+						updataData.setInt(i, (Integer) getStatment[i]);
+					else if (getStatment[i] instanceof Float)
+						updataData.setFloat(i, (Float) getStatment[i]);
+				}
+				Integer result = updataData.executeUpdate();
+				con.commit();
+				if(result != 0)
+					setResult("done");
+				else
+					setResult("update failed");
 			}
-			updataData.executeUpdate();
-			con.commit();
-			Thread.sleep(10);
-			setResult("done");
 		} catch (Exception e) {
 			System.out.println("insertDB error:" + e.getMessage());
 			setResult("insertDB error:" + e.getMessage());
@@ -155,8 +194,36 @@ public class MySqlConnection {
 
 	}
 	
-	public void resultReset()
-	{
+
+
+	private void deleteDB(Connection con, Object[] getStatment) {
+		try {
+			if (getStatment != null) {
+				PreparedStatement deleteData = con
+						.prepareStatement((String) getStatment[0]);
+				for (int i = 1; i < getStatment.length; i++) {
+					if (getStatment[i] instanceof String)
+						deleteData.setString(i, (String) getStatment[i]);
+					else if (getStatment[i] instanceof Integer)
+						deleteData.setInt(i, (Integer) getStatment[i]);
+					else if (getStatment[i] instanceof Float)
+						deleteData.setFloat(i, (Float) getStatment[i]);
+				}
+				Integer result = deleteData.executeUpdate();
+				con.commit();
+				if(result != 0)
+					setResult("done");
+				else
+					setResult("update failed");
+			}
+		} catch (Exception e) {
+			System.out.println("deleteDB error:" + e.getMessage());
+			setResult("deleteDB error:" + e.getMessage());
+		}
+
+	}
+
+	public void resultReset() {
 		result = new ArrayList<Object>();
 	}
 

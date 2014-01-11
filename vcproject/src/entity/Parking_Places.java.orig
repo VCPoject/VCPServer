@@ -95,7 +95,13 @@ public class Parking_Places implements Entity {
 		return toSend;
 	}
 
+<<<<<<< HEAD
+	public Integer getSubscribeNum() {
+		return subscribeNum;
+	}
+=======
 
+>>>>>>> refs/remotes/origin/Haim
 
 	public void setSubscribeNum(int subscribeNum) {
 		this.subscribeNum = subscribeNum;

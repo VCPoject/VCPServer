@@ -1,4 +1,4 @@
-package ocsf.server;
+package ocsf.server; 
 
 import java.util.ArrayList;
 import java.sql.Connection;
@@ -53,10 +53,10 @@ public class MySqlConnection {
 				} else if (command.contains("INSERT")) {
 					insertDB(conn, msg);
 				} else if (command.contains("DELETE")) {
-					deleteDB1(conn, msg);
+					deleteDB(conn, msg);
 				}
 			else if(command.contains("DELETE"))
-				deleteDB1(conn, msg);
+				deleteDB(conn, msg);
 				conn.close();
 			}
 		} catch (Exception e) {
@@ -79,6 +79,8 @@ public class MySqlConnection {
 					selectData.setInt(i, (Integer) getStatment[i]);
 				else if (getStatment[i] instanceof Date)
 					selectData.setDate(i, (Date) getStatment[i]);
+				else if (getStatment[i] instanceof Timestamp)
+					selectData.setTimestamp(i, (Timestamp) getStatment[i]);
 			}
 			rs = selectData.executeQuery();
 			ArrayList<Object> list = new ArrayList<Object>();
@@ -103,7 +105,6 @@ public class MySqlConnection {
 						list.add((Time)obj);
 					else if (obj instanceof Timestamp)
 						list.add((Timestamp)obj);
-					
 				}
 				thereIsRslt = true;
 			}
@@ -189,25 +190,7 @@ public class MySqlConnection {
 
 	}
 	
-	private void deleteDB1(Connection con, Object[] getStatment){
-		try {
-			PreparedStatement deleteData = con
-					.prepareStatement((String) getStatment[0]);
-			for (int i = 1; i < getStatment.length; i++) {
-				if (getStatment[i] instanceof String)
-					deleteData.setString(i, (String) getStatment[i]);
-				else if (getStatment[i] instanceof Integer)
-					deleteData.setInt(i, (Integer) getStatment[i]);
-			}
-			deleteData.executeUpdate();
-			con.commit();
-			Thread.sleep(10);
-			setResult("done");
-		} catch (Exception e) {
-			System.out.println("deleteDB error:" + e.getMessage());
-			setResult("deleteDB error:" + e.getMessage());
-		}
-	}
+
 
 	private void deleteDB(Connection con, Object[] getStatment) {
 		try {
