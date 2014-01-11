@@ -517,7 +517,7 @@ public class VCP_Main_Frame extends JFrame {
 		getEmployeePanel().getbtnQuarterly().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setContentPane(getQuarterlyGui());
-				getStatistics().getBtnReturn().addActionListener(
+				getStatisticsPanel().getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								setContentPane(getEmployeePanel());

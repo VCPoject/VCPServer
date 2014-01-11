@@ -51,9 +51,7 @@ public class CheckInController extends Controller {
 						return subscribe;
 					else
 						throw new Exception("Subscribe is expired");
-					
 				}
-				
 				else
 					throw new Exception("Car number is not assign to member id: " + memberID);
 			}

@@ -85,7 +85,6 @@ public class VcpInfo extends Controller  {
 					
 					if (!result.get(i).toString().equals("no value"))
 						addsubscribe.setDepartureTime(result.get(i++).toString());
-					
 					else
 						i++;
 					

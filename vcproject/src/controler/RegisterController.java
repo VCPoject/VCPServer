@@ -3,6 +3,7 @@ package controler;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import entity.Subscribe;
@@ -56,5 +57,19 @@ public class RegisterController extends Controller {
 		else
 			return false;
 	}
+	
+	/**
+	 * addDays is adding to give date number of x days
+	 * @param date to be add
+	 * @param days to add to date
+	 * @return
+	 */
+	public Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
+    }
 
 }

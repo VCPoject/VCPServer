@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -26,6 +27,8 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.SwingConstants;
+
+import com.toedter.calendar.DateUtil;
 
 import controler.RegisterController;
 import controler.VcpInfo;
@@ -458,6 +461,8 @@ public class Register_Panel extends JPanel {
 								"yyyy-MM-dd");
 						String todayDate = dateFormat.format(date);
 						newSubscribe.setStartDate(todayDate);
+						date = getRegisterController().addDays(date, 28);
+						newSubscribe.setEndDate(dateFormat.format(date));
 						String subscribeQuery;
 						if (rdbtnPartial.isSelected()) {
 							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`idparking`,`startDate`,`subscribType`,`customerType`,`leavingTime`) VALUES(?,?,?,?,?,?,?);";
@@ -472,7 +477,7 @@ public class Register_Panel extends JPanel {
 									+ ":00");
 						} else {
 							newSubscribe.setSubscribeType(rdbtnFull.getText());
-							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`startDate`,`subscribType`,`customerType`) VALUES(?,?,?,?,?);";
+							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`startDate`,`endDate`,`subscribType`,`customerType`) VALUES(?,?,?,?,?,?);";
 						}
 						if (rdbtnPrivate.isSelected())
 							newSubscribe.setCustomerType(rdbtnPrivate.getText());
@@ -631,4 +636,5 @@ public class Register_Panel extends JPanel {
 			payment = getVcpInfo().getParkingPricingInfo().getPartiallyOneCar().toString();
 		textFieldAmount.setText(payment);
 	}
+	
 }

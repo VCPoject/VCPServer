@@ -312,36 +312,28 @@ public class CheckOut_Panel extends JPanel {
 				try{
 					Subscribe subscribe = null;
 					Order order = null;
-					Parking_Places pPlace = null;
-					Integer[] parkingInfo = null;
-					String departDateStr = "";
 					String carNumStr = textFieldCarNumber.getText();
+					boolean isOrderExist = false;
 					//Check car number //
 					if(carNumStr.equals("  -   -  "))
 						throw new Exception("You didnt enter any car number");
 					Integer carNum = Integer.parseInt(carNumStr.replace("-", ""));
-					
 					if(rdbtnOrder.isSelected()){
 						order = getCheckOutController().getCarOrder(carNum);
 						if(order == null)
 							throw new Exception("There is no order for car number: " + carNumStr);
-						for(Parking_Lot parkinglot:getVcpInfo().getParkingLot())
-							if(order.getIdparking()==parkinglot.getIdparkinglot())
-								parkingInfo = getCheckOutController().Algo(getVcpInfo(),order,parkinglot);
-						boolean isOrderExist = false;
-						for(Parking_Places parkingPlace : getVcpInfo().getParkingPlaces())
-							if(parkingPlace.getIdorder().equals(order.getIdorder())){
+						
+						for(Parking_Places pPlace : getVcpInfo().getParkingPlaces())
+							if(pPlace.getIdorder().equals(order.getIdorder())){
+								pPlace.setStatus("vaccent");
+								getParkingPlaceController().updateParkingPlace(pPlace);
+								pPlace.setIdorder(null);
+								pPlace.setSubscribeNum(null);
 								isOrderExist = true;
 								break;
 							}
 						if(!isOrderExist)
 							throw new Exception("Car number " + order.getCar() + " is not in parking lot contact admin or try again");
-						departDateStr = order.getDepartureDate() + " " + order.getDepartureTime();
-						pPlace = getParkingPlaceController().getParkingPlaceByCoordinate(parkingInfo);
-						
-						
-						pPlace.setIdorder(order.getIdorder());
-						pPlace.setSubscribeNum(null);
 						
 						Date date = new Date();
 						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -349,7 +341,7 @@ public class CheckOut_Panel extends JPanel {
 						order.setCheckOutDate(strDate[0]);
 						order.setCheckOutTime(strDate[1]);
 						order.setStatus("implement");
-						getMakeOrderController().UpdateOrder(order);
+						getMakeOrderController().UpdateOrderCheckout(order);
 						if(!getMakeOrderController().getResult().equals("done"))
 							throw new Exception("Error: Can't update order");
 						if(order.getType().equals("one time")){
@@ -357,7 +349,7 @@ public class CheckOut_Panel extends JPanel {
 							updateFinancialCard(fCard, order);
 						}
 						
-					}/*else{
+					}else{
 						String memberIDStr = textFieldMemberID.getText();
 						if(memberIDStr == null || memberIDStr.isEmpty() || memberIDStr.length() == 0){
 							throw new Exception("You didnt enter any member ID number");
@@ -371,17 +363,17 @@ public class CheckOut_Panel extends JPanel {
 						subscribe = getCheckOutController().getSubscribeByNum(memberID,carNum);
 						Date date = new Date();
 						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-						departDateStr = dateFormat.format(date) + " " + subscribe.getDepartureTime();
-						for(Parking_Lot parkinglot:getVcpInfo().getParkingLot())
-							if(pPlace.getSubscribeNum().equals(subscribe.getSubscribeNum()))
-								parkingInfo = getCheckOutController().Algo(getVcpInfo(), subscribe, parkinglot);//Algorithm
-						pPlace = getParkingPlaceController().getParkingPlaceByCoordinate(parkingInfo);
-						pPlace.setSubscribeNum(subscribe.getSubscribeNum());
-						pPlace.setIdorder(null);
-					}*/
+						for(Parking_Places parkingPlace:getVcpInfo().getParkingPlaces())
+							if(parkingPlace.getSubscribeNum().equals(subscribe.getSubscribeNum())){
+								getCheckOutController().Algo(getVcpInfo(), subscribe, parkingPlace);//Algorithm
+								isOrderExist = true;
+							}
+						if(!isOrderExist)
+							throw new Exception("Car number " + subscribe.getCarNum() + " is not in parking lot contact admin or try again");
+						subscribe.setStatus("not checked in");
+						getCheckOutController().updateSubscribeAscheckedout(subscribe);
+					}
 					
-					pPlace.setStatus("vaccent");
-					getParkingPlaceController().updateParkingPlace(pPlace);
 					if(!getMakeOrderController().getResult().equals("done"))
 						throw new Exception("Error: Can't update parking place");
 					getCheckOutController().showSeccussesMsg("Check-Out succeed");
@@ -421,19 +413,13 @@ public class CheckOut_Panel extends JPanel {
 		return checkOutController;
 	}
 	
-	public Integer[] Algo(VcpInfo vcpInfo, Order order, Parking_Lot parkingLot)
-			throws ParseException {
-		Integer[] coordinate = getParking_Algorithem(order, parkingLot)
-				.findOptimParkingPlace();
-		return coordinate;
+	public void Algo(VcpInfo vcpInfo, Order order, Parking_Lot parkingLot)throws ParseException {
+		getParking_Algorithem(order, parkingLot);
 	}
 
-	public Parking_Algorithem getParking_Algorithem(Order order,
-			Parking_Lot parkingLot) throws ParseException {
+	public Parking_Algorithem getParking_Algorithem(Order order,Parking_Lot parkingLot) throws ParseException {
 		if (parkingAlgorithem == null)
-			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), order,
-					parkingLot);
-
+			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), order,parkingLot);
 		return parkingAlgorithem;
 	}
 
