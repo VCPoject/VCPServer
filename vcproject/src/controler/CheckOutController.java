@@ -25,16 +25,15 @@ public class CheckOutController extends Controller {
 	
 	public Order getCarOrder(Integer carNum) throws Exception {
         Order order;
-        Set<Entry<Integer, Order>> orderEntry = getVcpInfo().getAllOrders()
-                        .entrySet();
+        Set<Entry<Integer, Order>> orderEntry = getVcpInfo().getAllOrders() .entrySet();
         Iterator<Entry<Integer, Order>> odrderIterator = orderEntry.iterator();
         while (odrderIterator.hasNext()) {
                 order = odrderIterator.next().getValue();
                 if (order.getCar().equals(carNum)) {
-                        if (!order.getStatus().equals("checked in"))
+                        if (order.getStatus().equals("checked in"))
                                 return order;
                         else
-                                throw new Exception("Cant fint order");
+                                throw new Exception("Cant find order");
                 }
         }
         throw new Exception("There is no order on car number: " + carNum);
@@ -65,34 +64,19 @@ public class CheckOutController extends Controller {
 		return registerController;
 	}
 
-	public Integer[] Algo(VcpInfo vcpInfo, Order order, Parking_Lot parkingLot)
-			throws ParseException {
-		Integer[] coordinate = getParking_Algorithem(order, parkingLot)
-				.findOptimParkingPlace();
-		return coordinate;
+	public void Algo(Object order)throws ParseException {
+		 getParking_Algorithem(order);
+		 parkingAlgorithem = null;
 	}
 	
-	/*public Integer[] Algo(VcpInfo vcpInfo, Subscribe subscribe, Parking_Lot parkingLot)
-			throws ParseException {
-		Integer[] coordinate = getParking_Algorithem(subscribe, parkingLot)
-				.findOptimParkingPlace();
-		return coordinate;
-	}*/
-
-	public Parking_Algorithem getParking_Algorithem(Order order,Parking_Lot parkingLot) throws ParseException {
+	public Parking_Algorithem getParking_Algorithem(Object order) throws ParseException {
 		if (parkingAlgorithem == null)
-			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), order,
-					parkingLot);
+			parkingAlgorithem = new Parking_Algorithem(order,getVcpInfo());
 
 		return parkingAlgorithem;
 	}
 	
-	/*public Parking_Algorithem getParking_Algorithem(Subscribe subscribe,Parking_Lot parkingLot) throws ParseException {
-		if (parkingAlgorithem == null)
-			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), subscribe,	parkingLot);
-
-		return parkingAlgorithem;
-	}*/
+	
 	
 	public long getHoursDiff(Order order) {
 		String dateStart = order.getArrivalDate() + " " + order.getArrivalTime();

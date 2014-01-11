@@ -312,8 +312,6 @@ public class CheckOut_Panel extends JPanel {
 				try{
 					Subscribe subscribe = null;
 					Order order = null;
-					Parking_Places pPlace = null;
-					Integer[] parkingInfo = null;
 					String departDateStr = "";
 					String carNumStr = textFieldCarNumber.getText();
 					//Check car number //
@@ -327,7 +325,7 @@ public class CheckOut_Panel extends JPanel {
 							throw new Exception("There is no order for car number: " + carNumStr);
 						for(Parking_Lot parkinglot:getVcpInfo().getParkingLot())
 							if(order.getIdparking()==parkinglot.getIdparkinglot())
-								parkingInfo = getCheckOutController().Algo(getVcpInfo(),order,parkinglot);
+							getCheckOutController().Algo(order);
 						boolean isOrderExist = false;
 						for(Parking_Places parkingPlace : getVcpInfo().getParkingPlaces())
 							if(parkingPlace.getIdorder().equals(order.getIdorder())){
@@ -337,18 +335,13 @@ public class CheckOut_Panel extends JPanel {
 						if(!isOrderExist)
 							throw new Exception("Car number " + order.getCar() + " is not in parking lot contact admin or try again");
 						departDateStr = order.getDepartureDate() + " " + order.getDepartureTime();
-						pPlace = getParkingPlaceController().getParkingPlaceByCoordinate(parkingInfo);
-						
-						
-						pPlace.setIdorder(order.getIdorder());
-						pPlace.setSubscribeNum(null);
 						
 						Date date = new Date();
 						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 						String[] strDate = format.format(date).split("\\s");
 						order.setCheckOutDate(strDate[0]);
 						order.setCheckOutTime(strDate[1]);
-						order.setStatus("implement");
+						order.setStatus("checked out");
 						getMakeOrderController().UpdateOrder(order);
 						if(!getMakeOrderController().getResult().equals("done"))
 							throw new Exception("Error: Can't update order");
@@ -357,7 +350,7 @@ public class CheckOut_Panel extends JPanel {
 							updateFinancialCard(fCard, order);
 						}
 						
-					}/*else{
+					}else{
 						String memberIDStr = textFieldMemberID.getText();
 						if(memberIDStr == null || memberIDStr.isEmpty() || memberIDStr.length() == 0){
 							throw new Exception("You didnt enter any member ID number");
@@ -372,18 +365,10 @@ public class CheckOut_Panel extends JPanel {
 						Date date = new Date();
 						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						departDateStr = dateFormat.format(date) + " " + subscribe.getDepartureTime();
-						for(Parking_Lot parkinglot:getVcpInfo().getParkingLot())
-							if(pPlace.getSubscribeNum().equals(subscribe.getSubscribeNum()))
-								parkingInfo = getCheckOutController().Algo(getVcpInfo(), subscribe, parkinglot);//Algorithm
-						pPlace = getParkingPlaceController().getParkingPlaceByCoordinate(parkingInfo);
-						pPlace.setSubscribeNum(subscribe.getSubscribeNum());
-						pPlace.setIdorder(null);
-					}*/
+						getCheckOutController().Algo(subscribe);
+					}
 					
-					pPlace.setStatus("vaccent");
-					getParkingPlaceController().updateParkingPlace(pPlace);
-					if(!getMakeOrderController().getResult().equals("done"))
-						throw new Exception("Error: Can't update parking place");
+					
 					getCheckOutController().showSeccussesMsg("Check-Out succeed");
 			} catch (Exception e2) {
 				getCheckOutController().showWarningMsg(e2.getMessage());
@@ -421,22 +406,6 @@ public class CheckOut_Panel extends JPanel {
 		return checkOutController;
 	}
 	
-	public Integer[] Algo(VcpInfo vcpInfo, Order order, Parking_Lot parkingLot)
-			throws ParseException {
-		Integer[] coordinate = getParking_Algorithem(order, parkingLot)
-				.findOptimParkingPlace();
-		return coordinate;
-	}
-
-	public Parking_Algorithem getParking_Algorithem(Order order,
-			Parking_Lot parkingLot) throws ParseException {
-		if (parkingAlgorithem == null)
-			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), order,
-					parkingLot);
-
-		return parkingAlgorithem;
-	}
-
 	public FinancialCardController getFinancialCardController() {
 		if(financialCardController == null){
 			financialCardController = new FinancialCardController(host, port);

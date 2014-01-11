@@ -46,6 +46,22 @@ public class Parking_Algorithem extends Controller{
 		sortOrders();
 	}
 	
+	public Parking_Algorithem(Object checkOut,VcpInfo vcpInfo){
+		this.parkingPlacesList=vcpInfo.getParkingPlaces();
+		this.parkingLot=vcpInfo.getDefultParkingLot();
+		this.orderMap=vcpInfo.getAllOrders();
+		this.subscribeMap=vcpInfo.getAllSubscribed();
+		
+		if(checkOut instanceof Order)
+			checkOut=(Order)checkOut;
+	
+		else if(checkOut instanceof Subscribe)
+			checkOut=(Subscribe)checkOut;
+		
+		findCar(checkOut);
+	}
+	
+
 	public void getParkingLotParkingPalces() {
 		parkingPlacesMap=new HashMap<Integer,Parking_Places>();
 		for(Parking_Places parkingplace:parkingPlacesList)
@@ -269,5 +285,71 @@ public class Parking_Algorithem extends Controller{
 		//closeConnection();
 	}
 	
+	public void removeCarFromLot(Parking_Places parkingplace,Object order){
+		
+		if(order instanceof Order){
+			
+			if(parkingplace.getStatus().equals("save") ||parkingplace.getStatus().equals("save but occupy")){
+				Object[] updateParkingPlace={"UPDATE  vcp_db.parking_place SET status=?,idorder=?"
+				+ " WHERE idparking=? and parking_place.column=?;" 
+				,"save but occupy",null,parkingplace.getIdparkinglot()
+				,parkingplace.getColumn()};
+				sendQueryToServer(updateParkingPlace);
+				parkingplace.setIdorder(null);
+				parkingplace.setStatus("vaccant");
+				parkingplace.setIdorder(null);;
+			}
+		
+			else{
+				Object[] updateParkingPlace={"UPDATE  vcp_db.parking_place SET status=?,idorder=?,subScribeNum=?"
+				+ " WHERE idparking=? and parking_place.column=?;" 
+				,"occupy",((Order) order).getIdorder(),null,parkingplace.getIdparkinglot(),parkingplace.getColumn()};
+				sendQueryToServer(updateParkingPlace);
+				parkingplace.setIdorder(null);
+				parkingplace.setStatus("vaccant");
+				parkingplace.setSubscribeNum(null);
+			}
+		}
+		
+		else if(order instanceof Subscribe){
+			
+			if(parkingplace.getStatus().equals("save") || parkingplace.getStatus().equals("save but occupy")){
+			Object[] updateParkingPlace={"UPDATE  vcp_db.parking_place SET status=?,subScribeNum=?"
+			+ " WHERE idparking=? and parking_place.column=?;" 
+			,"save but occupy",null,parkingplace.getIdparkinglot()
+			,parkingplace.getColumn()};
+			sendQueryToServer(updateParkingPlace);
+			parkingplace.setSubscribeNum(null);
+			parkingplace.setStatus("vaccant");
+			}
+			
+			else{
+				Object[] updateParkingPlace={"UPDATE  vcp_db.parking_place SET status=?,subScribeNum=?"
+				+ " WHERE idparking=? and parking_place.column=?;" 
+				,"occupy",null,parkingplace.getIdparkinglot(),parkingplace.getColumn()};
+				sendQueryToServer(updateParkingPlace);
+				parkingplace.setSubscribeNum(((Subscribe)order).getSubscribeNum());
+				parkingplace.setStatus("occupy");
+			}
+		
+		}
+		
+	}
+	
+
+	public void findCar(Object checkOut) {
+		for(Parking_Places parkingplace: parkingPlacesList){
+			if(checkOut instanceof Order){
+				if(parkingplace.getIdorder()==((Order)checkOut).getIdorder())
+					removeCarFromLot(parkingplace, checkOut);
+			}
+			
+			else if(checkOut instanceof Subscribe){
+				if(parkingplace.getSubscribeNum()==((Subscribe)checkOut).getSubscribeNum())
+					removeCarFromLot(parkingplace,checkOut);
+			}
+		}
+		
+	}
 	
 }
