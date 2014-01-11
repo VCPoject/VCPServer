@@ -52,7 +52,6 @@ public class Statistics extends JPanel {
 		 scrollPane = new JScrollPane();
 		 scrollPane.setBounds(10, 107, 765, 400);
 		 add(scrollPane);
-		// DefaultTableModel model= new DefaultTableModel(weekController.toVector(),weekController.obtainFields());
 		 
 		 table=new JTable(){
 			 /**
@@ -83,7 +82,7 @@ public class Statistics extends JPanel {
 		
 		getbtnWeeklyStatistics().addActionListener(new ActionListener() {
 		 	public void actionPerformed(ActionEvent arg0) {
-		 		getWeeklyStats().getRowData();
+		 		getWeeklyStats();
 		 		table.setModel(new DefaultTableModel(weekController.toVector(),weekController.obtainFields()));
 		 	}
 		 });
