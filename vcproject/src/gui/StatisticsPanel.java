@@ -16,13 +16,13 @@ import com.toedter.calendar.JDateChooser;
 
 import javax.swing.border.TitledBorder;
 
-public class Statistics extends JPanel {
+public class StatisticsPanel extends JPanel {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
 	private JButton btnReturn;
 	private JButton btnWeeklyStatistics;
-	private static final long serialVersionUID = 1L;
 	private JTable table;
 	private WeeklyStats weekController;
 	private String host;
@@ -32,15 +32,23 @@ public class Statistics extends JPanel {
 	private JDateChooser dateChooser;
 	private DailyStatistic dailyStatistic;
 
-	public Statistics(String host, int dEFAULT_PORT) {
+	/**
+	 * This panel is for display statistic(daily\weekly) of VCP.
+	 * @param host - for connecting to server side
+	 * @param port - for connecting to server side
+	 */
+	public StatisticsPanel(String host, int port) {
 		super();
 		this.host=host;
-		this.port=dEFAULT_PORT;
+		this.port=port;
 		initialize();
 		listners();
 		
 	}
 
+	/**
+	 * Initialize the GUI of the panel
+	 */
 	private void initialize() {
 		setLayout(null);
 		this.setSize(785, 575);
@@ -92,6 +100,11 @@ public class Statistics extends JPanel {
 		 panel.add(dateChooser);
 	}
 	
+	
+	/**
+	 * Listeners of the GUI.
+	 * Listen to buttons Weekly/Daily and to the calendar button
+	 */
 	private void listners(){
 		
 		getbtnWeeklyStatistics().addActionListener(new ActionListener() {
@@ -126,6 +139,10 @@ public class Statistics extends JPanel {
 		
 	}
 	
+	
+	/**
+	 * arrangeTable make the table view more readable.
+	 */
 	public void arrangeTable(){
 			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
  	        centerRenderer.setHorizontalAlignment( JLabel.CENTER );

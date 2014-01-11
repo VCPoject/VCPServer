@@ -33,12 +33,24 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 public class VCP_Main_Frame extends JFrame {
-	
-	final public int DEFAULT_PORT = 5555;
-	final public String host;
 	private static final long serialVersionUID = 1L;
+	/**DEFAULT_PORT is the port of the server side*/
+	final public int DEFAULT_PORT = 5555;
+	/**host is the host of the server side*/
+	final public String host;
+	/** vcpInfo is a controller that run on start-up of the 
+	 * application and download all the info form the DB
+	 * its contains all:
+	 * order,subscribed,reservation,employees,parking lot,
+	 * parking places,clients,default parking lot,cars
+	 */
+	private VcpInfo vcpInfo;
+	
+	/**
+	 * defaultParkinglotNum contain the current parking lot number
+	 */
+	private int defaultParkinglotNum;
 	private Main_Panel mainPanel;
 	private LogIn_Frame loginframe;
 	private Order_Panel orderPanel;
@@ -56,14 +68,15 @@ public class VCP_Main_Frame extends JFrame {
 	private EmpComplainGui empComplainGui;
 	private ChangePricingPanel changePricingPanel;
 	private PricingRequestPanel pricingRequestPanel;
-	private VcpInfo vcpInfo;
 	private ParkingLotInit parkinglotinit;
-	private int defaultParkinglotNum;
-	private Statistics stats;
+	private StatisticsPanel statisticsPanel;
 	private ReportsGui reports;
 	private QuarterlyGui quaterly;
 	
 	 
+	/**This is the main frame of the VCP system
+	 * @param host for make connection with server side
+	 */
 	public VCP_Main_Frame(String host) {
 		super();
 		this.host = host;
@@ -73,6 +86,9 @@ public class VCP_Main_Frame extends JFrame {
 	
 	
 
+	/**For initilize the parking lot to know where the system is
+	 * 
+	 */
 	public void initializeParkingLot() {
 		getLogIn_Frame();
 		getLogIn_Frame().setVisible(true);
@@ -125,6 +141,9 @@ public class VCP_Main_Frame extends JFrame {
 		 });
 		}
 
+	/**
+	 * Initialize the frame of VCP
+	 */
 	private void initialize() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -145,7 +164,10 @@ public class VCP_Main_Frame extends JFrame {
 				/ 2 - this.getSize().height / 2);
 		listners();
 	}
-
+	
+	/**
+	 * Listeners for switch panels by pressing on the buttens
+	 */
 	private void listners() {
 		
 		getMainPanel().getBtnExit().addActionListener(new ActionListener() {/*
@@ -175,6 +197,7 @@ public class VCP_Main_Frame extends JFrame {
 						getLogIn_Frame().setVisible(true);
 						getLogIn_Frame().addWindowListener(new WindowAdapter() {
 							public void windowClosing(WindowEvent e) {
+								getLogIn_Frame().getLogincontroller().closeConnection();
 								getLogIn_Frame().closeLoginFrame();
 								loginframe=null;
 							}
@@ -188,6 +211,7 @@ public class VCP_Main_Frame extends JFrame {
 												"Exit Application", JOptionPane.YES_NO_OPTION);
 								if (result == JOptionPane.YES_OPTION) {
 									frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+									getLogIn_Frame().getLogincontroller().closeConnection();
 									getLogIn_Frame().closeLoginFrame();
 									loginframe = null;
 								}
@@ -212,7 +236,6 @@ public class VCP_Main_Frame extends JFrame {
 													makePanelImage(getParkingLot_Panel().getPanelFloor2(),"Floor2");
 													makePanelImage(getParkingLot_Panel().getPanelFloor3(),"Floor3");
 													makePdfFile();
-													getVcpInfo().showSeccussesMsg("Export to PDF Done");
 												}
 											});
 											getParkingLot_Panel().getBtnReturn().addActionListener(new ActionListener() {
@@ -228,18 +251,16 @@ public class VCP_Main_Frame extends JFrame {
 
 										public void actionPerformed(ActionEvent arg0) {
 											setContentPane(getSavingParkingPlace_Panel());
-											
 											getSavingParkingPlace_Panel().getBtnExit().addActionListener(new ActionListener() {
 												public void actionPerformed(ActionEvent e) {
 													JFrame frame = new JFrame();
-													int result = JOptionPane
-															.showConfirmDialog(
-																	frame,
+													int result = JOptionPane.showConfirmDialog(frame,
 																	"Are you sure you want to exit the application?",
 																	"Exit Application",
 																	JOptionPane.YES_NO_OPTION);
 														if (result == JOptionPane.YES_OPTION) {
 															setContentPane(getEmployeePanel());
+															getSavingParkingPlace_Panel().getParkingLot_controller().closeConnection();
 															savingparkingplace=null;
 														}
 													}
@@ -250,16 +271,14 @@ public class VCP_Main_Frame extends JFrame {
 									getEmployeePanel(). getbtnExit().addActionListener(new ActionListener() {
 										public void actionPerformed(ActionEvent e) {
 											JFrame frame = new JFrame();
-											int result = JOptionPane
-													.showConfirmDialog(
-															frame,
+											int result = JOptionPane.showConfirmDialog(frame,
 															"Are you sure you want to exit the application?",
-															"Exit Application",
-															JOptionPane.YES_NO_OPTION);
+															"Exit Application",	JOptionPane.YES_NO_OPTION);
 											if (result == JOptionPane.YES_OPTION) {
 												setContentPane(getMainPanel());
 												getLogIn_Frame().getLogIn_Panel().getLogincontroller().updateAsNotLoggedIn();
-												
+												getLogIn_Frame().getLogIn_Panel().getLogincontroller().closeConnection();
+												employee_panel = null;
 											}
 										}
 									});
@@ -293,11 +312,9 @@ public class VCP_Main_Frame extends JFrame {
 												public void actionPerformed(ActionEvent e) {
 													JFrame frame = new JFrame();
 													int result = JOptionPane
-															.showConfirmDialog(
-																	frame,
+															.showConfirmDialog(frame,
 																	"Are you sure you want to exit the application?",
-																	"Exit Application",
-																	JOptionPane.YES_NO_OPTION);
+																	"Exit Application",	JOptionPane.YES_NO_OPTION);
 														if (result == JOptionPane.YES_OPTION) {
 															findaltparkinglot=null;
 															setContentPane(getEmployeePanel());
@@ -314,6 +331,7 @@ public class VCP_Main_Frame extends JFrame {
 											getEmpComplainGui().getBtnReturn().addActionListener(new ActionListener() {
 												public void actionPerformed(ActionEvent e) {
 													setContentPane(getEmployeePanel());
+													getEmpComplainGui().getEmpComplainController().closeConnection();
 													empComplainGui = null;
 												}
 											});
@@ -378,10 +396,7 @@ public class VCP_Main_Frame extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						setContentPane(getOrderPanel());
 						getOrderPanel().getBtnReturn().addActionListener(
-								new ActionListener() {/*
-													 * Order Return Button
-													 * Listener
-													 */
+								new ActionListener() {
 									public void actionPerformed(ActionEvent e) {
 										setContentPane(getMainPanel());
 										orderPanel = null;
@@ -487,12 +502,12 @@ public class VCP_Main_Frame extends JFrame {
 			
 		getEmployeePanel().getbtnStatistics().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				setContentPane(getStatistics());
-				getStatistics().getBtnReturn().addActionListener(
+				setContentPane(getStatisticsPanel());
+				getStatisticsPanel().getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								setContentPane(getEmployeePanel());
-								stats = null;
+								statisticsPanel = null;
 							}
 						});
 
@@ -515,6 +530,9 @@ public class VCP_Main_Frame extends JFrame {
 		
 	}
 
+	/**
+	 * For closing the main frame
+	 */
 	private void closeMainFrame() {
 		this.setVisible(false);
 		this.dispose();
@@ -557,7 +575,11 @@ public class VCP_Main_Frame extends JFrame {
 		}
 		return registerPanel;
 	}
-
+	
+	/**
+	 * @param isCheckIn for know if we need to set the check in or out panel
+	 * @return the check in\out frame
+	 */
 	public CheckInOut_Frame getCheckInFrame(boolean isCheckIn) {
 		if (CheckInOutFrame == null)
 			CheckInOutFrame = new CheckInOut_Frame(host,DEFAULT_PORT,getVcpInfo(),isCheckIn);
@@ -569,13 +591,20 @@ public class VCP_Main_Frame extends JFrame {
 			employee_panel = new Employee_Panel();
 		return employee_panel;
 	}
-
+	
+	/**
+	 * Disappear the main frame
+	 */
 	protected void disableMainFrame() {
 		this.setEnabled(false);
 		this.setFocusable(false);
 		this.setVisible(false);
 	}
 
+	
+	/**
+	 * Make the main frame appear
+	 */
 	protected void enableMainFrame() {
 		this.setEnabled(true);
 		this.setFocusable(true);
@@ -627,7 +656,7 @@ public class VCP_Main_Frame extends JFrame {
 		
 		return parkinglotinit;
 	}
-
+	
 	public VcpInfo getVcpInfo() {
 		if(vcpInfo == null)
 			vcpInfo = new VcpInfo(host);
@@ -642,11 +671,11 @@ public class VCP_Main_Frame extends JFrame {
 		return resubscribePanel;
 	}
 	
-	public Statistics getStatistics() {
-		if(stats == null){
-			stats = new Statistics(host, DEFAULT_PORT);
+	public StatisticsPanel getStatisticsPanel() {
+		if(statisticsPanel == null){
+			statisticsPanel = new StatisticsPanel(host, DEFAULT_PORT);
 		}
-		return stats;
+		return statisticsPanel;
 	}
 
 
@@ -682,6 +711,11 @@ public class VCP_Main_Frame extends JFrame {
 		return pricingRequestPanel;
 	}
 	
+	/**
+	 * make a component snapshot and save him in the workspace
+	 * @param panel for make his snapshot
+	 * @param filename of the BMP file to be save
+	 */
 	private void makePanelImage(Component panel,String filename)
     {
         Dimension size = panel.getSize();
@@ -698,13 +732,24 @@ public class VCP_Main_Frame extends JFrame {
         }
     }
 	
+	public EmpComplainGui getEmpComplainGui() {
+		if(empComplainGui == null)
+		{
+			empComplainGui = new EmpComplainGui(host, DEFAULT_PORT);
+		}
+		return empComplainGui;
+	}
+	
+	
+	/**
+	 * Generate PDF files and open him
+	 */
 	private void makePdfFile(){
 		Document doc = new Document();
 		doc.setPageSize(PageSize.A4);
 		Image img;
 		try {
 			PdfWriter.getInstance(doc, new FileOutputStream("Parking Lot Pic.pdf"));
-			
 			doc.open();
 			Font font = new Font(Font.FontFamily.COURIER,30, Font.BOLD, new BaseColor(0,0,0));
 			Paragraph title = new Paragraph("Parking Lot Picture", font);
@@ -732,19 +777,6 @@ public class VCP_Main_Frame extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
-
-
-	public EmpComplainGui getEmpComplainGui() {
-		if(empComplainGui == null)
-		{
-			empComplainGui = new EmpComplainGui(host, DEFAULT_PORT);
-		}
-		return empComplainGui;
-	}
-	
-	
-
 }
 
 

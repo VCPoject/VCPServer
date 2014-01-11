@@ -34,13 +34,10 @@ import controler.VcpInfo;
 import entity.*;
 
 public class Order_Panel extends JPanel {
-
-	/**
-	 * 
-	 */
+	
+	private static final long serialVersionUID = 1L;
 	private String host;
 	private int port = 5555;
-	private static final long serialVersionUID = 1L;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JFormattedTextField textFieldIdNumber;
 	private JFormattedTextField textFieldCarNumber;
@@ -69,8 +66,23 @@ public class Order_Panel extends JPanel {
 	private JComboBox<String> comboBoxArrivalMin;
 	private JComboBox<String> comboBoxDepartureHour;
 	private JComboBox<String> comboBoxDepartureMin;
+	/** vcpInfo is a controller that run on start-up of the 
+	 * application and download all the info form the DB
+	 * its contains all:
+	 * order,subscribed,reservation,employees,parking lot,
+	 * parking places,clients,default parking lot,cars
+	 */
 	private VcpInfo vcpInfo;
+	
+	/**
+	 * fCard is the financial card for one time client
+	 * that holds the info about the payment
+	 */
 	private FinancialCard fCard;
+	
+	/**
+	 * timeToPay holds the calculate payment
+	 */
 	private Float timeToPay;
 	private JFormattedTextField frmtdtxtfldCreditCard;
 	private JLabel lblCardExpiration;
@@ -88,17 +100,24 @@ public class Order_Panel extends JPanel {
 	private JRadioButton rdbtnCash;
 	private JLabel lblPayCash;
 
+	/**
+	 * This panel is for making new orders.
+	 * @param host for make connection with server side
+	 * @param port for make connection with server side
+	 * @param vcpInfo for get info from DB
+	 */
 	public Order_Panel(String host, int port, VcpInfo vcpInfo) {
 		super();
 		this.host = host;
 		this.port = port;
 		this.vcpInfo = vcpInfo;
-		initialize();/* initilize panel gui */
-		//oneTime();
-		TempClient();/* change panel gui to adapt for temp client */
-		listners();/* panel listeners */
+		initialize();
+		TempClient();
+		listners();
 	}
-
+	/**
+	 * Initialize the panel of order
+	 */
 	private void initialize() {
 		this.setSize(785, 575);
 		setBackground(SystemColor.activeCaption);
@@ -383,7 +402,10 @@ public class Order_Panel extends JPanel {
 		return comboBoxParkLot;
 	}
 
-	private void fillComboBoxParkLot() {/* set into comboBox all the parking lot */
+	/**
+	 * set into comboBox all the parking lot
+	 */
+	private void fillComboBoxParkLot() {
 		ArrayList<Parking_Lot> result = vcpInfo.getParkingLot();
 		for (Parking_Lot pLot : result) {
 			getComboBoxParkLot().addItem((Integer.toString(pLot.getIdparkinglot())));
@@ -391,7 +413,10 @@ public class Order_Panel extends JPanel {
 
 	}
 
-	private void oneTime() {/* set panel gui to adapt one time client */
+	/**
+	 * Set panel GUI to adapt one time client
+	 */
+	private void oneTime() {
 		dateChooserArrival.setVisible(true);
 		dateChooserDeparture.setVisible(true);
 
@@ -431,7 +456,10 @@ public class Order_Panel extends JPanel {
 
 	}
 
-	private void TempClient() {/* change panel gui to adapt for temp client */
+	/**
+	 * Change panel GUI to adapt for temp client
+	 */
+	private void TempClient() {
 		dateChooserArrival.setVisible(false);
 		dateChooserDeparture.setVisible(false);
 		lblArrivalDay.setVisible(false);
@@ -455,7 +483,9 @@ public class Order_Panel extends JPanel {
 		
 		this.repaint();
 	}
-
+	/**
+	 * Listeners of the GUI components.
+	 */
 	private void listners() {
 
 		rdbtnTempClient.addActionListener(new ActionListener() {/*
@@ -696,6 +726,11 @@ public class Order_Panel extends JPanel {
 
 	}
 
+	/**
+	 * checkIfCarExist check if car is exist in the DB
+	 * @param car entity for check if its exists in DB
+	 * @return true if car is exist else false
+	 */
 	protected boolean checkIfCarExist(Car car) {
 		Object[] isCarExists = {
 				"SELECT count(`car`.`carNum`) FROM `vcp_db`.`car` WHERE carNum = ? AND idclient = ?;",
@@ -711,6 +746,11 @@ public class Order_Panel extends JPanel {
 		return true;
 	}
 
+	/**
+	 * checkIfClientExists check if client is exist in the DB
+	 * @param client entity for check if its exists in DB
+	 * @return true if client is in the system else false
+	 */
 	protected boolean checkIfClientExists(ClientEntity client) {
 		Object[] isClientExists = {
 				"SELECT count(`client`.`idclient`) FROM `vcp_db`.`client` WHERE idclient = ?;",
@@ -746,6 +786,11 @@ public class Order_Panel extends JPanel {
 		return vcpInfo;
 	}
 
+	/**
+	 * Calculate the hours that the client will park
+	 * @param order entity for calculate the payment.
+	 * @return hours of parking
+	 */
 	public Long findHoursToPay(Order order) {
 		String dateStart = order.getArrivalDate() + " "
 				+ order.getArrivalTime();

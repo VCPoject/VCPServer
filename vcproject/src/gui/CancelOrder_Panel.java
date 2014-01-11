@@ -27,6 +27,9 @@ public class CancelOrder_Panel extends JPanel {
 	private JButton btnReturn;
 	private JLabel lblCarNumber ;
 	private JLabel lblIdNumber;
+	/**
+	 * pricing holds the system pricing for parking lot
+	 */
 	private Pricing pricing;
 	private JButton btnSubmit;
 	private JButton btnSubmit_1;
@@ -40,12 +43,20 @@ public class CancelOrder_Panel extends JPanel {
 	private CancelOrderEntity coEntity;
 
 
-	public CancelOrder_Panel(String host,int port,Pricing p) {
+	/**
+	 * @param host for make connection with server side
+	 * @param port for make connection with server side
+	 * @param pricing holds the system pricing for parking lot
+	 */
+	public CancelOrder_Panel(String host,int port,Pricing pricing) {
 		super();
+		this.pricing = pricing;
 		initialize();
 		listners();
 	}
-	
+	/**
+	 * Initialize the panel of saving parking place
+	 */
 	private void initialize() {
 		setLayout(null);
 		this.setSize(785, 575);
@@ -123,11 +134,10 @@ public class CancelOrder_Panel extends JPanel {
 			add(lblPleaseChooseOrder);
 		 
 	}
-	
-
-	
+	/**
+	 * Listeners of the GUI components.
+	 */
 	private void listners(){
-		
 		getBtnSubmit().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				comboBox.removeAllItems();

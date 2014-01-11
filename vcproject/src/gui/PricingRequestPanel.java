@@ -34,13 +34,28 @@ public class PricingRequestPanel extends JPanel {
 	private JTable table;
 	private JScrollPane scrollPane;
 	private PricingController pricingController;
+	/**
+	 * result contains the result from the DB.
+	 */
 	private ArrayList<Object> result;
+	/**
+	 * cols contains the columns names of the table.
+	 */
 	private Vector<String> cols;
 	private JLabel lblSelectRequestsFrom;
 	private JButton btnReturn;
 	private JButton btnApproval;
 	private JButton btnDisapprove;
+	/**
+	 * pricing contains the pricing the parking lot.
+	 */
 	private Pricing pricing;
+	/**
+	 * This panel is for view the pricing request from employees.
+	 * @param host for make connection with server side
+	 * @param port for make connection with server side
+	 * @param pricing contains the pricing the parking lot.
+	 */
 	public PricingRequestPanel(String host,int port, Pricing pricing) {
 		super();
 		this.host = host;
@@ -49,7 +64,9 @@ public class PricingRequestPanel extends JPanel {
 		initialize();
 		listners();
 	}
-	
+	/**
+	 * Initialize the panel of PricingRequestPanel
+	 */
 	private void initialize() {
 		setLayout(null);
 		this.setSize(785, 575);
@@ -89,9 +106,6 @@ public class PricingRequestPanel extends JPanel {
 		add(scrollPane);
 		
 		table = new JTable(data, cols) {
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			public boolean isCellEditable(int data,	int columnNames) {
@@ -129,7 +143,9 @@ public class PricingRequestPanel extends JPanel {
 		
 		
 	}
-	
+	/**
+	 * Listeners of the GUI components.
+	 */
 	private void listners() {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		ListSelectionModel selectionModel = table.getSelectionModel();

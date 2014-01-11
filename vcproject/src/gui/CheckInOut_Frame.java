@@ -17,12 +17,28 @@ public class CheckInOut_Frame extends JFrame {
 	private CheckIn_Panel checkInPanel;
 	private CheckOut_Panel checkOutPanel;
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * isCheckIn is a flag that decide if open check in panel or check out 
+	 */
 	private boolean isCheckIn = false;
 	private String host;
 	private int port;
+	/** vcpInfo is a controller that run on start-up of the 
+	 * application and download all the info form the DB
+	 * its contains all:
+	 * order,subscribed,reservation,employees,parking lot,
+	 * parking places,clients,default parking lot,cars
+	 */
 	private VcpInfo vcpInfo;
 	
 
+	/**
+	 * @param host for make connection with server side
+	 * @param port for make connection with server side
+	 * @param vcpInfo for make connection with server side
+	 * @param isCheckIn flag that decide if open check in panel or check out 
+	 */
 	public CheckInOut_Frame(String host,int port, VcpInfo vcpInfo,boolean isCheckIn) {
 		super();
 		this.isCheckIn = isCheckIn;
@@ -31,7 +47,9 @@ public class CheckInOut_Frame extends JFrame {
 		this.vcpInfo = vcpInfo;
 		initialize();
 	}
-
+	/**
+	 * Initialize the panel of saving parking place
+	 */
 	private void initialize() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -69,7 +87,7 @@ public class CheckInOut_Frame extends JFrame {
 
 	public CheckOut_Panel getCheckOutPanel() {
 		if (checkOutPanel == null)
-			checkOutPanel = new CheckOut_Panel();
+			checkOutPanel = new CheckOut_Panel(host,port,getVcpInfo());
 		return checkOutPanel;
 	}
 

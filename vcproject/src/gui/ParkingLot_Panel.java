@@ -21,10 +21,20 @@ public class ParkingLot_Panel extends JPanel {
 	private ArrayList<ParkingButton> jbuttonArrFirst = new ArrayList<ParkingButton>();
 	private ArrayList<ParkingButton> jbuttonArrSecond = new ArrayList<ParkingButton>();
 	private ArrayList<ParkingButton> jbuttonArrThird = new ArrayList<ParkingButton>();
-	private int size;
+	
+	/**
+	 * PlotSize is contains the parking lot size
+	 */
+	private int PlotSize;
 	private JPanel panelFloor1;
 	private JPanel panelFloor2;
 	private JPanel panelFloor3;
+	/** vcpInfo is a controller that run on start-up of the 
+	 * application and download all the info form the DB
+	 * its contains all:
+	 * order,subscribed,reservation,employees,parking lot,
+	 * parking places,clients,default parking lot,cars
+	 */
 	private VcpInfo vcpInfo;
 	private JComboBox<Integer> comboBoxSelectParkingLot;
 	private JButton btnShowStatus;
@@ -40,6 +50,11 @@ public class ParkingLot_Panel extends JPanel {
 	private JButton btnReturn;
 	private JButton btnMakePdf;
 
+	/**
+	 * View the parking lot picture.
+	 * Also can export to PDF and see in every parking place his status.
+	 * @param vcpInfo contains info from DB
+	 */
 	public ParkingLot_Panel(VcpInfo vcpInfo) {
 		super();
 		this.vcpInfo = vcpInfo;
@@ -47,6 +62,9 @@ public class ParkingLot_Panel extends JPanel {
 		listners();
 	}
 
+	/**
+	 * Initialize the panel of ParkingLot_Panel.
+	 */
 	private void initialize() {
 		setLayout(null);
 		this.setSize(795, 575);
@@ -142,7 +160,9 @@ public class ParkingLot_Panel extends JPanel {
 		btnMakePdf.setBounds(553, 524, 109, 40);
 		add(btnMakePdf);
 	}
-
+	/**
+	 * Listeners of the GUI components.
+	 */
 	private void listners() {
 		btnShowStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -160,6 +180,12 @@ public class ParkingLot_Panel extends JPanel {
 
 	}
 
+	
+	/**
+	 * Initialize dynamically the floors with buttons of the selected parking lot
+	 * and insert to the buttons the parking place status.
+	 * @param size is the size if the parking lot
+	 */
 	public void setParkingLot(Integer size) {
 		panelFloor1.removeAll();
 		panelFloor2.removeAll();
@@ -168,7 +194,7 @@ public class ParkingLot_Panel extends JPanel {
 		jbuttonArrFirst = new ArrayList<ParkingButton>();
 		jbuttonArrSecond = new ArrayList<ParkingButton>();
 		jbuttonArrThird = new ArrayList<ParkingButton>();
-		// setFloorsPanels();
+
 		int parkNum = 1;
 		ParkingButton newButtonFirst;
 		ParkingButton newButtonSecond;
@@ -219,34 +245,11 @@ public class ParkingLot_Panel extends JPanel {
 	}
 
 	public Integer getPlotSize() {
-		return size;
+		return PlotSize;
 	}
 
 	public void setPlotSize(int size) {
-		this.size = size;
-	}
-
-	public void setFloorsPanels() {
-		panelFloor1 = new JPanel();
-		panelFloor1.setBorder(new TitledBorder(null, "First floor",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelFloor1.setBounds(23, 30, 520, 180);
-		add(panelFloor1);
-		panelFloor1.setLayout(null);
-
-		panelFloor2 = new JPanel();
-		panelFloor2.setBorder(new TitledBorder(null, "Second floor",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelFloor2.setBounds(23, 211, 520, 180);
-		add(panelFloor2);
-		panelFloor2.setLayout(null);
-
-		panelFloor3 = new JPanel();
-		panelFloor3.setBorder(new TitledBorder(null, "Third floor",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelFloor3.setBounds(23, 390, 520, 180);
-		add(panelFloor3);
-		panelFloor3.setLayout(null);
+		this.PlotSize = size;
 	}
 
 	public Parking_Lot getSelectedPlot() {
@@ -257,6 +260,11 @@ public class ParkingLot_Panel extends JPanel {
 		SelectedPlot = selectedPlot;
 	}
 
+	/**
+	 * Find the right button and initialize him with the parking pace status
+	 * Also insert to the button the Order/Subscribe info if needed.
+	 * @param pPlace contains the parking place info that will fille the button.
+	 */
 	public void setButtonPlaces(Parking_Places pPlace) {
 		ParkingButton tempBtn;
 		if (getSelectedPlot().getIdparkinglot().equals(pPlace.getIdparkinglot())) {

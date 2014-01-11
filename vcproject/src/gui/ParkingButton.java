@@ -3,9 +3,6 @@ package gui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.JButton;
 
 
@@ -15,16 +12,22 @@ public class ParkingButton extends JButton {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Object whoIsParking;
-	private ShowWhoParkFrame showWhoParkFrame;
 	
-	public ParkingButton() {
-	}
+	/**
+	 * whoIsParking contains the entity that park in the parking place
+	 */
+	private Object whoIsParking;
+	/**
+	 * showWhoParkFrame this frame will display the 
+	 * info of the entity that park in the parking place
+	 */
+	private ShowWhoParkFrame showWhoParkFrame;
 
-	public ParkingButton(Icon icon) {
-		super(icon);
-	}
-
+	/**
+	 * This is custom button that can hold info about entity
+	 * that in case the button is clicked will be show.
+	 * @param name of the button to display.
+	 */
 	public ParkingButton(String name) {
 		super(name);
 		setVacant();
@@ -45,36 +48,41 @@ public class ParkingButton extends JButton {
 			}
 		});
 	}
-
-	public ParkingButton(Action a) {
-		super(a);
-	}
-
-	public ParkingButton(String text, Icon icon) {
-		super(text, icon);
-	}
 	
+	/**
+	 * set blue color to the button
+	 * also set tip text as saved place
+	 */
 	public void setSaveSpace(){
 		this.setBackground(Color.BLUE);
 		this.setEnabled(true);
 		this.setToolTipText("Saved place");
 		this.repaint();
 	}
-	
+	/**
+	 * set green color to the button
+	 * also set tip text as Vacant
+	 */
 	public void setVacant(){
 		this.setBackground(Color.GREEN);
 		this.setEnabled(false);
 		this.setToolTipText("Vacant");
 		this.repaint();
 	}
-	
+	/**
+	 * set white color to the button
+	 * also set tip text as Occupy
+	 */
 	public void setOccupy(){
 		this.setBackground(Color.WHITE);
 		this.setEnabled(true);
 		this.setToolTipText("Occupy");
 		this.repaint();
 	}
-	
+	/**
+	 * set red color to the button
+	 * also set tip text as Not working
+	 */
 	public void setNotWorking(){
 		this.setBackground(Color.RED);
 		this.setEnabled(false);

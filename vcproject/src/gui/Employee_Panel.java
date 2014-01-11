@@ -21,14 +21,22 @@ public class Employee_Panel extends JPanel {
 	private JButton btnChangePricing;
 	private JButton btnReviewPricingRequests;
 	private JButton btnExit;
+	/**
+	 * conectedEmployee contains the employee that work on the panel
+	 */
 	private Employee conectedEmployee;
 
+	/**
+	 * This is the main panel for the employees
+	 */
 	public Employee_Panel() {
 		super();
 		initialize();
 		setLayout(null);
 	}
-
+	/**
+	 * Listeners of the GUI components.
+	 */
 	public void initialize() {
 		this.setSize(785, 575);
 		btnSaveParkin = new JButton("Save parking place");
@@ -89,6 +97,9 @@ public class Employee_Panel extends JPanel {
 		add(btnReviewPricingRequests);
 	}
 
+	/**
+	 * set permissions for the connected employee by his role
+	 */
 	public void setBtnEnableByEmpRole() {
 		switch (getConectedEmployee().getRole()) {
 		case "Customer service":

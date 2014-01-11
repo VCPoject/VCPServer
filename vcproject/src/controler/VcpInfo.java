@@ -1,15 +1,7 @@
 package controler;   
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import controler.Reminder.RemindTask;
-import client.Client;
 import entity.*;
 
 public class VcpInfo extends Controller  {

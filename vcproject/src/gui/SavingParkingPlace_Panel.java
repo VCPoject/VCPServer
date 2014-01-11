@@ -17,6 +17,8 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.border.TitledBorder;
 
 public class SavingParkingPlace_Panel extends JPanel {
+	
+	private static final long serialVersionUID = 1L;
 	private JButton btnSave;
 	private JButton btnExit;
 	private JComboBox <String> comboBoxParkinglot;
@@ -34,6 +36,12 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private int lineNum;
 	private int parkingplaceNum;
 	private String host;
+	/** vcpInfo is a controller that run on start-up of the 
+	 * application and download all the info form the DB
+	 * its contains all:
+	 * order,subscribed,reservation,employees,parking lot,
+	 * parking places,clients,default parking lot,cars
+	 */
 	private VcpInfo vcpInfo;
 	private int port;
 	private int defaultParkingLot;
@@ -47,7 +55,6 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private String departureTimeHour;
 	private Date ArrivalDate;
 	private Date DepartureDate;
-	private static final long serialVersionUID = 1L;
 	private JLabel lblArrivalDate;
 	private JLabel lblDepartureDate;
 	private JLabel lblArrivalTime;
@@ -58,6 +65,12 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private JLabel lblParkingPlaceNumber;
 	private JPanel panel;
 	
+	/**
+	 * This panel is for saving parking place.
+	 * @param host for make connection with server side
+	 * @param port for make connection with server side
+	 * @param vcpInfo for get info from DB
+	 */
 	public SavingParkingPlace_Panel(String host, int port, VcpInfo vcpInfo){
 		super();
 		this.vcpInfo=vcpInfo;
@@ -68,7 +81,9 @@ public class SavingParkingPlace_Panel extends JPanel {
 		initialize();
 		listners();
 	}
-	
+	/**
+	 * Initialize the panel of saving parking place
+	 */
 	private void initialize() {
 		this.setSize(785, 575);
 		setLayout(null);
@@ -182,6 +197,10 @@ public class SavingParkingPlace_Panel extends JPanel {
 		fillcomboBoxMin();
 	}
 
+	
+	/**
+	 * Initialize the combobox of arrival and departure with minutes
+	 */
 	public void fillcomboBoxMin() {
 		comboBoxArrivalMin.addItem("Min");
 		comboBoxDepartureMin.addItem("Min");
@@ -196,9 +215,10 @@ public class SavingParkingPlace_Panel extends JPanel {
 		}
 		
 	}
-		
 	
-
+	/**
+	 * Initialize the combobox of arrival and departure with hours
+	 */
 	public void fillcomboBoxHour() {
 		comboBoxArrivalHour.addItem("Hour");
 		comboBoxDepartureHour.addItem("Hour");
@@ -213,22 +233,38 @@ public class SavingParkingPlace_Panel extends JPanel {
 		}
 		
 	}
-
+	
+	
+	/**
+	 * Fill the combobox of parking lot with 
+	 * the default parking lot number
+	 */
 	public void fillParkinglotcombobox(){
 		comboBoxParkinglot.addItem((Integer.toString(defaultParkingLot)));
 	}
 	
+	/**
+	 * Fill the combobox of floor with 
+	 * the number of floors
+	 */
 	public void fillFloorcomboBox(){
 		for(Integer i=1;i<4;i++)
 			comboBoxFloor.addItem(i.toString());
 	}
 	
+	/**
+	 * Fill the combobox of line with 
+	 * the number of lines
+	 */
 	public void fillLinecomboBox(){
 		for(Integer i=1;i<4;i++)
 			comboBoxLine.addItem(i.toString());
 	}
 	
 	
+	/**
+	 * Listeners of the GUI components.
+	 */
 	public void listners(){
 		
 		btnSave.addActionListener(new ActionListener(){
@@ -318,7 +354,9 @@ public class SavingParkingPlace_Panel extends JPanel {
 
 	}
 
-	
+	/**
+	 * Fill the combobox of all the available parking places with.
+	 */
 	public void fillParkingPlacecombox(){
 	
 		comboBoxParkingPlace.removeAllItems();
@@ -339,6 +377,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 	public JButton getBtnExit(){
 		return btnExit;
 	}
+	
 	
 	public VcpInfo getVcpInfo() {
 		if(vcpInfo == null)

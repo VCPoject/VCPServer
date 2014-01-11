@@ -32,6 +32,7 @@ public class EmpComplainController extends Controller {
 			else
 				i++;
 		}
+		closeConnection();
 		return result;
 
 	}
@@ -75,6 +76,8 @@ public void complainReplay(Object idNum,Object idclient,String refound,String an
 		
 	} catch (Exception e) {
 		showWarningMsg(e.getMessage());
+	}finally{
+		closeConnection();
 	}
 
 }

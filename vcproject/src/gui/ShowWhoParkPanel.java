@@ -23,6 +23,9 @@ public class ShowWhoParkPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * entity contain instance of Order or Subscribe
+	 */
 	private Object entity;
 	private JButton btnClose;
 	private JTextField textFieldOrderNum;
@@ -55,12 +58,20 @@ public class ShowWhoParkPanel extends JPanel {
 	private JLabel lblClientIdSub;
 	private JLabel lblCarNumberSub;
 
+	/**
+	 * On this panel display info about Order or Subscribe
+	 * @param entity contains entity of Order or Subscribe
+	 */
 	public ShowWhoParkPanel(Object entity) {
 		super();
 		this.entity = entity;
 		initialize();
 	}
-
+	
+	
+	/**
+	 * Initialize the GUI of the panel
+	 */
 	private void initialize() {
 		this.setBounds(10, 11, 590, 341);
 		setLayout(null);
@@ -80,7 +91,11 @@ public class ShowWhoParkPanel extends JPanel {
 			setPanelForMember((Subscribe) entity);
 
 	}
-
+	
+	/**
+	 * Initialize the panel with order info
+	 * @param entity of order to get all the order info 
+	 */
 	private void setPanelForOrder(Order entity) {
 		lblOrderNumber = new JLabel("Order number:");
 		lblOrderNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -219,6 +234,11 @@ public class ShowWhoParkPanel extends JPanel {
 
 	}
 
+	
+	/**
+	 * Initialize the panel with Subscribe info
+	 * @param entity of Subscribe to get all the subscribe info 
+	 */
 	private void setPanelForMember(Subscribe entity) {
 		lblMemberNumber = new JLabel("Member number:");
 		lblMemberNumber.setFont(new Font("Tahoma", Font.BOLD, 18));

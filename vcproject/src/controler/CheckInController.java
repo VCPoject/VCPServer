@@ -13,7 +13,7 @@ public class CheckInController extends Controller {
 
 	private VcpInfo vcpInfo;
 	private RegisterController registerController;
-	Parking_Algorithem parkingAlgorithem;
+	private Parking_Algorithem parkingAlgorithem;
 
 	public CheckInController(String host, int port, VcpInfo vcpInfo) {
 		super(host, port);

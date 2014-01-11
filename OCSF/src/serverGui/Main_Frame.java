@@ -30,10 +30,10 @@ public class Main_Frame extends JFrame {
 	private Main_Panel mainPanel;
 	private int port;
 	private EchoServer sv;
+	private String dbIp;
+	private String dbUser;
+	private String dbPassword;
 	private Scheduler scheduler;
-	String dbIp;
-	String dbUser;
-	String dbPassword;
 
 	public Main_Frame(int port) {
 		super();
@@ -49,8 +49,7 @@ public class Main_Frame extends JFrame {
 			@Override
 			public void run() {
 
-				getMainPanel().setTextFieldNumberOfConnections(
-						sv.getNumberOfConnections());
+				getMainPanel().setTextFieldNumberOfConnections(sv.getNumberOfConnections());//TODO
 				if (sv.isListening()) {
 					getMainPanel().setTxtStatus("Connected");
 					Thread[] clientList = sv.getClientConnections();
@@ -160,12 +159,10 @@ public class Main_Frame extends JFrame {
 						getMainPanel().getBtnStopServer().setEnabled(true);
 						getMainPanel().getBtnStartServer().setEnabled(false);
 						getMainPanel().getBtnChangeDB().setEnabled(false);
-						getMainPanel().getTextFieldServerIP()
-								.setEditable(false);
-						getMainPanel().getTextFieldDBusername().setEditable(
-								false);
+						getMainPanel().getTextFieldServerIP().setEditable(false);
+						getMainPanel().getTextFieldDBusername().setEditable(false);
 						getMainPanel().getPasswordField().setEditable(false);
-						scheduler = new Scheduler(port, dbIp, dbUser, dbPassword);
+						getScheduler();
 					}
 				});
 
@@ -177,10 +174,8 @@ public class Main_Frame extends JFrame {
 							getMainPanel().getBtnStopServer().setEnabled(false);
 							getMainPanel().getBtnStartServer().setEnabled(true);
 							getMainPanel().getBtnChangeDB().setEnabled(true);
-							getMainPanel().getTextFieldServerIP().setEditable(
-									true);
-							getMainPanel().getTextFieldDBusername()
-									.setEditable(true);
+							getMainPanel().getTextFieldServerIP().setEditable(true);
+							getMainPanel().getTextFieldDBusername().setEditable(true);
 							getMainPanel().getPasswordField().setEditable(true);
 							Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 							String[] columnNames = { "Client IP", "Client port" };
@@ -191,16 +186,13 @@ public class Main_Frame extends JFrame {
 							JTable table = new JTable(data, cols) {
 								private static final long serialVersionUID = 1L;
 
-								public boolean isCellEditable(int data,
-										int columnNames) {
+								public boolean isCellEditable(int data, int columnNames) {
 									return false;
 								}
 							};
 							getMainPanel().setTableClientConnected(table);
 						} catch (IOException e) {
-							System.out
-									.println("error while closing connections:"
-											+ e.getMessage());
+							System.out.println("error while closing connections:"	+ e.getMessage());
 							e.printStackTrace();
 						}
 					}
@@ -217,6 +209,12 @@ public class Main_Frame extends JFrame {
 	private void closeMainFrame() {
 		this.setVisible(false);
 		this.dispose();
+	}
+
+	public Scheduler getScheduler() {
+		if(scheduler == null)
+			scheduler = new Scheduler(port, dbIp, dbUser, dbPassword);
+		return scheduler;
 	}
 
 }
