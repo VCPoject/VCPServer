@@ -22,10 +22,10 @@ public class ParkingPlaceController extends Controller {
 	}
 	
 	public void updateParkingPlace(Parking_Places pPlace){
-		String updatePPlace = "UPDATE `vcp_db`.`parking_place` SET `idorder` = ?,`subscribeNum` = ?,`status` = ? WHERE `idparking` = ? AND `floor` = ? AND `row` = ? AND `column` = ?;";
+		String updatePPlace = "UPDATE `vcp_db`.`parking_place` SET `idorder` = ?,`status` = ? WHERE `idparking` = ? AND `floor` = ? AND `row` = ? AND `column` = ?;";
 		pPlace.setQuery(updatePPlace);
 		sendQueryToServer(pPlace);
-		
+		closeConnection();
 	}
 
 	public VcpInfo getVcpInfo() {

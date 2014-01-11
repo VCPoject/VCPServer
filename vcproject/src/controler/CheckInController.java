@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import entity.Order;
 import entity.Parking_Lot;
+import entity.Parking_Places;
 import entity.Subscribe;
 
 public class CheckInController extends Controller {
@@ -30,16 +31,19 @@ public class CheckInController extends Controller {
                         if (!order.getStatus().equals("checked in"))
                                 return order;
                         else
-                                throw new Exception("Cant fint order");
+					throw new Exception("Cant find order");
                 }
         }
         throw new Exception("There is no order on car number: " + carNum);
 }
 
 	public Subscribe getSubscribeByNum(Integer memberID, Integer carNum) throws Exception {
-		Subscribe subscribe = getVcpInfo().getAllSubscribed().get(memberID);
-		if (subscribe == null)
-			throw new Exception("Member id " + memberID + " is not exists.");
+		Subscribe subscribe;
+		Set<Entry<Integer, Subscribe>> subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
+		Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
+		
+			while(subscribeIterator.hasNext()) {
+				subscribe=subscribeIterator.next().getValue();
 		if (subscribe.getCarNum().equals(carNum))
 			if (!getRegisterController().isExpired(subscribe))
 				return subscribe;
@@ -48,6 +52,27 @@ public class CheckInController extends Controller {
 		else
 			throw new Exception("Car number is not assign to member id: " + memberID);
 
+	}
+	
+	public void updateSubscribeAscheckedin(Subscribe subscribe){
+		
+		if(subscribe.getSubscribeType().equals("partially")){
+		subscribe.setStatus("checked in");
+		subscribe.setEntriesDay((subscribe.getEntriesDay())+1);
+		Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?,entriesDay=?"
+					+ " WHERE subscribeNum=?;","checked in",subscribe.getSubscribeNum(),(subscribe.getEntriesDay())+1,};
+		sendQueryToServer(updateSubscribe);
+		//closeConnection();
+		}
+		
+		else{
+			Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?"
+			+ " WHERE subscribeNum=?;","checked in",subscribe.getSubscribeNum()};
+			sendQueryToServer(updateSubscribe);
+			closeConnection();
+			subscribe.setStatus("checked in");
+		}
+		
 	}
 
 	public VcpInfo getVcpInfo() {
@@ -61,17 +86,24 @@ public class CheckInController extends Controller {
 		return registerController;
 	}
 
-	public Integer[] Algo(VcpInfo vcpInfo, Order order, Parking_Lot parkingLot)
-			throws ParseException {
-		Integer[] coordinate = getParking_Algorithem(order, parkingLot)
-				.findOptimParkingPlace();
-		return coordinate;
+	public void Algo(Object order) throws ParseException {
+		Object orderType;
+		
+		if(order instanceof Order){
+		orderType=(Order) order;
+		getParking_Algorithem(orderType);
+		}
+		
+		else if(order instanceof Subscribe){
+			orderType=(Subscribe) order;
+			getParking_Algorithem(orderType);
+		}
+		parkingAlgorithem=null;
 	}
-
-	public Parking_Algorithem getParking_Algorithem(Order order,
-			Parking_Lot parkingLot) throws ParseException {
+	
+	public Parking_Algorithem getParking_Algorithem(Object order) throws ParseException{
 		if (parkingAlgorithem == null)
-			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), order,
+			parkingAlgorithem=new Parking_Algorithem(getVcpInfo(), order);
 					parkingLot);
 
 		return parkingAlgorithem;

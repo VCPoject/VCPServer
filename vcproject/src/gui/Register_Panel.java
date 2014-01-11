@@ -5,6 +5,7 @@ import java.awt.SystemColor;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
 import java.awt.Font;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,6 +15,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Map.Entry;
+
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
@@ -24,11 +26,13 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.SwingConstants;
+
 import controler.RegisterController;
 import controler.VcpInfo;
 import entity.Car;
 import entity.Parking_Lot;
 import entity.Subscribe;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -388,9 +392,12 @@ public class Register_Panel extends JPanel {
 									+ carNumberStr);
 						}
 						Set<Entry<Integer, Subscribe>> subscribeEntry = getVcpInfo().getAllSubscribed().entrySet();
-						Iterator<Entry<Integer, Subscribe>> subscribeIterator = subscribeEntry.iterator();
-						while (subscribeIterator.hasNext()) {
-							Subscribe findSubscribe = subscribeIterator.next().getValue();
+						Set<Entry<Integer, Subscribe>> subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
+						Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
+						Subscribe findSubscribe;
+						
+						while(subscribeIterator.hasNext()){
+							findSubscribe=subscribeIterator.next().getValue();
 							if (findSubscribe.getCarNum().equals(Integer.parseInt(carNumberStr)) && findSubscribe.getIdClient().equals(Integer.parseInt(idclient))) {
 								if (getRegisterController().isExpired(findSubscribe)) {
 									throw new Exception(carNumberStr + " is already registerd.\nYou can to make resubscribe to member id: " + findSubscribe.getSubscribeNum());
@@ -435,7 +442,7 @@ public class Register_Panel extends JPanel {
 						String subscribeQuery;
 						if (rdbtnPartial.isSelected()) {
 							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`idparking`,`startDate`,`subscribType`,`customerType`,`leavingTime`) VALUES(?,?,?,?,?,?,?);";
-							newSubscribe.setSubscribType(rdbtnPartial.getText());
+							newSubscribe.setSubscribeType(rdbtnPartial.getText());
 							newSubscribe.setIdparking(Integer
 									.parseInt(comboBoxParkingLot
 											.getSelectedItem().toString()));
@@ -445,7 +452,7 @@ public class Register_Panel extends JPanel {
 									+ comboBoxDepartureMin.getSelectedItem()
 									+ ":00");
 						} else {
-							newSubscribe.setSubscribType(rdbtnFull.getText());
+							newSubscribe.setSubscribeType(rdbtnFull.getText());
 							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`startDate`,`subscribType`,`customerType`) VALUES(?,?,?,?,?);";
 						}
 						if (rdbtnPrivate.isSelected())
@@ -456,7 +463,7 @@ public class Register_Panel extends JPanel {
 						newSubscribe.setSubscribeNum(getVcpInfo()
 								.getAllSubscribed().size() + 1);
 						newSubscribe.setQuery(subscribeQuery);
-						getVcpInfo().getAllSubscribed().put(getVcpInfo().getAllSubscribed().size(),newSubscribe);
+						getVcpInfo().getAllSubscribed().put(newSubscribe.getSubscribeNum(),newSubscribe);
 						getRegisterController().addNewSubscribe(newSubscribe);
 						if (!getRegisterController().getResult().get(0)
 								.equals("done"))
@@ -547,10 +554,18 @@ public class Register_Panel extends JPanel {
 			Subscribe subscribe = subscribeIterator.next().getValue();
 			if (subscribe.getIdClient().equals(clientID)) {
 				return false;
+		Set<Entry<Integer, Subscribe>> subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
+		Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
+		Subscribe subscribe;
+		
+		while(subscribeIterator.hasNext()) {
+			subscribe=subscribeIterator.next().getValue();
+			if (subscribe.getIdClient().equals(clientID)) {
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	public JButton getBtnReturn() {

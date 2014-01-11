@@ -153,7 +153,7 @@ public class ParkingLot_controller extends Controller{
 	
 	public ArrayList<Parking_Lot> findAvailableParkingLots(){
 		for(Parking_Lot parkingLot: parkingLotList)
-			if(parkingLot.getStatus().equals("available"))
+			if(parkingLot.getStatus().equals("avilable"))
 				availableParkingLots.add(parkingLot);
 		
 		return availableParkingLots;

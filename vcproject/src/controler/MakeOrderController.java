@@ -9,7 +9,7 @@ public class MakeOrderController extends Controller {
 	public MakeOrderController(String host, int port) {
 		super(host, port);
 	}
-
+	
 	public void addCarToDB(Car car) {
 		sendQueryToServer(car);
 	}

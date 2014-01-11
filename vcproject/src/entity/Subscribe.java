@@ -10,6 +10,8 @@ public class Subscribe extends ClientEntity {
 	private String subscribType;
 	private String customerType;
 	private String departureTime;
+	private String endDate;
+	private String status;
 
 	public Subscribe() {
 		super();
@@ -55,11 +57,11 @@ public class Subscribe extends ClientEntity {
 		this.startDate = startDate;
 	}
 
-	public String getSubscribType() {
+	public String getSubscribeType() {
 		return subscribType;
 	}
 
-	public void setSubscribType(String subscribType) {
+	public void setSubscribeType(String subscribType) {
 		this.subscribType = subscribType;
 	}
 
@@ -81,17 +83,33 @@ public class Subscribe extends ClientEntity {
 
 	@Override
 	public Object[] toObject() {
-		if (getSubscribType().equals("Partial")) {
+		if (getSubscribeType().equals("partially")) {
 			Object[] obj = { getQuery(), getIdClient(),
 					getCarNum(), getIdparking(), getStartDate(),
-					getSubscribType(), getCustomerType(), getDepartureTime() };
+					getSubscribeType(), getCustomerType(), getDepartureTime(),getStatus() };
 			return obj;
 		} else {
 			Object[] obj = { getQuery(), getIdClient(),
-					getCarNum(), getStartDate(), getSubscribType(),
-					getCustomerType() };
+					getCarNum(), getStartDate(),getEndDate(), getSubscribeType(),
+					getCustomerType(),getStatus() };
 			return obj;
 		}
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

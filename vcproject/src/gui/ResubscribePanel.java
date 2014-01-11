@@ -439,10 +439,12 @@ public class ResubscribePanel extends JPanel {
 							throw new Exception("You didnt enter car number");
 						Integer carNumber = Integer.parseInt(carNumberStr);
 
-						Set<Entry<Integer, Subscribe>> subscribeEntry = getVcpInfo().getAllSubscribed().entrySet();
-						Iterator<Entry<Integer, Subscribe>> subscribeIterator = subscribeEntry.iterator();
-						while (subscribeIterator.hasNext()) {
-							Subscribe findSubscribe = subscribeIterator.next().getValue();
+						Set<Entry<Integer, Subscribe>>subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
+						Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
+						Subscribe findSubscribe;
+						
+						while(subscribeIterator.hasNext()){
+						findSubscribe=subscribeIterator.next().getValue();
 							if (findSubscribe.getCarNum().equals(carNumber)
 									&& findSubscribe.getIdClient().equals(
 											clientId)) {
@@ -464,13 +466,26 @@ public class ResubscribePanel extends JPanel {
 							throw new Exception(
 									"You didnt enter valid member number");
 						}
-						Subscribe findSubscribe = getVcpInfo().getAllSubscribed().get(memberID);
-						if (findSubscribe != null) {
-							if (!getRegisterController().isExpired(findSubscribe)) {
-								throw new Exception("No need to resubscribe. Subscribe is not expird yet");
+						Set<Entry<Integer, Subscribe>>subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
+						Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
+						Subscribe findSubscribe;
+						while(subscribeIterator.hasNext()){
+						findSubscribe=subscribeIterator.next().getValue();
+						
 							}
 							canResubscribe = true;
 							subscribe = findSubscribe;
+							if (findSubscribe.getSubscribeNum()
+									.equals(memberID)) {
+								if (!getRegisterController().isExpired(
+										findSubscribe)) {
+									throw new Exception(
+											"No need to resubscribe. Subscribe is not expird yet");
+								}
+								canResubscribe = true;
+								subscribe = findSubscribe;
+								break;
+							}
 						}
 						
 					}
@@ -480,7 +495,7 @@ public class ResubscribePanel extends JPanel {
 								"There is no member like you enter, contact administrator");
 					}
 
-					if (subscribe.getSubscribType().equals("Partial")) {
+					if (subscribe.getSubscribeType().equals("Partial")) {
 						rdbtnFull.setSelected(false);
 						rdbtnPartial.setSelected(true);
 						comboBoxParkingLot.setSelectedIndex(subscribe
@@ -560,7 +575,7 @@ public class ResubscribePanel extends JPanel {
 					}
 					
 					if (rdbtnPartial.isSelected()) {
-						subscribe.setSubscribType(rdbtnPartial.getText());
+						subscribe.setSubscribeType(rdbtnPartial.getText());
 						String departureTime = comboBoxDepartureHour
 								.getSelectedItem()
 								+ ":"
@@ -571,7 +586,7 @@ public class ResubscribePanel extends JPanel {
 								.parseInt(comboBoxParkingLot.getSelectedItem()
 										.toString()));
 					}else{
-						subscribe.setSubscribType(rdbtnFull.getText());
+						subscribe.setSubscribeType(rdbtnFull.getText());
 						subscribe.setDepartureTime(null);
 						subscribe.setIdparking(null);
 					}
