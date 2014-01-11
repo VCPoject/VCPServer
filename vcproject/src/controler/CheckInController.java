@@ -38,20 +38,27 @@ public class CheckInController extends Controller {
 }
 
 	public Subscribe getSubscribeByNum(Integer memberID, Integer carNum) throws Exception {
-		Subscribe subscribe;
+		Subscribe subscribe = null;
 		Set<Entry<Integer, Subscribe>> subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
 		Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
 		
 			while(subscribeIterator.hasNext()) {
 				subscribe=subscribeIterator.next().getValue();
-		if (subscribe.getCarNum().equals(carNum))
-			if (!getRegisterController().isExpired(subscribe))
-				return subscribe;
-			else
-				throw new Exception("Subscribe is expired");
-		else
-			throw new Exception("Car number is not assign to member id: " + memberID);
-
+				
+				if (subscribe.getCarNum().equals(carNum)){
+					
+					if (!getRegisterController().isExpired(subscribe))
+						return subscribe;
+					else
+						throw new Exception("Subscribe is expired");
+					
+				}
+				
+				else
+					throw new Exception("Car number is not assign to member id: " + memberID);
+			}
+			
+		return subscribe;
 	}
 	
 	public void updateSubscribeAscheckedin(Subscribe subscribe){
@@ -102,10 +109,10 @@ public class CheckInController extends Controller {
 	}
 	
 	public Parking_Algorithem getParking_Algorithem(Object order) throws ParseException{
+		
 		if (parkingAlgorithem == null)
 			parkingAlgorithem=new Parking_Algorithem(getVcpInfo(), order);
-					parkingLot);
-
+		
 		return parkingAlgorithem;
 	}
 }

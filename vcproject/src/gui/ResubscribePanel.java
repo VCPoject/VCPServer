@@ -471,10 +471,8 @@ public class ResubscribePanel extends JPanel {
 						Subscribe findSubscribe;
 						while(subscribeIterator.hasNext()){
 						findSubscribe=subscribeIterator.next().getValue();
-						
-							}
-							canResubscribe = true;
-							subscribe = findSubscribe;
+						canResubscribe = true;
+						subscribe = findSubscribe;
 							if (findSubscribe.getSubscribeNum()
 									.equals(memberID)) {
 								if (!getRegisterController().isExpired(

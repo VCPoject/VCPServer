@@ -391,7 +391,6 @@ public class Register_Panel extends JPanel {
 									+ "is not associated with car number: "
 									+ carNumberStr);
 						}
-						Set<Entry<Integer, Subscribe>> subscribeEntry = getVcpInfo().getAllSubscribed().entrySet();
 						Set<Entry<Integer, Subscribe>> subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
 						Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
 						Subscribe findSubscribe;
@@ -550,14 +549,7 @@ public class Register_Panel extends JPanel {
 	public boolean checkForClientValidity(Integer clientID) throws Exception {
 		Set<Entry<Integer, Subscribe>> subscribeEntry = getVcpInfo().getAllSubscribed().entrySet();
 		Iterator<Entry<Integer, Subscribe>> subscribeIterator = subscribeEntry.iterator();
-		while (subscribeIterator.hasNext()) {
-			Subscribe subscribe = subscribeIterator.next().getValue();
-			if (subscribe.getIdClient().equals(clientID)) {
-				return false;
-		Set<Entry<Integer, Subscribe>> subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
-		Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
 		Subscribe subscribe;
-		
 		while(subscribeIterator.hasNext()) {
 			subscribe=subscribeIterator.next().getValue();
 			if (subscribe.getIdClient().equals(clientID)) {
