@@ -60,6 +60,8 @@ public class VCP_Main_Frame extends JFrame {
 	private ParkingLotInit parkinglotinit;
 	private int defaultParkinglotNum;
 	private Statistics stats;
+	private ReportsGui reports;
+	private QuarterlyGui quaterly;
 	
 	 
 	public VCP_Main_Frame(String host) {
@@ -335,6 +337,20 @@ public class VCP_Main_Frame extends JFrame {
 										}
 									});
 									
+									getEmployeePanel().getbtnCreateReport().addActionListener(new ActionListener() {
+										public void actionPerformed(ActionEvent e) {
+											setContentPane(getReportsGui());
+											getReportsGui().getBtnReturn().addActionListener(new ActionListener() {
+												public void actionPerformed(ActionEvent e) {
+													setContentPane(getEmployeePanel());
+													reports = null;
+												}
+											});
+										}
+
+										});
+										
+									
 									getEmployeePanel().getBtnReviewPricingRequests().addActionListener(new ActionListener() {
 										public void actionPerformed(ActionEvent e) {
 											setContentPane(getPricingRequestPanel());
@@ -477,6 +493,20 @@ public class VCP_Main_Frame extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								setContentPane(getEmployeePanel());
 								stats = null;
+							}
+						});
+
+			}
+		});	
+		
+		getEmployeePanel().getbtnQuarterly().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setContentPane(getQuarterlyGui());
+				getStatistics().getBtnReturn().addActionListener(
+						new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								setContentPane(getEmployeePanel());
+								quaterly = null;
 							}
 						});
 
@@ -628,6 +658,21 @@ public class VCP_Main_Frame extends JFrame {
 		return changePricingPanel;
 	}
 
+	
+	public ReportsGui getReportsGui() {
+		if(reports == null){
+			reports = new ReportsGui(host, DEFAULT_PORT, vcpInfo);
+		}
+		return reports;
+	}
+	
+	
+	public QuarterlyGui getQuarterlyGui() {
+		if(quaterly == null){
+			quaterly = new QuarterlyGui(host, DEFAULT_PORT, vcpInfo);
+		}
+		return quaterly;
+	}
 
 
 	public PricingRequestPanel getPricingRequestPanel() {

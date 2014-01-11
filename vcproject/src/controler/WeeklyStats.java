@@ -27,7 +27,6 @@ public class WeeklyStats extends Controller {
 		sendQueryToServer(obj);
 		int j=1;
 		for(int i=0;i<getResult().size();i++){
-			System.out.print(getResult().get(i).toString()+ " ");
 			if(!getResult().get(i).equals("no value"))
 				row.add(getResult().get(i));
 			else

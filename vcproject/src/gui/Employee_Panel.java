@@ -11,7 +11,7 @@ public class Employee_Panel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JButton btnFindAltParkin;
-	private JButton btnSetupParkinLot;
+	private JButton btnQuarterly;
 	private JButton btnSignAsnotWorking;
 	private JButton btnComplains;
 	private JButton btnCreateReport;
@@ -46,9 +46,9 @@ public class Employee_Panel extends JPanel {
 		btnFindAltParkin.setBounds(230, 170, 129, 49);
 		add(btnFindAltParkin);
 
-		btnSetupParkinLot = new JButton("Setup parkin lot");
-		btnSetupParkinLot.setBounds(230, 240, 129, 49);
-		add(btnSetupParkinLot);
+		btnQuarterly = new JButton("Setup parkin lot");
+		btnQuarterly.setBounds(230, 240, 129, 49);
+		add(btnQuarterly);
 
 		btnSignAsnotWorking = new JButton("Not working  places");
 		btnSignAsnotWorking.setBounds(230, 310, 129, 49);
@@ -93,7 +93,7 @@ public class Employee_Panel extends JPanel {
 		switch (getConectedEmployee().getRole()) {
 		case "Customer service":
 			btnFindAltParkin.setEnabled(false);
-			btnSetupParkinLot.setEnabled(false);
+			btnQuarterly.setEnabled(false);
 			btnSignAsnotWorking.setEnabled(false);
 			btnComplains.setEnabled(true);
 			btnCreateReport.setEnabled(false);
@@ -106,7 +106,7 @@ public class Employee_Panel extends JPanel {
 
 		case "parking manager":
 			btnFindAltParkin.setEnabled(false);
-			btnSetupParkinLot.setEnabled(false);
+			btnQuarterly.setEnabled(true);
 			btnSignAsnotWorking.setEnabled(false);
 			btnComplains.setEnabled(true);
 			btnCreateReport.setEnabled(false);
@@ -119,7 +119,7 @@ public class Employee_Panel extends JPanel {
 
 		case "network manager":
 			btnFindAltParkin.setEnabled(true);
-			btnSetupParkinLot.setEnabled(true);
+			btnQuarterly.setEnabled(true);
 			btnSignAsnotWorking.setEnabled(true);
 			btnComplains.setEnabled(false);
 			btnCreateReport.setEnabled(true);
@@ -132,7 +132,7 @@ public class Employee_Panel extends JPanel {
 
 		case "operation":
 			btnFindAltParkin.setEnabled(true);
-			btnSetupParkinLot.setEnabled(true);
+			btnQuarterly.setEnabled(true);
 			btnSignAsnotWorking.setEnabled(true);
 			btnComplains.setEnabled(false);
 			btnCreateReport.setEnabled(true);
@@ -145,7 +145,7 @@ public class Employee_Panel extends JPanel {
 			
 		default:
 			btnFindAltParkin.setEnabled(true);
-			btnSetupParkinLot.setEnabled(true);
+			btnQuarterly.setEnabled(true);
 			btnSignAsnotWorking.setEnabled(true);
 			btnComplains.setEnabled(true);
 			btnCreateReport.setEnabled(true);
@@ -171,8 +171,8 @@ public class Employee_Panel extends JPanel {
 		return btnFindAltParkin;
 	}
 
-	public JButton getbtnSetupParkinLot() {
-		return btnSetupParkinLot;
+	public JButton getbtnQuarterly() {
+		return btnQuarterly;
 	}
 
 	public JButton getbtnSignAsnotWorking() {

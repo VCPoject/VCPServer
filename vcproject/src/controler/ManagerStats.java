@@ -2,11 +2,9 @@ package controler;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
 
-import entity.ManagerStatsEntity;
 
 public class ManagerStats extends Controller {
 	
@@ -22,11 +20,15 @@ public class ManagerStats extends Controller {
 	private ArrayList<Integer>memberCount= new ArrayList<Integer>();
 	private ArrayList<Integer>memHasMorCar= new ArrayList<Integer>();
 	private ArrayList<Integer>lateCount= new ArrayList<Integer>();
-	private ArrayList<Integer> NotWork = new ArrayList<Integer>();
-	private ManagerStatsEntity statsEntity;
-	public ManagerStats(){
+	private ArrayList<Integer> notWork = new ArrayList<Integer>();
+	private ArrayList<Integer> lateToPark = new ArrayList<Integer>();
+	private ArrayList<Integer> abortedParking = new ArrayList<Integer>();
+
+	private VcpInfo vcpInfo;
+	public ManagerStats(String host, int port,VcpInfo vcpInfo){
 		super();
-		statsEntity= new ManagerStatsEntity();
+
+		this.vcpInfo=vcpInfo;
 	}
 	
 	protected void getRowData(Date start,Date end){
@@ -34,23 +36,41 @@ public class ManagerStats extends Controller {
 		Timestamp endDate = new Timestamp(end.getTime());
 		Object[] obj ={"SELECT * FROM vcp_employ.daily_statistic WHERE date < ? AND date > ?;",endDate.toString(),startDate.toString()};
 		sendQueryToServer(obj);
-		for(int i=0;i<getResult().size();i++)
+		for(int i=1;i<getResult().size();i++)
 		{
+			
+			impOrder.add(Integer.parseInt(getResult().get(i).toString()));
 			i++;
-			impOrder.add(Integer.parseInt(getResult().get(i++).toString()));
-			cancelOrder.add(Integer.parseInt(getResult().get(i++).toString()));
-			memberCount.add(Integer.parseInt(getResult().get(i++).toString()));
-			memHasMorCar.add(Integer.parseInt(getResult().get(i++).toString()));
+			cancelOrder.add(Integer.parseInt(getResult().get(i).toString()));
+			i++;
+			memberCount.add(Integer.parseInt(getResult().get(i).toString()));
+			i++;
+			memHasMorCar.add(Integer.parseInt(getResult().get(i).toString()));
+			i++;
 			lateCount.add(Integer.parseInt(getResult().get(i).toString()));
+			i++;
+			i++;
 		}
+		Object[] lateTOParking = {"SELECT COUNT(idorder) FROM vcp_db.order WHERE checkInTime > arrivalTime"
+				+ " GROUP BY idparking ORDER BY idparking;"};
+		sendQueryToServer(lateTOParking);
+		if(!getResult().get(0).equals("No Result")){}
+		for(int i=0;i<getResult().size();i++)
+			lateToPark.add(Integer.parseInt(getResult().get(i++).toString()));
+		Object[] ParkingAboted = {"SELECT COUNT(idorder) FROM vcp_db.order WHERE status ='Aborted' "
+				+ "GROUP BY idparking ORDER BY idparking;"};
+			sendQueryToServer(ParkingAboted);
+			if(!getResult().get(0).equals("No Result")){}
+			for(int i=0;i<getResult().size();i++)
+			abortedParking.add(Integer.parseInt(getResult().get(i++).toString()));
 	}
 	
 	
 	public float MakeMedian(ArrayList<Integer> arr) {
 
 		if (arr.size() % 2 == 1)
-			return((arr.get(arr.size()/2)+1)); 
-		return(((arr.get(arr.size()/2+1))+(arr.get(arr.size()/2)))/2);
+			return(((arr.get(arr.size()-1)/2)+1)); 
+		return((((arr.get(arr.size()-1)/2+1))+(arr.get((arr.size()-1)/2)))/2);
 
 	}
 
@@ -63,22 +83,28 @@ public class ManagerStats extends Controller {
 	}
 	
 	public int[] Incidence(ArrayList<Integer> arr) {
-		for (int i = 0; i <brr.size() ; i++) 
-			for(int j=0;j <arr.size();j++){
-				if(arr.get(j)==brr.get(i).data)
-					brr.get(i).count++;
-				else 
-				{
-					Node e = new Node();
-					e.data=arr.get(j);
-					e.count=0;
-					brr.add(e);
-				}
-					
+		boolean flag=true;
+		brr= new ArrayList<Node>();
+			for (int i = 0; i <arr.size() ; i++) {
+			for(int j=0;j <brr.size();j++){
+					if(arr.get(i)==brr.get(j).data){
+					brr.get(j).count++;
+					flag=false;
+					}
+					}		
+			if(flag){
+			Node e = new Node();
+			e.data=arr.get(i);
+			e.count=0;
+			brr.add(e);
 			}
-		int[] a= new int[brr.size()];
-		for(int i=0;i<brr.size();i++)
-			a[i]=brr.get(i).count;
+			flag=true;
+		}
+		int[] a= new int[10];
+		for(int i=0;i<brr.size();i++){
+			a[brr.get(i).data/10]++;
+			
+		}
 		return(a);
 	}
 	public double StiatTekken(ArrayList<Integer> arr){
@@ -90,7 +116,7 @@ public class ManagerStats extends Controller {
 		double temp=0;
 		for(int i=0;i<arr.size();i++)
 		 temp = temp + (arr.get(i)-avg)*(arr.get(i)-avg);
-		temp = temp/arr.size();
+		temp = Math.sqrt(temp)/arr.size();
 		return(temp);
 	}
 	
@@ -111,15 +137,15 @@ public class ManagerStats extends Controller {
 				endSum= endSum + endDate.getTime();
 				if(i%7==0){
 					Long l = (endSum-startSum)/(60 * 60 * 1000);
-					NotWork.add(Integer.parseInt(l.toString()));
+					notWork.add(Integer.parseInt(l.toString()));
 				}
 			}
 		if(i<=7){
 			Long l = (endSum-startSum)/(60 * 60 * 1000);
-			NotWork.add(Integer.parseInt(l.toString()));
+			notWork.add(Integer.parseInt(l.toString()));
 		}
 		
-		return NotWork; 
+		return notWork; 
 	}
 	
 	public Vector<String> obtainFieldsForNotWork(){
@@ -136,40 +162,117 @@ public class ManagerStats extends Controller {
 	public Vector<Vector<Object>> ActivityReport(Date start,Date end){
 		getRowData(start,end);
 		CalculetedNotWork(start,end);
+		int[] temp;
 		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
 		Vector<Object> row=new Vector<Object>(12);
+		row.add("Implemented Oreders");
 		row.add(MakeMedian(impOrder));
 		row.add(StiatTekken(impOrder));
-		Collections.addAll(row, Incidence(impOrder));
+		temp = Incidence(impOrder);
+		for(int i = 0 ;i<temp.length;i++)
+			row.add(temp[i]);
 		result.add(row);
 		row=new Vector<Object>(12);
+		row.add("Canceld Orders");
 		row.add(MakeMedian(cancelOrder));
 		row.add(StiatTekken(cancelOrder));
-		Collections.addAll(row, Incidence(cancelOrder));
+		temp = Incidence(cancelOrder);
+		for(int i = 0 ;i<temp.length;i++)
+			row.add(temp[i]);
 		result.add(row);	
 		row=new Vector<Object>(12);
-		row.add(MakeMedian(NotWork));
-		row.add(StiatTekken(NotWork));
-		Collections.addAll(row, Incidence(NotWork));
+		row.add("Not Working Parking");
+		row.add(MakeMedian(notWork));
+		row.add(StiatTekken(notWork));
+		temp = Incidence(notWork);
+		for(int i = 0 ;i<temp.length;i++)
+			row.add(temp[i]);
 		result.add(row);	
 		return result;
 	}
 	
 	public Vector<String> obtainFields(){
 		Vector<String> s= new Vector<String>(12);
-		s.add("MakeMedian");
-		s.add("Standard deviation");
-		s.add("Frequency Distribution Decile1");
-		s.add("Frequency Distribution Decile2");
-		s.add("Frequency Distribution Decile3");
-		s.add("Frequency Distribution Decile4");
-		s.add("Frequency Distribution Decile5");
-		s.add("Frequency Distribution Decile6");
-		s.add("Frequency Distribution Decile7");
-		s.add("Frequency Distribution Decile8");
-		s.add("Frequency Distribution Decile9");
-		s.add("Frequency Distribution Decile10");
+		s.add(" ");
+		s.add("Median");
+		s.add("sd");
+		s.add("Decile1");
+		s.add("Decile2");
+		s.add("Decile3");
+		s.add("Decile4");
+		s.add("Decile5");
+		s.add("Decile6");
+		s.add("Decile7");
+		s.add("Decile8");
+		s.add("Decile9");
+		s.add("Decile10");
 		return s;
+	}
+	
+	
+	
+	public Vector<Vector<Object>> AbnormalWorking(){
+		getRowData(new Date(0), new Date());
+		int[] temp;
+		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
+		Vector<Object> row=new Vector<Object>(13);
+		row.add("Canceld Orders");
+		row.add(MakeMedian(cancelOrder));
+		row.add(StiatTekken(cancelOrder));
+		temp = Incidence(cancelOrder);
+		for(int i = 0 ;i<temp.length;i++)
+			row.add(temp[i]);
+		result.add(row);
+		row=new Vector<Object>(13);
+		row.add("Number of Late");
+		row.add(MakeMedian(lateCount));
+		row.add(StiatTekken(lateCount));
+		temp = Incidence(lateCount);
+		for(int i = 0 ;i<temp.length;i++)
+			row.add(temp[i]);
+		result.add(row);
+		row=new Vector<Object>(13);
+		row.add("Canceld Orders By Parking");
+		row.add(MakeMedian(lateToPark));
+		row.add(StiatTekken(lateToPark));
+		temp = Incidence(lateToPark);
+		for(int i = 0 ;i<temp.length;i++)
+			row.add(temp[i]);
+		result.add(row);
+		row=new Vector<Object>(13);
+		row.add("Aborted Orders By Parking");
+		row.add(MakeMedian(abortedParking));
+		row.add(StiatTekken(abortedParking));
+		temp = Incidence(abortedParking);
+		for(int i = 0 ;i<temp.length;i++)
+			row.add(temp[i]);
+		result.add(row);
+		return result;
+	}
+	
+	public Vector<Vector<Object>> Preformence(){
+		
+		int numOfSubscribed;
+		int numWithMorThenOneCar;
+		numOfSubscribed=vcpInfo.getAllSubscribed().size();
+		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
+		Vector<Object> row=new Vector<Object>(2);
+		
+		Object[] obj={"SELECT count(idclient) AS id FROM "
+		+ "(SELECT idclient FROM vcp_db.subscribe "
+		+ "group by idclient HAVING count(carNum) >'1')"
+		+ " AS clientWithMoreCar ;" };
+		sendQueryToServer(obj);
+		if(!getResult().get(0).equals("No Result")){}
+		numWithMorThenOneCar=Integer.parseInt(getResult().get(0).toString());
+		row.add("Number Of Subscribes");
+		row.add(numOfSubscribed);
+		result.add(row);
+		row = new Vector<Object>(2);
+		row.add("Num Of Subscribe With More then One Car");
+		row.add(numWithMorThenOneCar);
+		result.add(row);
+		return result;
 	}
 
 }
