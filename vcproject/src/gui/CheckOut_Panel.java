@@ -312,29 +312,28 @@ public class CheckOut_Panel extends JPanel {
 				try{
 					Subscribe subscribe = null;
 					Order order = null;
-					String departDateStr = "";
 					String carNumStr = textFieldCarNumber.getText();
+					boolean isOrderExist = false;
 					//Check car number //
 					if(carNumStr.equals("  -   -  "))
 						throw new Exception("You didnt enter any car number");
 					Integer carNum = Integer.parseInt(carNumStr.replace("-", ""));
-					
 					if(rdbtnOrder.isSelected()){
 						order = getCheckOutController().getCarOrder(carNum);
 						if(order == null)
 							throw new Exception("There is no order for car number: " + carNumStr);
-						for(Parking_Lot parkinglot:getVcpInfo().getParkingLot())
-							if(order.getIdparking()==parkinglot.getIdparkinglot())
-							getCheckOutController().Algo(order);
-						boolean isOrderExist = false;
-						for(Parking_Places parkingPlace : getVcpInfo().getParkingPlaces())
-							if(parkingPlace.getIdorder().equals(order.getIdorder())){
+						
+						for(Parking_Places pPlace : getVcpInfo().getParkingPlaces())
+							if(pPlace.getIdorder().equals(order.getIdorder())){
+								pPlace.setStatus("vaccent");
+								getParkingPlaceController().updateParkingPlace(pPlace);
+								pPlace.setIdorder(null);
+								pPlace.setSubscribeNum(null);
 								isOrderExist = true;
 								break;
 							}
 						if(!isOrderExist)
 							throw new Exception("Car number " + order.getCar() + " is not in parking lot contact admin or try again");
-						departDateStr = order.getDepartureDate() + " " + order.getDepartureTime();
 						
 						Date date = new Date();
 						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -342,7 +341,7 @@ public class CheckOut_Panel extends JPanel {
 						order.setCheckOutDate(strDate[0]);
 						order.setCheckOutTime(strDate[1]);
 						order.setStatus("checked out");
-						getMakeOrderController().UpdateOrder(order);
+						getMakeOrderController().UpdateOrderCheckout(order);
 						if(!getMakeOrderController().getResult().equals("done"))
 							throw new Exception("Error: Can't update order");
 						if(order.getType().equals("one time")){
@@ -364,10 +363,16 @@ public class CheckOut_Panel extends JPanel {
 						subscribe = getCheckOutController().getSubscribeByNum(memberID,carNum);
 						Date date = new Date();
 						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-						departDateStr = dateFormat.format(date) + " " + subscribe.getDepartureTime();
-						getCheckOutController().Algo(subscribe);
+						for(Parking_Places parkingPlace:getVcpInfo().getParkingPlaces())
+							if(parkingPlace.getSubscribeNum().equals(subscribe.getSubscribeNum())){
+								getCheckOutController().Algo(getVcpInfo(), subscribe, parkingPlace);//Algorithm
+								isOrderExist = true;
+							}
+						if(!isOrderExist)
+							throw new Exception("Car number " + subscribe.getCarNum() + " is not in parking lot contact admin or try again");
+						subscribe.setStatus("not checked in");
+						getCheckOutController().updateSubscribeAscheckedout(subscribe);
 					}
-					
 					
 					getCheckOutController().showSeccussesMsg("Check-Out succeed");
 			} catch (Exception e2) {
@@ -406,6 +411,10 @@ public class CheckOut_Panel extends JPanel {
 		return checkOutController;
 	}
 	
+	public void Algo(VcpInfo vcpInfo, Order order, Parking_Lot parkingLot)throws ParseException {
+		getParking_Algorithem(order, parkingLot);
+	public Parking_Algorithem getParking_Algorithem(Order order,Parking_Lot parkingLot) throws ParseException {
+			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), order,parkingLot);
 	public FinancialCardController getFinancialCardController() {
 		if(financialCardController == null){
 			financialCardController = new FinancialCardController(host, port);

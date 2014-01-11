@@ -1,17 +1,15 @@
 package gui;
 
 import java.awt.SystemColor;
-
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-
 import java.awt.Font;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-
 import javax.swing.JFormattedTextField;
 import javax.swing.text.MaskFormatter;
 import javax.swing.SwingConstants;
@@ -21,16 +19,13 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
-
 import controler.CheckInController;
 import controler.MakeOrderController;
 import controler.ParkingPlaceController;
 import controler.VcpInfo;
 import entity.Order;
-import entity.Parking_Lot;
 import entity.Parking_Places;
 import entity.Subscribe;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -187,7 +182,19 @@ public class CheckIn_Panel extends JPanel {
 						order = getCheckInController().getCarOrder(carNum);
 						if(order == null)
 							throw new Exception("There is no order for car number: " + carNumStr);
-					
+						if(!order.getStatus().equals("not checked in"))
+							throw new Exception("You dont have valid order.(Canceld or already implement)");
+						if(order.getType().equals("Full")){
+							if(!order.getIdparking().equals(getVcpInfo().getDefultParkingLot().getIdparkinglot()))
+								throw new Exception("You are in the wrong parking lot.\n"
+										+ "You should go to parking lot number:" + order.getIdparking() );
+							String arrivalDateStr = order.getArrivalDate() + " " + order.getArrivalTime();
+							Date arrivalDate = StringToDate(arrivalDateStr);
+							Date todayDate = new Date();
+							if(arrivalDate.before(todayDate)){
+								throw new Exception("Your arrival date is not now");
+							}
+						}
 						getCheckInController().Algo(order);
 						departDateStr = order.getDepartureDate() + " " + order.getDepartureTime();
 						Date date = new Date();
@@ -211,6 +218,17 @@ public class CheckIn_Panel extends JPanel {
 							throw new Exception("You didnt enter a valid member ID.");
 						}
 						subscribe = getCheckInController().getSubscribeByNum(memberID,carNum);
+						if(subscribe.getSubscribeType().equals("Partial")){
+							if(!subscribe.getIdparking().equals(getVcpInfo().getDefultParkingLot().getIdparkinglot()))
+								throw new Exception("You are in the wrong parking lot.\n"
+										+ "You should go to parking lot number:" + subscribe.getIdparking());
+							if(subscribe.getEntriesDay() > 0)
+								throw new Exception("You cant check in today");
+							
+							Calendar date = Calendar.getInstance();    
+							if(date.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || date.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
+								throw new Exception("You cant check in at weekends");
+						}
 						Date date = new Date();
 						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						departDateStr = dateFormat.format(date) + " " + subscribe.getDepartureTime();

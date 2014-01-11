@@ -57,7 +57,7 @@ public class ResubscribePanel extends JPanel {
 	private JRadioButton rdbtnFull;
 	private JRadioButton rdbtnPartial;
 	private JLabel lblCreditCard;
-	private JPanel PayPan;
+	private JPanel PaymentPan;
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 	private JPanel panelCradit;
 	private JRadioButton rdbtnCradit;
@@ -173,19 +173,19 @@ public class ResubscribePanel extends JPanel {
 			comboBoxDepartureMin.addItem(i.toString());
 		}
 
-		PayPan = new JPanel();
-		PayPan.setBackground(SystemColor.activeCaption);
-		PayPan.setBorder(new TitledBorder(UIManager
+		PaymentPan = new JPanel();
+		PaymentPan.setBackground(SystemColor.activeCaption);
+		PaymentPan.setBorder(new TitledBorder(UIManager
 				.getBorder("TitledBorder.border"), "Payment",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		PayPan.setBounds(35, 170, 356, 106);
-		panelNewSubscribe.add(PayPan);
-		PayPan.setLayout(null);
+		PaymentPan.setBounds(35, 170, 356, 106);
+		panelNewSubscribe.add(PaymentPan);
+		PaymentPan.setLayout(null);
 
 		panelCradit = new JPanel();
 		panelCradit.setBackground(SystemColor.activeCaption);
 		panelCradit.setBounds(10, 38, 337, 57);
-		PayPan.add(panelCradit);
+		PaymentPan.add(panelCradit);
 		panelCradit.setLayout(null);
 
 		lblCreditCard = new JLabel("Cradit card:");
@@ -224,24 +224,24 @@ public class ResubscribePanel extends JPanel {
 		rdbtnCash.setBackground(SystemColor.activeCaption);
 		buttonGroup_1.add(rdbtnCash);
 		rdbtnCash.setBounds(298, 10, 49, 23);
-		PayPan.add(rdbtnCash);
+		PaymentPan.add(rdbtnCash);
 
 		rdbtnCradit = new JRadioButton("Cradit");
 		rdbtnCradit.setBackground(SystemColor.activeCaption);
 		rdbtnCradit.setSelected(true);
 		buttonGroup_1.add(rdbtnCradit);
 		rdbtnCradit.setBounds(220, 10, 55, 23);
-		PayPan.add(rdbtnCradit);
+		PaymentPan.add(rdbtnCradit);
 
 		JLabel lblPaymentType = new JLabel("Payment Type:");
 		lblPaymentType.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblPaymentType.setBounds(75, 11, 135, 22);
-		PayPan.add(lblPaymentType);
+		PaymentPan.add(lblPaymentType);
 
 		lblPayCash = new JLabel("Press button \"Pay Cash\"");
 		lblPayCash.setFont(new Font("Arial", Font.BOLD, 18));
 		lblPayCash.setBounds(70, 53, 216, 22);
-		PayPan.add(lblPayCash);
+		PaymentPan.add(lblPayCash);
 
 		btnPay = new JButton("Pay cradit");
 		btnPay.setBounds(226, 280, 89, 30);
@@ -614,6 +614,8 @@ public class ResubscribePanel extends JPanel {
 					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 					String startDate = dateFormat.format(date);
 					subscribe.setStartDate(startDate);
+					date = getRegisterController().addDays(date, 28);
+					subscribe.setEndDate(dateFormat.format(date));
 					
 					getRegisterController().showSeccussesMsg("Payment received");
 					btnSubmit.setEnabled(true);

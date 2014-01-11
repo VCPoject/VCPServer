@@ -1,6 +1,5 @@
 package controler;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -64,14 +63,14 @@ public class CheckOutController extends Controller {
 		return registerController;
 	}
 
-	public void Algo(Object order)throws ParseException {
+	public void Algo(VcpInfo vcpInfo, Order order, Parking_Lot parkingLot)
 		 getParking_Algorithem(order);
-		 parkingAlgorithem = null;
+		getParking_Algorithem(order, parkingLot);
 	}
 	
 	public Parking_Algorithem getParking_Algorithem(Object order) throws ParseException {
 		if (parkingAlgorithem == null)
-			parkingAlgorithem = new Parking_Algorithem(order,getVcpInfo());
+			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), order);
 
 		return parkingAlgorithem;
 	}
@@ -97,6 +96,26 @@ public class CheckOutController extends Controller {
 		long diffHours = diff / (60 * 60 * 1000);
 		
 		return diffHours;
+	}
+	
+public void updateSubscribeAscheckedout(Subscribe subscribe){
+		
+		if(subscribe.getSubscribeType().equals("partially")){
+		subscribe.setStatus("checked in");
+		subscribe.setEntriesDay((subscribe.getEntriesDay())+1);
+		Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?,entriesDay=?"
+					+ " WHERE subscribeNum=?;","checked in",subscribe.getSubscribeNum(),(subscribe.getEntriesDay())+1,};
+		sendQueryToServer(updateSubscribe);
+		//closeConnection();
+		}
+		else{
+			Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?"
+			+ " WHERE subscribeNum=?;","checked in",subscribe.getSubscribeNum()};
+			sendQueryToServer(updateSubscribe);
+			closeConnection();
+			subscribe.setStatus("checked in");
+		}
+		
 	}
 
 }
