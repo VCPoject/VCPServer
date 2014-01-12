@@ -191,6 +191,7 @@ public class Main_Frame extends JFrame {
 								}
 							};
 							getMainPanel().setTableClientConnected(table);
+							scheduler = null;
 						} catch (IOException e) {
 							System.out.println("error while closing connections:"	+ e.getMessage());
 							e.printStackTrace();

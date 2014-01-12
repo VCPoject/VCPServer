@@ -503,8 +503,8 @@ public class Register_Panel extends JPanel {
 												+ "\n"
 												+ "you will need to enter him when you make check-in");
 					}
-					getRegisterController().showSeccussesMsg(
-							"Wellcome!\nYou are now Subscribe.");
+					getRegisterController().showSeccussesMsg("Wellcome!\nYou are now Subscribe.");
+					btnReturn.doClick();
 				} catch (Exception e2) {
 					getRegisterController().showWarningMsg(e2.getMessage());
 				}

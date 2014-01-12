@@ -17,8 +17,7 @@ public class DailyStatistic extends TimerTask {
 	private String dbPassword;
 	private int port;
 
-	public DailyStatistic(int port, String dbIp, String dbUser,
-			String dbPassword) {
+	public DailyStatistic(int port, String dbIp, String dbUser,String dbPassword) {
 		this.dbIp = dbIp;
 		this.dbUser = dbUser;
 		this.dbPassword = dbPassword;
