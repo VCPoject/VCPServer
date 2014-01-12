@@ -557,33 +557,53 @@ public class Order_Panel extends JPanel {
 						order.setDepartureTime(timeDeparture);
 					
 					if (rdbtnOneTimeClient.isSelected()){
-						Float onetime = getVcpInfo().getParkingPricingInfo().getOneTime();
 						String arrivalHour = comboBoxArrivalHour.getSelectedItem().toString();
 						String arrivalMin = comboBoxArrivalMin.getSelectedItem().toString();
 						if (!arrivalHour.equals("Hour")	&& !arrivalMin.equals("Min")) {
 							timeArrival = comboBoxArrivalHour.getSelectedItem().toString()
 									+ ":" + comboBoxArrivalMin.getSelectedItem().toString() + ":00";
 						} else {
+							btnPay.setEnabled(false);
 							throw new Exception("You didn`t select arrivel time");
 						}
 						Date departureDate = dateChooserDeparture.getDate();
-						if(departureDate == null)
+						if(departureDate == null){
+							btnPay.setEnabled(false);
 							throw new Exception("You didnt select departure date");
-						DateFormat formatDate = new SimpleDateFormat(
-								"yyyy-MM-dd");
+						}
+						DateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
 						dateDeparture = formatDate.format(departureDate);
 						order.setDepartureDate(dateDeparture);
 						Date arrivalDate = dateChooserArrival.getDate();
-						if(arrivalDate == null)
+						if(arrivalDate == null){
+							btnPay.setEnabled(false);
 							throw new Exception("You didnt select arrival date");
+						}
 						String dateArrival = formatDate.format(arrivalDate);
+						String arrival = dateArrival + " " + timeArrival;
+						SimpleDateFormat validDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						Date toDay = new Date();
+						if(toDay.after(validDate.parse(arrival))){
+							btnPay.setEnabled(false);
+							throw new Exception("You didnt enter valid arrivel time");
+						}
 						order.setArrivalDate(dateArrival);
 						order.setArrivalTime(timeArrival);
-						timeToPay = (Float) (findHoursToPay(order) * onetime);
-						if(timeToPay < 0)
+						String departure = order.getDepartureDate() + " " + order.getDepartureTime();
+						Date validdeparture = validDate.parse(departure);
+						if(validdeparture.before(validDate.parse(arrival)) || validdeparture.before(toDay)){
+							btnPay.setEnabled(false);
+							throw new Exception("You didnt enter valid departure date");
+						}
+						timeToPay = (Float) (findHoursToPay(order));
+						if(timeToPay < 0){
+							btnPay.setEnabled(false);
 							throw new Exception("You didnt select valid time");
+						}
 						textFieldAmount.setText(timeToPay.toString());
+						btnPay.setEnabled(true);
 					}
+					
 				} catch (Exception e2) {
 					getMakeOrderController().showWarningMsg(
 							"Error in submit: " + e2.getMessage());
@@ -603,7 +623,7 @@ public class Order_Panel extends JPanel {
 					Car car = new Car();/* car entity */
 
 					ArrayList<Object> result = null;
-					String status = "did not checked in yet";/* status that will be applied to new order that didnt checked in */
+					String status = "not checked in";/* status that will be applied to new order that didnt checked in */
 					
 					/*	Check and set client id	*/
 					String cIDStr = textFieldIdNumber.getText();
@@ -644,8 +664,7 @@ public class Order_Panel extends JPanel {
 						// get current date time with Date()
 						Date date = new Date();
 						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						String[] dateAndTime = dateFormat.format(date).split(
-								"\\s");
+						String[] dateAndTime = dateFormat.format(date).split("\\s");
 						order.setArrivalDate(dateAndTime[0]);
 						order.setArrivalTime(dateAndTime[1]);
 						order.setDepartureDate(dateAndTime[0]);
@@ -667,6 +686,7 @@ public class Order_Panel extends JPanel {
 					}
 					if (!checkIfClientExists(client)) {/* add new client in the db */
 						getMakeOrderController().addNewClient(client);
+						getVcpInfo().getAllClients().add(client);
 					}
 					result = getMakeOrderController().getResult();
 					if (result.get(0) != null)
@@ -678,6 +698,8 @@ public class Order_Panel extends JPanel {
 					result = getMakeOrderController().getResult();
 					if (result.get(0) != null) {
 						getMakeOrderController().addNewOrder(order);
+						order.setIdorder(getVcpInfo().getAllOrders().size() + 1);
+						getVcpInfo().getAllOrders().put(order.getIdorder(),order);
 						result = getMakeOrderController().getResult();
 						getVcpInfo().getAllOrders().put(getVcpInfo().getAllOrders().size()+1,order);
 					}
@@ -732,17 +754,18 @@ public class Order_Panel extends JPanel {
 	 * @return true if car is exist else false
 	 */
 	protected boolean checkIfCarExist(Car car) {
-		Object[] isCarExists = {
-				"SELECT count(`car`.`carNum`) FROM `vcp_db`.`car` WHERE carNum = ? AND idclient = ?;",
-				car.getCarNum(), car.getClient() };
-		getMakeOrderController().searchCar(isCarExists);
-		ArrayList<Object> result = getMakeOrderController().getResult();
-		if (result.get(0).toString().equals("0")) {
+		boolean isExist = false;
+		for(Car serachCar: getVcpInfo().getAllCars()){
+			if(serachCar.getCarNum().equals(car.getCarNum())){
+				isExist = true;
+				break;
+			}
+		}
+		if (!isExist) {
 			String addCarQuery = "INSERT INTO `vcp_db`.`car`(`carNum`,`idclient`)VALUES(?,?);";
 			car.setQuery(addCarQuery);
 			return false;
 		}
-
 		return true;
 	}
 
@@ -756,8 +779,14 @@ public class Order_Panel extends JPanel {
 				"SELECT count(`client`.`idclient`) FROM `vcp_db`.`client` WHERE idclient = ?;",
 				client.getIdClient() };
 		getMakeOrderController().searchClient(isClientExists);
-		ArrayList<Object> result = getMakeOrderController().getResult();
-		if (result.get(0).toString().equals("0")) {
+		boolean isExists = false;
+		for(ClientEntity serachClient: getVcpInfo().getAllClients()){
+			if(serachClient.getIdClient().equals(client.getIdClient())){
+				isExists = true;
+				break;
+			}
+		}
+		if (!isExists) {
 			String addClientQuery = "INSERT INTO `vcp_db`.`client`(`idclient`,`email`) VALUES(?,?);";
 			client.setQuery(addClientQuery);
 			return false;
@@ -791,7 +820,8 @@ public class Order_Panel extends JPanel {
 	 * @param order entity for calculate the payment.
 	 * @return hours of parking
 	 */
-	public Long findHoursToPay(Order order) {
+	public Float findHoursToPay(Order order) {
+		Float payForHour = getVcpInfo().getParkingPricingInfo().getOneTime();
 		String dateStart = order.getArrivalDate() + " "
 				+ order.getArrivalTime();
 		String dateStop = order.getDepartureDate() + " "
@@ -818,9 +848,9 @@ public class Order_Panel extends JPanel {
 		long diff = d2.getTime() - d1.getTime();
 		long diffHours = diff / (60 * 60 * 1000);
 		if (diffHours < 1) {
-			return (long) 1;
+			return (Float) payForHour;
 		} else {
-			return (long) diffHours + toAdd;
+			return (long) (diffHours + toAdd)*payForHour;
 		}
 	}
 }
