@@ -1,15 +1,18 @@
 package gui;
 
 import java.awt.SystemColor;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+
 import java.awt.Font;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
 import javax.swing.JFormattedTextField;
 import javax.swing.text.MaskFormatter;
 import javax.swing.SwingConstants;
@@ -19,13 +22,16 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
+
 import controler.CheckInController;
 import controler.MakeOrderController;
+import controler.ParkingLot_controller;
 import controler.ParkingPlaceController;
 import controler.VcpInfo;
 import entity.Order;
 import entity.Parking_Places;
 import entity.Subscribe;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -53,7 +59,9 @@ public class CheckIn_Panel extends JPanel {
 	private CheckInController checkInController;
 	private ParkingPlaceController parkingPlaceController;
 	private MakeOrderController makeOrderController;
-
+	private ParkingLot_controller parkingLotController;
+	private int[] fullPositionCounter;
+	private int ParkingLotSize;
 	/**
 	 * This panel is for make check in to parking lot.
 	 * @param host for make connection with server side
@@ -65,6 +73,8 @@ public class CheckIn_Panel extends JPanel {
 		this.host = host;
 		this.port = port;
 		this.vcpInfo = vcpInfo;
+		ParkingLotSize=vcpInfo.getDefultParkingLot().getDepth()*vcpInfo.getDefultParkingLot().getHight()*
+		vcpInfo.getDefultParkingLot().getWidth();
 		initialize();
 		listners();
 	}
@@ -173,6 +183,11 @@ public class CheckIn_Panel extends JPanel {
 					Integer[] parkingInfo = null;
 					String departDateStr = "";
 					String carNumStr = textFieldCarNumber.getText();
+					
+					if(getVcpInfo().getDefultParkingLot().getStatus().equals("full"))
+							throw new Exception("Sorry parking lot"+" "+
+					getVcpInfo().getDefultParkingLot().getIdparkinglot()+" "+"is full"+"you can go to"+
+					" "+getVcpInfo().getDefultParkingLot().getAltparkinglot()+" "+"instead");
 					//Check car number //
 					if(carNumStr.equals("  -   -  "))
 						throw new Exception("You didnt enter any car number");
@@ -194,6 +209,7 @@ public class CheckIn_Panel extends JPanel {
 							if(arrivalDate.before(todayDate)){
 								throw new Exception("Your arrival date is not now");
 							}
+							
 						}
 						getCheckInController().Algo(order);
 						departDateStr = order.getDepartureDate() + " " + order.getDepartureTime();
@@ -204,9 +220,30 @@ public class CheckIn_Panel extends JPanel {
 						order.setCheckInTime(strDate[1]);
 						order.setStatus("checked in");
 						getMakeOrderController().UpdateOrder(order);
+						fullPositionCounter=getVcpInfo().fullPositionCounter();
+						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]++;
+						
+						if(fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]==ParkingLotSize){
+							getParkingLot_controller().updateParkingLotAsFull(getVcpInfo().getDefultParkingLot().
+							getIdparkinglot());
+							throw new Exception(" Parknig lot"+" "+getVcpInfo().getDefultParkingLot().getIdparkinglot()+
+									" "+"is Full please find Alternativa Parking lot");
+						}
+						
 						if(!getMakeOrderController().getResult().get(0).equals("done"))
 							throw new Exception("Error: Can't update order");
 					}else{
+						
+						fullPositionCounter=getVcpInfo().fullPositionCounter();
+						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]++;
+						
+						if(fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]==ParkingLotSize){
+							getParkingLot_controller().updateParkingLotAsFull(getVcpInfo().getDefultParkingLot().
+							getIdparkinglot());
+							throw new Exception(" Parknig lot"+" "+getVcpInfo().getDefultParkingLot().getIdparkinglot()+
+									" "+"is Full please find Alternativa Parking lot");
+						}
+						
 						String memberIDStr = textFieldMemberID.getText();
 						if(memberIDStr == null || memberIDStr.isEmpty() || memberIDStr.length() == 0){
 							throw new Exception("You didnt enter any member ID number");
@@ -218,11 +255,11 @@ public class CheckIn_Panel extends JPanel {
 							throw new Exception("You didnt enter a valid member ID.");
 						}
 						subscribe = getCheckInController().getSubscribeByNum(memberID,carNum);
-						if(subscribe.getSubscribeType().equals("Partial")){
+						if(subscribe.getSubscribeType().equals("partially")){
 							if(!subscribe.getIdparking().equals(getVcpInfo().getDefultParkingLot().getIdparkinglot()))
 								throw new Exception("You are in the wrong parking lot.\n"
 										+ "You should go to parking lot number:" + subscribe.getIdparking());
-							if(subscribe.getEntriesDay() > 0)
+							if(subscribe.getEntriesDay() > 1)
 								throw new Exception("You cant check in today");
 							
 							Calendar date = Calendar.getInstance();    
@@ -234,6 +271,13 @@ public class CheckIn_Panel extends JPanel {
 						departDateStr = dateFormat.format(date) + " " + subscribe.getDepartureTime();
 						getCheckInController().Algo(subscribe);
 						getCheckInController().updateSubscribeAscheckedin(subscribe);
+						fullPositionCounter=getVcpInfo().fullPositionCounter();
+						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]++;
+						
+						if(fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]==ParkingLotSize){
+							getParkingLot_controller().updateParkingLotAsFull(getVcpInfo().getDefultParkingLot().
+							getIdparkinglot());
+						}
 						
 					}
 					
@@ -280,6 +324,13 @@ public class CheckIn_Panel extends JPanel {
 			parkingPlaceController = new ParkingPlaceController(host, port, getVcpInfo());
 		}
 		return parkingPlaceController;
+	}
+	
+	public ParkingLot_controller getParkingLot_controller(){
+		if(parkingLotController==null)
+			parkingLotController=new ParkingLot_controller();
+		
+		return parkingLotController;
 	}
 
 	public MakeOrderController getMakeOrderController() {

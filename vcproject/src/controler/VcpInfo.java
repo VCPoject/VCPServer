@@ -2,6 +2,7 @@ package controler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import entity.*;
 
 public class VcpInfo extends Controller  {
@@ -17,8 +18,8 @@ public class VcpInfo extends Controller  {
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
 	private boolean systemEnable = false;
-	private HashMap<Integer, Subscribe> allSubscribed;
-
+	private ParkingLot_controller parkingLotController;
+	private int[] fullPositionCounter;
 
 	public VcpInfo(String host) {
 		super(host);
@@ -29,7 +30,7 @@ public class VcpInfo extends Controller  {
 		getAllClients();
 		getAllOrders();
 		getAllSubscribed();
-		//getReservationInfo();
+		getReservationInfo();
 		getAllCars();
 		getParkingPricingInfo();
 		closeConnection();
@@ -124,7 +125,7 @@ public class VcpInfo extends Controller  {
 					order.setArrivalTime(result.get(i++).toString());
 					order.setDepartureDate(result.get(i++).toString());
 					order.setDepartureTime(result.get(i++).toString());
-
+					
 					String checkInDate = result.get(i++).toString();
 					if (checkInDate.equals("no value"))
 						order.setCheckInDate(null);
@@ -231,7 +232,7 @@ public class VcpInfo extends Controller  {
 
 	public ArrayList<Parking_Lot> getParkingLotInfo() {
 		if (parkingLot == null) {
-			Object[] parkingLotQuery = { "SELECT * FROM `vcp_db`.`parking_lot`;" };
+			Object[] parkingLotQuery = { "SELECT * FROM `vcp_db`.`parking_lot` ORDER BY `idparking`;" };
 			sendQueryToServer(parkingLotQuery);
 			ArrayList<Object> result = getResult();
 			ArrayList<Parking_Lot> tempLot = new ArrayList<Parking_Lot>();
@@ -244,11 +245,12 @@ public class VcpInfo extends Controller  {
 					pLot.setHight(Integer.parseInt(result.get(i++).toString()));
 					pLot.setWidth(Integer.parseInt(result.get(i++).toString()));
 					pLot.setStatus(result.get(i++).toString());
-					pLot.setAltparkinglot(Integer.parseInt(result.get(i)
-							.toString()));
+					pLot.setAltparkinglot(Integer.parseInt(result.get(i).toString()));
+					
 					tempLot.add(pLot);
 				}
 				setParkingLot(tempLot);
+				
 			}
 		}
 		return parkingLot;
@@ -282,8 +284,14 @@ public class VcpInfo extends Controller  {
 					tempPlace.add(pLot);
 				}
 				setParkingPlaces(tempPlace);
+				
 			}
 		}
+		
+		fullPositionCounter=new int[parkingLot.size()];
+		for(int i=0;i<parkingLot.size();i++)
+			fullPositionCounter[i]=CountOccupyParkingPlaces(parkingLot.get(i).getIdparkinglot());
+		
 		return parkingPlaces;
 
 	}
@@ -366,5 +374,30 @@ public class VcpInfo extends Controller  {
 			setEmployee(employeeHash);
 		}
 		return employeeMap;
+	}
+	
+	public int CountOccupyParkingPlaces(int parkingLotId){
+		int count=0;
+		for(Parking_Places parkingplace: parkingPlaces){
+			if(parkingplace.getIdparkinglot()==parkingLotId){
+				if(parkingplace.getStatus().equals("occupy") || parkingplace.getStatus().equals("save but occupy")
+				|| parkingplace.getStatus().equals("save")|| parkingplace.getStatus().equals("not working"))
+					count++;
+				}
+		}
+		
+		return count;
+	}
+	
+	public ParkingLot_controller getParkingLot_controller(){
+		
+		if(parkingLotController==null)
+			parkingLotController=new ParkingLot_controller();
+		
+		return parkingLotController;
+	}
+	
+	public int[] fullPositionCounter(){
+		return fullPositionCounter;
 	}
 }

@@ -63,14 +63,24 @@ public class CheckOutController extends Controller {
 		return registerController;
 	}
 
-	public void Algo(VcpInfo vcpInfo, Order order, Parking_Lot parkingLot)
-		 getParking_Algorithem(order);
-		getParking_Algorithem(order, parkingLot);
+	public void Algo(Object order) throws ParseException{
+		Object orderType;
+		
+		if(order instanceof Order){
+		orderType=(Order) order;
+		getParking_Algorithem(orderType);
+		}
+		
+		else if(order instanceof Subscribe){
+		orderType=(Subscribe) order;
+		getParking_Algorithem(orderType);
+		}
+		parkingAlgorithem=null;
 	}
 	
 	public Parking_Algorithem getParking_Algorithem(Object order) throws ParseException {
 		if (parkingAlgorithem == null)
-			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), order);
+			parkingAlgorithem = new Parking_Algorithem(order,getVcpInfo());
 
 		return parkingAlgorithem;
 	}
@@ -101,19 +111,20 @@ public class CheckOutController extends Controller {
 public void updateSubscribeAscheckedout(Subscribe subscribe){
 		
 		if(subscribe.getSubscribeType().equals("partially")){
-		subscribe.setStatus("checked in");
-		subscribe.setEntriesDay((subscribe.getEntriesDay())+1);
+		
 		Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?,entriesDay=?"
-					+ " WHERE subscribeNum=?;","checked in",subscribe.getSubscribeNum(),(subscribe.getEntriesDay())+1,};
+		+ " WHERE subscribeNum=?;","checked in",(subscribe.getEntriesDay())-1,subscribe.getSubscribeNum()};
 		sendQueryToServer(updateSubscribe);
-		//closeConnection();
+		subscribe.setStatus("checked out");
+		subscribe.setEntriesDay((subscribe.getEntriesDay()));
+		
 		}
+		
 		else{
 			Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?"
-			+ " WHERE subscribeNum=?;","checked in",subscribe.getSubscribeNum()};
+			+ " WHERE subscribeNum=?;","checked out",subscribe.getSubscribeNum()};
 			sendQueryToServer(updateSubscribe);
-			closeConnection();
-			subscribe.setStatus("checked in");
+			subscribe.setStatus("checked out");
 		}
 		
 	}

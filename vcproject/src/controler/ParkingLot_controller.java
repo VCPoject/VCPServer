@@ -3,6 +3,7 @@ package controler;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -10,6 +11,7 @@ import entity.Order;
 import entity.Parking_Lot;
 import entity.Parking_Places;
 import entity.Reservation;
+import entity.Subscribe;
 
 public class ParkingLot_controller extends Controller{
 	private ArrayList<Parking_Lot> parkingLotList;
@@ -17,9 +19,11 @@ public class ParkingLot_controller extends Controller{
 	private ArrayList<Parking_Places> vaccantParkingPlaces;
 	private ArrayList<Parking_Lot> availableParkingLots;
 	private HashMap<Integer, Order>  ordersMap;
+	private HashMap<Integer,Subscribe>subscribeMap;
 	
 	public ParkingLot_controller(){
 		super();
+		
 	}
 	
 	
@@ -30,9 +34,8 @@ public class ParkingLot_controller extends Controller{
 	}
 	
 	
-	public ArrayList<Parking_Places>  getVaccantParkingPlaces(int parkinglotId,String arrivalDate,String arrivalTime) throws ParseException{
-		SimpleDateFormat timeArrivalparser=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date timeArrival=timeArrivalparser.parse(arrivalDate+" "+arrivalTime);
+	public ArrayList<Parking_Places>  getVaccantParkingPlaces(int parkinglotId,Date arrivalDate) throws ParseException{
+		Date departureDate;
 		vaccantParkingPlaces=new ArrayList<Parking_Places>();
 		
 		for(Parking_Places parkingplace:parkingPlaces){
@@ -41,24 +44,38 @@ public class ParkingLot_controller extends Controller{
 				vaccantParkingPlaces.add(parkingplace);
 			
 			else if(parkingplace.getIdparkinglot()==parkinglotId && parkingplace.getStatus().equals("occipuy")){
+					
+				if(parkingplace.getIdorder()!=null){
 					Order order=ordersMap.get(parkingplace.getIdorder());
-					SimpleDateFormat departureTimeparser=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Date departureDate=departureTimeparser.parse(order.getDepartureDate()+" "+order.getDepartureTime());
-				
-					if(parkingplace.getIdparkinglot()==parkinglotId && parkingplace.getIdorder()==order.getIdorder()){
-							if(timeArrival.after(departureDate))
+					departureDate=StringToDate(order.getDepartureDate(), order.getDepartureTime());
+						if(arrivalDate.after(departureDate))
 								vaccantParkingPlaces.add(parkingplace);
+				}
+				
+				else{
+					Subscribe subscribe=subscribeMap.get(parkingplace.getSubscribeNum());
+						if(subscribe.getSubscribeNum().equals("partially")){
+							Date currentDate=new Date();
+							departureDate=StringToDate(currentDate.toString(), subscribe.getDepartureTime());
+							if(arrivalDate.after(departureDate))
+								vaccantParkingPlaces.add(parkingplace);
+						}
+						
+						else{
+							Date fullSubscribeDepartureDate=StringToDate(subscribe.getStartDate(), "00:00:00");
+							departureDate=addDays(fullSubscribeDepartureDate, 14);
+							if(arrivalDate.after(departureDate))
+								vaccantParkingPlaces.add(parkingplace);
+						}
+					}
 												
 				}
 			}
-		}
+		
 		
 		return vaccantParkingPlaces;
 	}
 	
-	public void updateParkingplaceAsNotSave(){
-		
-	}
 	
 	public void saveParkingPlace(int parkinglotId,String arrivalDate,String departureDate,
 			String arrivalTime,String departutreTime ,int parkingPlaceNum,int lineNum,int floorNum){
@@ -176,13 +193,32 @@ public class ParkingLot_controller extends Controller{
 			showWarningMsg("Couldn't signed up Parking lot as full");
 	}
 	
+	public void updateParkingLotAsAvaialble(int parkinglotId){
+		ArrayList<Object> result = null;
+		Object[] sqlmsg={ "UPDATE  vcp_db.parking_lot SET status=? 'alt_parkinglot=?"
+		+ "WHERE idparking=?;" ,"available",0,parkinglotId};
+		sendQueryToServer(sqlmsg);
+		result=getResult();
+		
+		if(result.get(0).equals("done")) {
+			showSeccussesMsg("Parking Lot has been signed up as Available");
+			for(Parking_Lot parkingLot:parkingLotList)
+				if(parkingLot.getIdparkinglot()==parkinglotId){
+					parkingLot.setStatus("available");
+					parkingLot.setAltparkinglot(0);
+				}
+		}
+		
+		else
+			showWarningMsg("Couldn't signed up Parking lot as available");
+	}
+	
 	public void updateparkingLotAsAlt(int fullParkinglotId,int altParkinglotId){
 		ArrayList<Object> result = null;
 		Object[] sqlmsg={ "UPDATE vcp_db.parking_lot SET alt_parking_lot=? WHERE idparking=?;" ,altParkinglotId,
 		fullParkinglotId};
 		sendQueryToServer(sqlmsg);
 		result=getResult();
-		closeConnection();
 		
 		if(result.get(0).equals("done")) {
 			showSeccussesMsg("Parking Lot has been signed up as alternative parking lot");
@@ -195,4 +231,26 @@ public class ParkingLot_controller extends Controller{
 			showWarningMsg("Couldn't signed up Parking lot as alternative parking lot");
 		
 	}
+	
+	/**
+	 * addDays is adding to give date number of x days
+	 * @param date to be add
+	 * @param days to add to date
+	 * @return
+	 */
+	public Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
+    }
+	
+	public Date StringToDate(String strDate,String strTime) throws ParseException{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date departDate = format.parse(strDate+" "+strTime);
+		return departDate;
+	}
+
+	
 }

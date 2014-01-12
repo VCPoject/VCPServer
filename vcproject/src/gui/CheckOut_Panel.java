@@ -23,6 +23,7 @@ import javax.swing.ButtonGroup;
 import controler.CheckOutController;
 import controler.FinancialCardController;
 import controler.MakeOrderController;
+import controler.ParkingLot_controller;
 import controler.ParkingPlaceController;
 import controler.Parking_Algorithem;
 import controler.RegisterController;
@@ -51,6 +52,7 @@ public class CheckOut_Panel extends JPanel {
 	private MakeOrderController makeOrderController;
 	private String host;
 	private int port;
+	private int[] fullPositionCounter;
 	/** vcpInfo is a controller that run on start-up of the 
 	 * application and download all the info form the DB
 	 * its contains all:
@@ -75,7 +77,7 @@ public class CheckOut_Panel extends JPanel {
 	private JPanel panelCradit;
 	private JFormattedTextField frmtdtxtfldCreditCard;
 	private RegisterController registerController;
-	
+	private ParkingLot_controller parkingLotController;
 	/**
 	 * This panel is for make check - out
 	 * @param host for connecting to server side
@@ -148,7 +150,7 @@ public class CheckOut_Panel extends JPanel {
 
 		
 		btnReturn = new JButton("Return");
-		btnReturn.setBounds(10, 294, 95, 35);
+		btnReturn.setBounds(74, 294, 95, 35);
 		add(btnReturn);
 		
 		JLabel lblCheckoutType = new JLabel("Check-Out type:");
@@ -323,15 +325,9 @@ public class CheckOut_Panel extends JPanel {
 						if(order == null)
 							throw new Exception("There is no order for car number: " + carNumStr);
 						
-						for(Parking_Places pPlace : getVcpInfo().getParkingPlaces())
-							if(pPlace.getIdorder().equals(order.getIdorder())){
-								pPlace.setStatus("vaccent");
-								getParkingPlaceController().updateParkingPlace(pPlace);
-								pPlace.setIdorder(null);
-								pPlace.setSubscribeNum(null);
-								isOrderExist = true;
-								break;
-							}
+						getCheckOutController().Algo(order);
+						isOrderExist = true;
+						
 						if(!isOrderExist)
 							throw new Exception("Car number " + order.getCar() + " is not in parking lot contact admin or try again");
 						
@@ -342,7 +338,12 @@ public class CheckOut_Panel extends JPanel {
 						order.setCheckOutTime(strDate[1]);
 						order.setStatus("checked out");
 						getMakeOrderController().UpdateOrderCheckout(order);
-						if(!getMakeOrderController().getResult().equals("done"))
+						fullPositionCounter=getVcpInfo().fullPositionCounter();
+						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]--;
+						if(getVcpInfo().getDefultParkingLot().getStatus().equals("full"))
+							getParkingLot_controller().updateParkingLotAsAvaialble
+							(getVcpInfo().getDefultParkingLot().getIdparkinglot());
+						if(!getMakeOrderController().getResult().get(0).equals("done"))
 							throw new Exception("Error: Can't update order");
 						if(order.getType().equals("one time")){
 							FinancialCard fCard = getFinancialCardController().getFinancialCard(order.getClient());
@@ -364,9 +365,11 @@ public class CheckOut_Panel extends JPanel {
 						Date date = new Date();
 						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						for(Parking_Places parkingPlace:getVcpInfo().getParkingPlaces())
-							if(parkingPlace.getSubscribeNum().equals(subscribe.getSubscribeNum())){
-								getCheckOutController().Algo(getVcpInfo(), subscribe, parkingPlace);//Algorithm
-								isOrderExist = true;
+							if(parkingPlace.getSubscribeNum()!=null){
+								if(parkingPlace.getSubscribeNum().equals(subscribe.getSubscribeNum())){
+									getCheckOutController().Algo( subscribe);//Algorithm
+									isOrderExist = true;
+								}
 							}
 						if(!isOrderExist)
 							throw new Exception("Car number " + subscribe.getCarNum() + " is not in parking lot contact admin or try again");
@@ -413,8 +416,14 @@ public class CheckOut_Panel extends JPanel {
 	
 	public void Algo(VcpInfo vcpInfo, Order order, Parking_Lot parkingLot)throws ParseException {
 		getParking_Algorithem(order, parkingLot);
+	}
+		
 	public Parking_Algorithem getParking_Algorithem(Order order,Parking_Lot parkingLot) throws ParseException {
-			parkingAlgorithem = new Parking_Algorithem(getVcpInfo(), order,parkingLot);
+		if(parkingAlgorithem==null)
+			parkingAlgorithem = new Parking_Algorithem(order,getVcpInfo());
+		
+		return parkingAlgorithem;
+	}
 	public FinancialCardController getFinancialCardController() {
 		if(financialCardController == null){
 			financialCardController = new FinancialCardController(host, port);
@@ -448,5 +457,12 @@ public class CheckOut_Panel extends JPanel {
 		}
 
 		return registerController;
+	}
+	
+	public ParkingLot_controller getParkingLot_controller(){
+		if(parkingLotController==null)
+			parkingLotController=new ParkingLot_controller();
+		
+		return parkingLotController;
 	}
 }

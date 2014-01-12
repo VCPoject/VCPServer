@@ -14,6 +14,8 @@ public class CheckInController extends Controller {
 	private VcpInfo vcpInfo;
 	private RegisterController registerController;
 	private Parking_Algorithem parkingAlgorithem;
+	private int fullPositionCounter;
+
 
 	public CheckInController(String host, int port, VcpInfo vcpInfo) {
 		super(host, port);
@@ -38,12 +40,9 @@ public class CheckInController extends Controller {
 }
 
 	public Subscribe getSubscribeByNum(Integer memberID, Integer carNum) throws Exception {
-		Subscribe subscribe = null;
-		Set<Entry<Integer, Subscribe>> subscribeEntry=getVcpInfo().getAllSubscribed().entrySet();
-		Iterator<Entry<Integer, Subscribe>> subscribeIterator=subscribeEntry.iterator();
 		
-			while(subscribeIterator.hasNext()) {
-				subscribe=subscribeIterator.next().getValue();
+		
+				Subscribe subscribe=getVcpInfo().getAllSubscribed().get(memberID);
 				
 				if (subscribe.getCarNum().equals(carNum)){
 					
@@ -54,20 +53,16 @@ public class CheckInController extends Controller {
 				}
 				else
 					throw new Exception("Car number is not assign to member id: " + memberID);
-			}
-			
-		return subscribe;
 	}
 	
 	public void updateSubscribeAscheckedin(Subscribe subscribe){
 		
 		if(subscribe.getSubscribeType().equals("partially")){
-		subscribe.setStatus("checked in");
-		subscribe.setEntriesDay((subscribe.getEntriesDay())+1);
 		Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?,entriesDay=?"
-					+ " WHERE subscribeNum=?;","checked in",subscribe.getSubscribeNum(),(subscribe.getEntriesDay())+1,};
+		+ " WHERE subscribeNum=?;","checked in",(subscribe.getEntriesDay())+1,subscribe.getSubscribeNum()};
+		subscribe.setStatus("checked in");
+		subscribe.setEntriesDay((subscribe.getEntriesDay()));
 		sendQueryToServer(updateSubscribe);
-		//closeConnection();
 		}
 		
 		else{
