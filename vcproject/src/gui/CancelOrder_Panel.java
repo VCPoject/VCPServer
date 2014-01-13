@@ -42,6 +42,8 @@ public class CancelOrder_Panel extends JPanel {
 
 	public CancelOrder_Panel(String host,int port,Pricing p) {
 		super();
+		this.host=host;
+		this.port=port;
 		initialize();
 		listners();
 	}

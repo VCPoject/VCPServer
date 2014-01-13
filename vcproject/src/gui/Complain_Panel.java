@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 import javax.swing.JTextArea;
 import controler.ComplainController;
+import javax.swing.JComboBox;
 
 public class Complain_Panel extends JPanel {
 
@@ -28,6 +29,9 @@ public class Complain_Panel extends JPanel {
 	private String host;
 	private int port = 5555;
 	private ComplainController complainController;
+	private JLabel lblParkingLotNumber;
+	private JComboBox<Integer> comboBox;
+	private int selected;
 	
 	
 	public Complain_Panel(String host, int port) {
@@ -80,17 +84,30 @@ public class Complain_Panel extends JPanel {
 			textFieldCarNumber.setColumns(10);
 			
 			btnSubmit = new JButton("Submit");
-			btnSubmit.setBounds(366, 386, 103, 38);
+			btnSubmit.setEnabled(false);
+			btnSubmit.setBounds(352, 481, 103, 38);
 			add(btnSubmit);
 			
 			textArea = new JTextArea();
-			textArea.setBounds(352, 233, 228, 130);
+			textArea.setEnabled(false);
+			textArea.setBounds(352, 340, 228, 130);
 			add(textArea);
 			
 			JLabel lblComplainDetails = new JLabel("Complain Details:");
 			lblComplainDetails.setFont(new Font("Tahoma", Font.BOLD, 18));
-			lblComplainDetails.setBounds(145, 233, 197, 29);
+			lblComplainDetails.setBounds(145, 329, 197, 29);
 			add(lblComplainDetails);
+			
+			lblParkingLotNumber = new JLabel("Parking Lot Number:");
+			lblParkingLotNumber.setFont(new Font("Tahoma", Font.BOLD, 16));
+			lblParkingLotNumber.setBounds(145, 280, 176, 29);
+			add(lblParkingLotNumber);
+			
+			comboBox = new JComboBox();
+			comboBox.setBounds(352, 286, 226, 20);
+			for(int i=1;i<7;i++)
+			comboBox.addItem(i);
+			add(comboBox);
 		
 	}
 	
@@ -102,13 +119,19 @@ public class Complain_Panel extends JPanel {
 				int idnum = Integer.parseInt(textFieldIdNumber.getText());
 				int carnum = Integer.parseInt(textFieldCarNumber.getText().replaceAll("-", ""));
 				String complain = textArea.getText();
-				if(getComplainController().checkValidity(idnum,carnum,complain))
+				if(getComplainController().checkValidity(idnum,carnum,complain,selected))
 				{
 				complainController.sendAck(idnum,complain);
 				}
 			}
 		});	
-			
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				textArea.setEnabled(true);
+				btnSubmit.setEnabled(true);
+				selected=Integer.parseInt(comboBox.getSelectedItem().toString());
+			}
+		});
 	  }
 	
 	public JButton getBtnReturn() {

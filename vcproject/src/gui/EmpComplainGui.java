@@ -95,6 +95,7 @@ public class EmpComplainGui extends JPanel {
 	}
 
 	private void listners() {
+		
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 

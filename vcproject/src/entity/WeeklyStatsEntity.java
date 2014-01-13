@@ -1,7 +1,11 @@
 package entity;
 
 import java.sql.Timestamp;
-
+/**
+ * entity for Weekly statistics
+ * @author H_B
+ *
+ */
 public class WeeklyStatsEntity {
 	
 	private String query;

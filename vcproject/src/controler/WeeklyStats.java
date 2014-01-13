@@ -17,7 +17,10 @@ public class WeeklyStats extends Controller {
 	}
 	
 
-	
+	/**
+	 * get data from DB that is needed to print to JTable
+	 * @return Vector<Vector<Object>>
+	 */
 	public Vector<Vector<Object>> toVector() {
 		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
 		Vector<Object> row=new Vector<Object>(13);
@@ -44,7 +47,10 @@ public class WeeklyStats extends Controller {
 		return result;
 	}
 	
-	
+	/**
+	 * get culomn list to JTable
+	 * @return Vector<String>
+	 */
 	public Vector<String> obtainFields(){
 		Vector<String> s= new Vector<String>(12);
 		s.add(" ");

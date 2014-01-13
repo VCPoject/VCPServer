@@ -10,7 +10,12 @@ public class ComplainFuController extends Controller {
 		super(host, port);
 		// TODO Auto-generated constructor stub
 	}
-
+/**
+ * checking if car number match id number
+ * @param idnum
+ * @param carnum
+ * @return TRUE OR FALSE
+ */
 	public boolean checkValidity(int idnum, int carnum) {
 		Object[] sqlsMsg = {
 				"SELECT `car`.`carNum`,`car`.`idclient`FROM `vcp_db`.`car` WHERE "
@@ -25,7 +30,11 @@ public class ComplainFuController extends Controller {
 			return true;
 		}	
 	}
-
+/**
+ * get Srting array of all open complains to the user
+ * @param idnum
+ * @return String[]
+ */
 	public String[] getComplains(int idnum) {
 		complainEntity = new ComplainFuEntity();
 		Object[] sqlsMsg = {"SELECT `complain`.`complainNum` FROM `vcp_db`.`complain` WHERE "
@@ -45,7 +54,11 @@ public class ComplainFuController extends Controller {
 			return pickedString;
 		}
 	}
-
+/**
+ * when selected complain this method return the costumer support answer
+ * @param selectedItem
+ * @return String
+ */
 	public String getSelectedItemComplain(String selectedItem) {
 		Object[] sqlsMsg = {
 				"SELECT `complain_ans`.`response` FROM `vcp_employ`.`complain_ans` WHERE "
@@ -53,7 +66,11 @@ public class ComplainFuController extends Controller {
 		sendQueryToServer(sqlsMsg);
 		return getResult().get(0).toString();
 	}
-
+/**
+ * when selected complain this method return the costumer support amount of refound
+ * @param selectedItem
+ * @return String
+ */
 	public String getSelectedItemAmount(String selectedItem) {
 		Object[] sqlsMsg = {
 				"SELECT `complain_ans`.`refound` FROM `vcp_employ`.`complain_ans` WHERE "

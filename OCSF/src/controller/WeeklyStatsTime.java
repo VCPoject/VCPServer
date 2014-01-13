@@ -39,7 +39,9 @@ public class WeeklyStatsTime extends TimerTask {
 	}
 
 
-	
+	/**
+	 * update the data from data base that is need to calculate the weekly statistics
+	 */
 	public void getRowData(){
 		int[] impOrder = new int[7];
 		int[] cancelOrder= new int[7];
@@ -89,7 +91,11 @@ public class WeeklyStatsTime extends TimerTask {
 		updateDataBase();
 	}
 
-
+/**
+ * calculate median to update DB
+ * @param arr
+ * @return median
+ */
 	public float MakeMedian(int arr[]) {
 
 		if (arr.length % 2 == 1)
@@ -97,7 +103,11 @@ public class WeeklyStatsTime extends TimerTask {
 		return( (float)((arr[(arr.length/2 + 1)] + arr[(arr.length/2 )]) / 2));
 
 	}
-
+/**
+ *  calculate avarge to up DB
+ * @param arr
+ * @return avarage
+ */
 	public float MakeAverage(int  arr[]) {
 		int sum = 0, average = 0;
 		for (int i = 0; i < arr.length; i++)
@@ -106,7 +116,9 @@ public class WeeklyStatsTime extends TimerTask {
 		return average;
 	}
 	
-	
+	/**
+	 * updating DB Weekly_Reports
+	 */
 	private void updateDataBase(){
 		
 		Object[] obj = {"INSERT INTO vcp_employ.weekly_reports (name,avg,median,decile1,decile2,decile3,decile4,decile5,decile6,decile7,decile8,decile9,decile10) "
@@ -140,7 +152,11 @@ public class WeeklyStatsTime extends TimerTask {
 		sendToSQL(obj4);	
 		
 	}
-	
+	/**
+	 * get the Query data from DB
+	 * @param msg
+	 * @return ArrayList<Object>
+	 */
 	public ArrayList<Object> sendToSQL(Object[] msg) {
 		MySqlConnection toDB = new MySqlConnection(dbIp, dbUser, dbPassword);
 		toDB.update(toDB.getConn(), (Object[]) msg);

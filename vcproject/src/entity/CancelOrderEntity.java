@@ -1,5 +1,9 @@
 package entity;
-
+/**
+ * cancel order entity
+ * @author H_B
+ *
+ */
 public class CancelOrderEntity {
 	private int carid;
 	private int userid;

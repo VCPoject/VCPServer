@@ -1,6 +1,7 @@
 package ocsf.server; 
 
 import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -75,6 +76,8 @@ public class MySqlConnection {
 					selectData.setString(i, (String) getStatment[i]);
 				else if (getStatment[i] instanceof Integer)
 					selectData.setInt(i, (Integer) getStatment[i]);
+				else if (getStatment[i] instanceof Long)
+					selectData.setLong(i, (Long) getStatment[i]);
 				else if (getStatment[i] instanceof Float)
 					selectData.setInt(i, (Integer) getStatment[i]);
 				else if (getStatment[i] instanceof Date)
@@ -101,6 +104,8 @@ public class MySqlConnection {
 						list.add((Float) obj);
 					else if (obj instanceof Date)
 						list.add((Date)obj);
+					else if (obj instanceof BigDecimal)
+						list.add(Long.parseLong(obj.toString()));
 					else if (obj instanceof Time)
 						list.add((Time)obj);
 					else if (obj instanceof Timestamp)

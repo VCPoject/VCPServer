@@ -1,5 +1,9 @@
 package entity;
-
+/**
+ * entity for complain follow up
+ * @author H_B
+ *
+ */
 public class ComplainFuEntity {
 	private String Complains;
 	private String status;

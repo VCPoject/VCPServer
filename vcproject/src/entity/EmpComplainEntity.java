@@ -1,6 +1,10 @@
 package entity;
 
-
+/**
+ * entity for employee complain 
+ * @author H_B
+ *
+ */
 public class EmpComplainEntity implements Entity {
 	private String query;
 	private String status;

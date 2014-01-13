@@ -22,11 +22,14 @@ public class Employee_Panel extends JPanel {
 	private JButton btnReviewPricingRequests;
 	private JButton btnExit;
 	private Employee conectedEmployee;
+	private JButton systemData;
 
 	public Employee_Panel() {
 		super();
 		initialize();
 		setLayout(null);
+		
+
 	}
 
 	public void initialize() {
@@ -46,7 +49,7 @@ public class Employee_Panel extends JPanel {
 		btnFindAltParkin.setBounds(230, 170, 129, 49);
 		add(btnFindAltParkin);
 
-		btnQuarterly = new JButton("Setup parkin lot");
+		btnQuarterly = new JButton("Quarterly Reports");
 		btnQuarterly.setBounds(230, 240, 129, 49);
 		add(btnQuarterly);
 
@@ -87,6 +90,10 @@ public class Employee_Panel extends JPanel {
 		btnReviewPricingRequests = new JButton("Pricing requests");
 		btnReviewPricingRequests.setBounds(462, 380, 129, 49);
 		add(btnReviewPricingRequests);
+		
+		systemData = new JButton("System Data");
+		systemData.setBounds(466, 453, 129, 49);
+		add(systemData);
 	}
 
 	public void setBtnEnableByEmpRole() {
@@ -102,6 +109,7 @@ public class Employee_Panel extends JPanel {
 			btnSaveParkin.setEnabled(true);
 			btnChangePricing.setEnabled(false);
 			btnReviewPricingRequests.setEnabled(false);
+			systemData.setEnabled(false);
 			break;
 
 		case "parking manager":
@@ -115,6 +123,7 @@ public class Employee_Panel extends JPanel {
 			btnSaveParkin.setEnabled(false);
 			btnChangePricing.setEnabled(true);
 			btnReviewPricingRequests.setEnabled(false);
+			systemData.setEnabled(false);
 			break;
 
 		case "network manager":
@@ -128,6 +137,7 @@ public class Employee_Panel extends JPanel {
 			btnSaveParkin.setEnabled(true);
 			btnChangePricing.setEnabled(true);
 			btnReviewPricingRequests.setEnabled(true);
+			systemData.setEnabled(true);
 			break;
 
 		case "operation":
@@ -141,6 +151,7 @@ public class Employee_Panel extends JPanel {
 			btnSaveParkin.setEnabled(true);
 			btnChangePricing.setEnabled(true);
 			btnReviewPricingRequests.setEnabled(false);
+			systemData.setEnabled(false);
 			break;
 			
 		default:
@@ -154,6 +165,7 @@ public class Employee_Panel extends JPanel {
 			btnSaveParkin.setEnabled(true);
 			btnChangePricing.setEnabled(true);
 			btnReviewPricingRequests.setEnabled(true);
+			systemData.setEnabled(false);
 			break;
 			
 		}
@@ -185,6 +197,10 @@ public class Employee_Panel extends JPanel {
 
 	public JButton getbtnCreateReport() {
 		return btnCreateReport;
+	}
+	
+	public JButton getSystemData(){
+		return systemData ;
 	}
 
 	public JButton getbtnStatistics() {

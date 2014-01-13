@@ -1,5 +1,9 @@
 package entity;
-
+/**
+ * complain Entity
+ * @author H_B
+ *
+ */
 public class ComplainEntity {
 	private String complainNum;
 	private int idNum;

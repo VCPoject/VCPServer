@@ -62,6 +62,7 @@ public class VCP_Main_Frame extends JFrame {
 	private Statistics stats;
 	private ReportsGui reports;
 	private QuarterlyGui quaterly;
+	private SystemData systemData;
 	
 	 
 	public VCP_Main_Frame(String host) {
@@ -199,7 +200,7 @@ public class VCP_Main_Frame extends JFrame {
 								if (getLogIn_Frame().getLogIn_Panel().checkValidity()){
 									getEmployeePanel().setConectedEmployee(getLogIn_Frame().getConnectedEmployee());
 									//set it up for employee permissions
-									//getEmployeePanel().setBtnEnableByEmpRole(); 
+									getEmployeePanel().setBtnEnableByEmpRole(); 
 									getLogIn_Frame().closeLoginFrame();
 									loginframe=null;
 									setContentPane(getEmployeePanel());
@@ -502,11 +503,27 @@ public class VCP_Main_Frame extends JFrame {
 		getEmployeePanel().getbtnQuarterly().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setContentPane(getQuarterlyGui());
-				getStatistics().getBtnReturn().addActionListener(
+				getQuarterlyGui().getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								setContentPane(getEmployeePanel());
 								quaterly = null;
+								
+							}
+						});
+
+			}
+		});	
+		
+		getEmployeePanel().getSystemData().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setContentPane(getSystemData());
+				getSystemData().getBtnReturn().addActionListener(
+						new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								setContentPane(getEmployeePanel());
+								quaterly = null;
+								
 							}
 						});
 
@@ -669,7 +686,7 @@ public class VCP_Main_Frame extends JFrame {
 	
 	public QuarterlyGui getQuarterlyGui() {
 		if(quaterly == null){
-			quaterly = new QuarterlyGui(host, DEFAULT_PORT, vcpInfo);
+			quaterly = new QuarterlyGui(host, DEFAULT_PORT, vcpInfo,getEmployeePanel().getConectedEmployee());
 		}
 		return quaterly;
 	}
@@ -743,7 +760,14 @@ public class VCP_Main_Frame extends JFrame {
 		return empComplainGui;
 	}
 	
-	
+	public SystemData getSystemData() {
+		if(systemData == null)
+		{
+			systemData = new SystemData(host, DEFAULT_PORT,vcpInfo);
+		}
+		return systemData;
+	}
+	 
 
 }
 
