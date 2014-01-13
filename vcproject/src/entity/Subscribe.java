@@ -10,6 +10,8 @@ public class Subscribe extends ClientEntity {
 	private String subscribType;
 	private String customerType;
 	private String departureTime;
+	private String endDate;
+	private String status;
 
 	public Subscribe() {
 		super();
@@ -92,6 +94,21 @@ public class Subscribe extends ClientEntity {
 					getCustomerType() };
 			return obj;
 		}
+	}
+
+	public void setEndDate(String string) {
+		this.endDate=string;
+		
+	}
+
+	public void setSubscribeType(String string) {
+		this.subscribType=string;
+		
+	}
+
+	public void setStatus(String string) {
+		this.status=string;
+		
 	}
 
 }

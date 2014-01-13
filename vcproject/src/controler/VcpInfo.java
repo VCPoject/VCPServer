@@ -25,6 +25,7 @@ public class VcpInfo extends Controller  {
 	private Parking_Lot defultParkingLot;
 	private boolean systemEnable = false;
 	private HashMap<Integer, Subscribe> allSubscribed;
+	private HashMap<Integer, Subscribe> subscribeMap;
 
 
 	public VcpInfo(String host) {
@@ -67,12 +68,11 @@ public class VcpInfo extends Controller  {
 	}
 
 	public HashMap<Integer, Subscribe> getAllSubscribed() {
-		if (allSubscribed == null) {
+		if (subscribeMap == null) {
 			Object[] getallsubscribed = { "SELECT * FROM `vcp_db`.`subscribe`;" };
 			sendQueryToServer(getallsubscribed);
 			ArrayList<Object> result = getResult();
-			HashMap<Integer, Subscribe> tempSubscribeList = new HashMap<Integer, Subscribe>();
-
+			HashMap<Integer,Subscribe> tempSubscribeMap = new HashMap<Integer,Subscribe>();
 			if (result != null && !result.get(0).equals("No Result")) {
 				for (int i = 0; i < result.size(); i++) {
 					Subscribe addsubscribe = new Subscribe();
@@ -81,24 +81,35 @@ public class VcpInfo extends Controller  {
 					addsubscribe.setCarNum(Integer.parseInt(result.get(i++).toString()));
 					if (!result.get(i).toString().equals("no value"))
 						addsubscribe.setIdparking(Integer.parseInt(result.get(i++).toString()));
+					
 					else
 						i++;
+					
 					addsubscribe.setStartDate(result.get(i++).toString());
-					addsubscribe.setSubscribType(result.get(i++).toString());
+					addsubscribe.setEndDate(result.get(i++).toString());
+					addsubscribe.setSubscribeType(result.get(i++).toString());
 					addsubscribe.setCustomerType(result.get(i++).toString());
+					
 					if (!result.get(i).toString().equals("no value"))
 						addsubscribe.setDepartureTime(result.get(i++).toString());
 					else
 						i++;
+					
 					if(!result.get(i).toString().equals("no value"))
-						addsubscribe.setEntriesDay(Integer.parseInt(result.get(i).toString()));
-					tempSubscribeList.put(addsubscribe.getSubscribeNum(),addsubscribe);
+						addsubscribe.setEntriesDay(Integer.parseInt(result.get(i++).toString()));
+					
+					else
+						i++;
+					
+					addsubscribe.setStatus(result.get(i).toString());
+					tempSubscribeMap.put(addsubscribe.getSubscribeNum(),addsubscribe);
 				}
 			}
-			setAllSubscribed(tempSubscribeList);
+			setAllSubscribed(tempSubscribeMap);
 		}
-		return allSubscribed;
+		return subscribeMap;
 	}
+
 
 	public void setAllSubscribed(HashMap<Integer, Subscribe> allSubscribed) {
 		this.allSubscribed = allSubscribed;

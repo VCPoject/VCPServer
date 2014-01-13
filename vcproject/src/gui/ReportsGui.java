@@ -47,7 +47,7 @@ public class ReportsGui extends JPanel {
 	private void initialize() {
 		setLayout(null);
 		this.setSize(785, 575);
-		 setBackground(SystemColor.activeCaption);
+		 
 		 
 		 btnReturn = new JButton("Return");
 		 btnReturn.setBounds(10, 519, 93, 35);

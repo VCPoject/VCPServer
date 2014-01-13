@@ -131,6 +131,9 @@ public class ManagerStats extends Controller {
 		}
 		int[] a= new int[10];
 		for(int i=0;i<brr.size();i++){
+			if(brr.get(i).data/10>9)
+				a[9]++;
+			else
 			a[brr.get(i).data/10]++;
 			
 		}
@@ -312,9 +315,12 @@ public class ManagerStats extends Controller {
 	 */
 	public Vector<Vector<Object>> Preformence(){
 		
-		int numOfSubscribed;
+		int numOfSubscribed=0;
 		int numWithMorThenOneCar;
-		numOfSubscribed=vcpInfo.getAllSubscribed().size();
+		Object[] getallsubscribed = { "SELECT COUNT(*) FROM `vcp_db`.`subscribe`;" };
+		sendQueryToServer(getallsubscribed);
+		if(!getResult().get(0).equals("No Result"))
+			numOfSubscribed=Integer.parseInt(getResult().get(0).toString());
 		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
 		Vector<Object> row=new Vector<Object>(2);
 		

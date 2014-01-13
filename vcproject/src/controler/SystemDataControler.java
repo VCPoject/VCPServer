@@ -22,7 +22,10 @@ public class SystemDataControler extends Controller {
 		
 	}
 
-
+/**
+ * get all orders from DB
+ * @return Vector<Vector<Object>> result
+ */
 	public Vector<Vector<Object>> getOrders() {
 		Object[] obj ={"SELECT * FROM vcp_db.order ;"};
 		sendQueryToServer(obj);
@@ -39,7 +42,10 @@ public class SystemDataControler extends Controller {
 		}
 		return result;
 	}
-	
+	/**
+	 * set name to JTable Orders column
+	 * @return Vector<Object> s
+	 */
 	public Vector<Object> OrdersRowName(){
 		Vector<Object> s=new Vector<Object>(14);
  		s.add("Order ID");
@@ -58,7 +64,10 @@ public class SystemDataControler extends Controller {
  		s.add("Client Type");
 		return s;
 	}
-	
+	/**
+	 * return all employee data from DB
+	 * @return Vector<Vector<Object>> result
+	 */
 	public Vector<Vector<Object>> getEmployees() {
 		Object[] obj ={"SELECT * FROM vcp_employ.employ ;"};
 		sendQueryToServer(obj);
@@ -74,7 +83,10 @@ public class SystemDataControler extends Controller {
 		}
 		return result;
 	}
-	
+	/**
+	 * set name to JTable Employee column
+	 * @return Vector<Object> s
+	 */
 	public Vector<Object> EmployeeRowName(){
 		Vector<Object> s=new Vector<Object>(14);
  		s.add("Employee ID");
@@ -88,7 +100,10 @@ public class SystemDataControler extends Controller {
  		s.add("Relevence");
 		return s;
 	}
-	
+	/**
+	 * return all complains data from DB
+	 * @return Vector<Vector<Object>> result
+	 */
 	public Vector<Vector<Object>> getComplains() {
 		Object[] obj ={"SELECT * FROM vcp_db.complain ;"};
 		sendQueryToServer(obj);
@@ -104,7 +119,10 @@ public class SystemDataControler extends Controller {
 		}
 		return result;
 	}
-	
+	/**
+	 * set name to JTable Complain column
+	 * @return Vector<Object> s
+	 */
 	public Vector<Object> ComplainRowName(){
 		Vector<Object> s=new Vector<Object>(14);
 		

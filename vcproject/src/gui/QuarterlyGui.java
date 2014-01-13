@@ -41,7 +41,7 @@ public class QuarterlyGui extends JPanel {
 	private JLabel lblSelectParkingLot;
 	private JComboBox<Integer> comboBox_1;
 	private Employee conectedEmployee;
-	private Employee_Panel ePanel;
+
 	
 	public QuarterlyGui(String host, int dEFAULT_PORT, VcpInfo vcpInfo, Employee employee) {
 		super();

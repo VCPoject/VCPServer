@@ -36,7 +36,7 @@ public class Quarterly extends Controller {
 		if(!getResult().get(0).equals("No Result")){}
 		for(int i=0;i<getResult().size();i++)
 			complainReport.add(getResult().get(i));
-	/*	Object[] obj2 ={"SELECT COUNT(parkingPlaceNum) FROM vcp_db.not_working_places WHERE endDate < ? AND startDate > ? AND idparking = ? AND parkingPlaceNum !=0 ;",end,start,lotID};
+		Object[] obj2 ={"SELECT COUNT(parkingPlaceNum) FROM vcp_db.not_working_places WHERE endDate < ? AND startDate > ? AND idparking = ? AND parkingPlaceNum !=0 ;",end,start,lotID};
 		sendQueryToServer(obj2);
 		if(!getResult().get(0).equals("No Result")){}
 		for(int i=0;i<getResult().size();i++)
@@ -47,7 +47,7 @@ public class Quarterly extends Controller {
 		for(int i =0;i<getResult().size();i++)
 			parkingDownReport.add(vcpInfo.getParkingLotInfo().get(Integer.parseInt(getResult().get(i).toString())).getDepth()*
 					vcpInfo.getParkingLotInfo().get(Integer.parseInt(getResult().get(i).toString())).getHight()*
-					vcpInfo.getParkingLotInfo().get(Integer.parseInt(getResult().get(i).toString())).getWidth());   */
+					vcpInfo.getParkingLotInfo().get(Integer.parseInt(getResult().get(i).toString())).getWidth());   
 		
 	}
 	
