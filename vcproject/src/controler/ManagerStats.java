@@ -102,6 +102,9 @@ public class ManagerStats extends Controller {
 		}
 		int[] a= new int[10];
 		for(int i=0;i<brr.size();i++){
+			if((brr.get(i).data/10)>10)
+				a[9]++;
+			else
 			a[brr.get(i).data/10]++;
 			
 		}

@@ -29,7 +29,7 @@ public class ComplainFuController extends Controller {
 	public String[] getComplains(int idnum) {
 		complainEntity = new ComplainFuEntity();
 		Object[] sqlsMsg = {"SELECT `complain`.`complainNum` FROM `vcp_db`.`complain` WHERE "
-				+ " `complain`.`idclient`= ?  AND `complain`.`status` = 'open'",idnum };
+				+ " `complain`.`idclient`= ? ",idnum };
 		sendQueryToServer(sqlsMsg);
 		if (getResult().get(0).equals("No Result"))
 		{
@@ -48,16 +48,16 @@ public class ComplainFuController extends Controller {
 
 	public String getSelectedItemComplain(String selectedItem) {
 		Object[] sqlsMsg = {
-				"SELECT `complain_ans`.`response` FROM `vcp_employ`.`complain_ans` WHERE "
-						+ " `complain_ans`.`idcomplain`= ?", Integer.parseInt(selectedItem)};
+				"SELECT `complain_`.`replay` FROM `vcp_db`.`complain` WHERE "
+						+ " `complain_ans`.`complainNum`= ?", Integer.parseInt(selectedItem)};
 		sendQueryToServer(sqlsMsg);
 		return getResult().get(0).toString();
 	}
 
 	public String getSelectedItemAmount(String selectedItem) {
 		Object[] sqlsMsg = {
-				"SELECT `complain_ans`.`refound` FROM `vcp_employ`.`complain_ans` WHERE "
-						+ " `complain_ans`.`idcomplain`= ?", Integer.parseInt(selectedItem)};
+				"SELECT `complain`.`refound` FROM `vcp_db`.`complain` WHERE "
+						+ " `complain`.`complainNum`= ?", Integer.parseInt(selectedItem)};
 		sendQueryToServer(sqlsMsg);	
 		return getResult().get(0).toString();
 	}
