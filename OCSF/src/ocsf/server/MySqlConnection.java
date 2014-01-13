@@ -166,8 +166,7 @@ public class MySqlConnection {
 	private void insertDB(Connection con, Object[] getStatment) {
 		try {
 			if (getStatment != null) {
-				PreparedStatement updataData = con
-						.prepareStatement((String) getStatment[0]);
+				PreparedStatement updataData = con.prepareStatement((String) getStatment[0]);
 				for (int i = 1; i < getStatment.length; i++) {
 					if (getStatment[i] instanceof String)
 						updataData.setString(i, (String) getStatment[i]);

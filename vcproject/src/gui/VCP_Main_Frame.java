@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -18,7 +19,10 @@ import controler.VcpInfo;
 import entity.Parking_Lot;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -28,9 +32,12 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.pdf.codec.BmpImage;
+
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 public class VCP_Main_Frame extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -234,6 +241,7 @@ public class VCP_Main_Frame extends JFrame {
 													makePanelImage(getParkingLot_Panel().getPanelFloor1(),"Floor1");
 													makePanelImage(getParkingLot_Panel().getPanelFloor2(),"Floor2");
 													makePanelImage(getParkingLot_Panel().getPanelFloor3(),"Floor3");
+													makePanelImage(getParkingLot_Panel().getPanelButtons(),"buttons");
 													makePdfFile();
 												}
 											});
@@ -745,7 +753,7 @@ public class VCP_Main_Frame extends JFrame {
 	 */
 	private void makePdfFile(){
 		Document doc = new Document();
-		doc.setPageSize(PageSize.A4);
+		doc.setPageSize(PageSize.A3);
 		Image img;
 		try {
 			PdfWriter.getInstance(doc, new FileOutputStream("Parking Lot Pic.pdf"));
@@ -754,7 +762,8 @@ public class VCP_Main_Frame extends JFrame {
 			Paragraph title = new Paragraph("Parking Lot Picture", font);
 			title.setAlignment(Element.TITLE);
 			doc.add(title);
-			String[] pic = {"buttons.jpg","Floor1.bmp","Floor2.bmp","Floor3.bmp"};
+
+			String[] pic = {"buttons.bmp","Floor1.bmp","Floor2.bmp","Floor3.bmp"};
 			for (int i = 0; i < pic.length; i++) {
 	            img = Image.getInstance(String.format(pic[i]));
 	            img.setAlignment(Element.ALIGN_CENTER);
@@ -775,6 +784,10 @@ public class VCP_Main_Frame extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public java.awt.Image getImage(String img){
+	    return new ImageIcon(getClass().getResource(img)).getImage();
 	}
 }
 

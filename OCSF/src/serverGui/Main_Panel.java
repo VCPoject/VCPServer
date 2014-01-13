@@ -1,23 +1,31 @@
 package serverGui; 
 
 import java.awt.SystemColor;
+
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+
 import java.awt.Font;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
 import javax.swing.JTextArea;
+
 import ocsf.server.TextAreaOutputStream;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -25,6 +33,7 @@ import javax.swing.UIManager;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.JPasswordField;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -277,15 +286,30 @@ public class Main_Panel extends JPanel {
 
 	private void getDbInfo() {
 		// The name of the file to open.
-		String fileName = "dbInfo.txt";
+		String fileName = "dateBaseConnectionInfo/dbInfo.txt";
 		String line = null;// read line
 
 		try {
 			// FileReader reads text files in the default encoding.
-			FileReader fileReader = new FileReader(fileName);
+			
 
 			// Always wrap FileReader in BufferedReader.
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			BufferedReader bufferedReader;
+			try {
+				FileReader fileReader = new FileReader(fileName);
+				bufferedReader = new BufferedReader(fileReader);
+				
+			} catch (Exception e) {
+				try {
+					fileName = "dbInfo.txt";
+					FileReader fileReader = new FileReader(fileName);
+					bufferedReader = new BufferedReader(fileReader);
+				} catch (Exception e2) {
+					bufferedReader = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream("dbInfo.txt")));
+				}
+			}
+			
+			
 
 			int i = 0;
 			while ((line = bufferedReader.readLine()) != null) {

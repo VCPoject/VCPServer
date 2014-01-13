@@ -83,7 +83,7 @@ public class Subscribe extends ClientEntity {
 
 	@Override
 	public Object[] toObject() {
-		if (getSubscribeType().equals("partially")) {
+		if ("partially".equals(getSubscribeType().toLowerCase())) {
 			Object[] obj = { getQuery(), getIdClient(),
 					getCarNum(), getIdparking(), getStartDate(),getEndDate(),
 					getSubscribeType(), getCustomerType(), getDepartureTime(),getStatus() };

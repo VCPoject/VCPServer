@@ -133,7 +133,7 @@ public class Register_Panel extends JPanel {
 		add(panelSelectSubscribe);
 		panelSelectSubscribe.setLayout(null);
 
-		rdbtnPartial = new JRadioButton("Partial");
+		rdbtnPartial = new JRadioButton("Partially");
 		buttonGroupSubscribeType.add(rdbtnPartial);
 		rdbtnPartial.setBounds(6, 16, 71, 23);
 		panelSelectSubscribe.add(rdbtnPartial);
@@ -465,32 +465,24 @@ public class Register_Panel extends JPanel {
 						newSubscribe.setEndDate(dateFormat.format(date));
 						String subscribeQuery;
 						if (rdbtnPartial.isSelected()) {
-							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`idparking`,`startDate`,`subscribType`,`customerType`,`leavingTime`) VALUES(?,?,?,?,?,?,?);";
+							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`idparking`,`startDate`,`endDate`,`subscribType`,`customerType`,`leavingTime`,`status`) VALUES(?,?,?,?,?,?,?,?,?);";
 							newSubscribe.setSubscribeType(rdbtnPartial.getText());
-							newSubscribe.setIdparking(Integer
-									.parseInt(comboBoxParkingLot
-											.getSelectedItem().toString()));
-							newSubscribe.setDepartureTime(comboBoxDepartureHour
-									.getSelectedItem()
-									+ ":"
-									+ comboBoxDepartureMin.getSelectedItem()
-									+ ":00");
+							newSubscribe.setIdparking(Integer.parseInt(comboBoxParkingLot.getSelectedItem().toString()));
+							newSubscribe.setDepartureTime(comboBoxDepartureHour.getSelectedItem()+ ":"	+ comboBoxDepartureMin.getSelectedItem() + ":00");
 						} else {
 							newSubscribe.setSubscribeType(rdbtnFull.getText());
-							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`startDate`,`endDate`,`subscribType`,`customerType`) VALUES(?,?,?,?,?,?);";
+							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`startDate`,`endDate`,`subscribType`,`customerType`,`status`) VALUES(?,?,?,?,?,?,?);";
 						}
 						if (rdbtnPrivate.isSelected())
 							newSubscribe.setCustomerType(rdbtnPrivate.getText());
 						else
-							newSubscribe.setCustomerType(rdbtnBusiness
-									.getText());
-						newSubscribe.setSubscribeNum(getVcpInfo()
-								.getAllSubscribed().size() + 1);
+							newSubscribe.setCustomerType(rdbtnBusiness.getText());
+						newSubscribe.setSubscribeNum(getVcpInfo().getAllSubscribed().size() + 1);
+						newSubscribe.setStatus("not checked in");
 						newSubscribe.setQuery(subscribeQuery);
 						getVcpInfo().getAllSubscribed().put(newSubscribe.getSubscribeNum(),newSubscribe);
 						getRegisterController().addNewSubscribe(newSubscribe);
-						if (!getRegisterController().getResult().get(0)
-								.equals("done"))
+						if (!getRegisterController().getResult().get(0).equals("done"))
 							throw new Exception(
 									"Error while try to add subscribe to database");
 						getRegisterController()

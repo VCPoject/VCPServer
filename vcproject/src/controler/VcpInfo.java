@@ -30,7 +30,7 @@ public class VcpInfo extends Controller  {
 		getAllClients();
 		getAllOrders();
 		getAllSubscribed();
-		getReservationInfo();
+		//getReservationInfo();
 		getAllCars();
 		getParkingPricingInfo();
 		closeConnection();

@@ -325,18 +325,30 @@ public class CheckOut_Panel extends JPanel {
 						if(order == null)
 							throw new Exception("There is no order for car number: " + carNumStr);
 						
-						getCheckOutController().Algo(order);
-						isOrderExist = true;
-						
+						for(Parking_Places pPlace: getVcpInfo().getParkingPlaces()){
+							if(pPlace.getIdorder().equals(order.getIdorder())){
+								isOrderExist = true;
+								break;
+							}
+						}
 						if(!isOrderExist)
 							throw new Exception("Car number " + order.getCar() + " is not in parking lot contact admin or try again");
-						
 						Date date = new Date();
 						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 						String[] strDate = format.format(date).split("\\s");
 						order.setCheckOutDate(strDate[0]);
 						order.setCheckOutTime(strDate[1]);
+						if(order.getType().equals("temp") && !panelPayment.isVisible()){
+							//TODO
+							Date arrived = StringToDate(order.getArrivalDate(), order.getArrivalTime());
+							Date exit = StringToDate(order.getCheckOutDate(),order.getCheckOutTime());
+							btnCheckOut.setEnabled(false);
+							textFieldAmount.setText(findHoursToPay(arrived,exit,order).toString());
+							panelPayment.setVisible(true);
+							throw new Exception("Please make a payment");
+						}
 						order.setStatus("checked out");
+						getCheckOutController().Algo(order);
 						getMakeOrderController().UpdateOrderCheckout(order);
 						fullPositionCounter=getVcpInfo().fullPositionCounter();
 						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]--;
@@ -362,8 +374,6 @@ public class CheckOut_Panel extends JPanel {
 							throw new Exception("You didnt enter a valid member ID.");
 						}
 						subscribe = getCheckOutController().getSubscribeByNum(memberID,carNum);
-						Date date = new Date();
-						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						for(Parking_Places parkingPlace:getVcpInfo().getParkingPlaces())
 							if(parkingPlace.getSubscribeNum()!=null){
 								if(parkingPlace.getSubscribeNum().equals(subscribe.getSubscribeNum())){
@@ -464,5 +474,28 @@ public class CheckOut_Panel extends JPanel {
 			parkingLotController=new ParkingLot_controller();
 		
 		return parkingLotController;
+	}
+	
+	public Date StringToDate(String strDate,String strTime) throws ParseException{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date departDate = format.parse(strDate+" "+strTime);
+		return departDate;
+	}
+	
+	public Float findHoursToPay(Date arrive, Date end, Order order) {
+		Float payForHour;
+		if(order.getType().endsWith("temp"))
+			payForHour = getVcpInfo().getParkingPricingInfo().getOccasional();
+		else
+			payForHour = getVcpInfo().getParkingPricingInfo().getOneTime();
+
+		// Get msec from each, and subtract.
+		long diff = end.getTime() - arrive.getTime();
+		long diffHours = diff / (60 * 60 * 1000);
+		if (diffHours < 1) {
+			return (Float) payForHour;
+		} else {
+			return (long) (diffHours)*payForHour;
+		}
 	}
 }

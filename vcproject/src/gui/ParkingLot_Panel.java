@@ -49,6 +49,7 @@ public class ParkingLot_Panel extends JPanel {
 	private JLabel lblNotWorking;
 	private JButton btnReturn;
 	private JButton btnMakePdf;
+	private JPanel panelButtons;
 
 	/**
 	 * View the parking lot picture.
@@ -111,45 +112,53 @@ public class ParkingLot_Panel extends JPanel {
 		btnShowStatus.setBounds(628, 63, 93, 29);
 		add(btnShowStatus);
 		
+		panelButtons = new JPanel();
+		panelButtons.setBounds(577, 215, 208, 193);
+		add(panelButtons);
+		panelButtons.setLayout(null);
+		
+		
+		
+		
 		buttonSave = new ParkingButton("");
-		buttonSave.setBounds(733, 215, 52, 40);
+		buttonSave.setBounds(156, 0, 52, 40);
 		buttonSave.setSaveSpace();
-		add(buttonSave);
+		panelButtons.add(buttonSave);
 		
 		btnVacant = new ParkingButton("");
-		btnVacant.setBounds(733, 266, 52, 40);
+		btnVacant.setBounds(156, 51, 52, 40);
 		btnVacant.setVacant();
-		add(btnVacant);
+		panelButtons.add(btnVacant);
 		
 		buttonOccupy = new ParkingButton("");
-		buttonOccupy.setBounds(733, 317, 52, 40);
+		buttonOccupy.setBounds(156, 102, 52, 40);
 		buttonOccupy.setOccupy();
-		add(buttonOccupy);
+		panelButtons.add(buttonOccupy);
 		
 		btnNotWorking = new ParkingButton("");
-		btnNotWorking.setBounds(733, 368, 52, 40);
+		btnNotWorking.setBounds(156, 153, 52, 40);
 		btnNotWorking.setNotWorking();
-		add(btnNotWorking);
+		panelButtons.add(btnNotWorking);
 		
 		lblSaveSpace = new JLabel("Save Space:");
+		lblSaveSpace.setBounds(12, 10, 109, 22);
+		panelButtons.add(lblSaveSpace);
 		lblSaveSpace.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblSaveSpace.setBounds(589, 225, 109, 22);
-		add(lblSaveSpace);
 		
 		lblVacant = new JLabel("Vacant:");
+		lblVacant.setBounds(51, 60, 70, 22);
+		panelButtons.add(lblVacant);
 		lblVacant.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblVacant.setBounds(628, 275, 70, 22);
-		add(lblVacant);
 		
 		lblOccupy = new JLabel("Occupy:");
+		lblOccupy.setBounds(51, 110, 74, 22);
+		panelButtons.add(lblOccupy);
 		lblOccupy.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblOccupy.setBounds(628, 325, 74, 22);
-		add(lblOccupy);
 		
 		lblNotWorking = new JLabel("Not Working:");
+		lblNotWorking.setBounds(0, 160, 121, 22);
+		panelButtons.add(lblNotWorking);
 		lblNotWorking.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblNotWorking.setBounds(577, 375, 121, 22);
-		add(lblNotWorking);
 		
 		btnReturn = new JButton("Return");
 		
@@ -324,6 +333,10 @@ public class ParkingLot_Panel extends JPanel {
 
 	public JPanel getPanelFloor3() {
 		return panelFloor3;
+	}
+
+	public JPanel getPanelButtons() {
+		return panelButtons;
 	}
 
 }

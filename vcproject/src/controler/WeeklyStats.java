@@ -5,18 +5,9 @@ import java.util.Vector;
 
 
 public class WeeklyStats extends Controller {
-
-
-
-
-
 	public WeeklyStats(String host, int port) {
 		super();
-
-
 	}
-	
-
 	
 	public Vector<Vector<Object>> toVector() {
 		Vector<Vector<Object>> result = new Vector<Vector<Object>>();

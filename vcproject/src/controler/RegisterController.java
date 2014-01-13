@@ -20,9 +20,9 @@ public class RegisterController extends Controller {
 
 	public void updateResubscribe(Subscribe reSubscribed) {
 		Object[] updateResubscribe = {
-				"UPDATE `vcp_db`.`subscribe` SET `idparking` = ?, `startDate` = ?, `subscribType` = ?"
+				"UPDATE `vcp_db`.`subscribe` SET `idparking` = ?, `startDate` = ?, `endDate` = ?, `subscribType` = ?"
 						+ ",`customerType` = ?, `leavingTime` = ?  WHERE `subscribeNum` = ?;",
-				reSubscribed.getIdparking(), reSubscribed.getStartDate(),
+				reSubscribed.getIdparking(), reSubscribed.getStartDate(),reSubscribed.getEndDate(),
 				reSubscribed.getSubscribeType(), reSubscribed.getCustomerType(),
 				reSubscribed.getDepartureTime(), reSubscribed.getSubscribeNum() };
 		sendQueryToServer(updateResubscribe);
