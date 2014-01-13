@@ -130,7 +130,7 @@ public class Complain_Panel extends JPanel {
 		return btnSubmit;
 	}
 	
-	private ComplainController getComplainController() {
+	public ComplainController getComplainController() {
 		if(complainController == null || !complainController.isConnected()){
 			complainController = new ComplainController(host,port);
 		}

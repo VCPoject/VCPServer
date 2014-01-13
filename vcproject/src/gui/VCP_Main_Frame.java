@@ -26,6 +26,7 @@ import com.itextpdf.text.Font;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.awt.Window.Type;
 
 public class VCP_Main_Frame extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -86,8 +87,7 @@ public class VCP_Main_Frame extends JFrame {
 	public void initializeParkingLot() {
 		getLogIn_Frame();
 		getLogIn_Frame().setVisible(true);
-		getLogIn_Frame().getLogIn_Panel().getBtnSubmit()
-		.addActionListener(new ActionListener() {
+		getLogIn_Frame().getLogIn_Panel().getBtnSubmit().addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				
@@ -113,7 +113,6 @@ public class VCP_Main_Frame extends JFrame {
 								frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 								getLogIn_Frame().closeLoginFrame();
 								System.exit(0);
-								
 							}
 						}
 					});
@@ -147,8 +146,9 @@ public class VCP_Main_Frame extends JFrame {
 					"setLookAndFeel error: " + e.getMessage(),
 					"setLookAndFeel ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
+		setTitle("VCP Project");
+		setDefaultCloseOperation(VCP_Main_Frame.DO_NOTHING_ON_CLOSE);
 		this.setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setContentPane(getMainPanel());
 		getContentPane().setBackground(SystemColor.activeCaption);
 		this.setSize(800, 600);
@@ -163,6 +163,13 @@ public class VCP_Main_Frame extends JFrame {
 	 * Listeners for switch panels by pressing on the buttens
 	 */
 	private void listners() {
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				getMainPanel().getBtnExit().doClick();
+			}
+		});
 		
 		getMainPanel().getBtnExit().addActionListener(new ActionListener() {/*
 																			 * Exit
@@ -189,14 +196,6 @@ public class VCP_Main_Frame extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						getLogIn_Frame();
 						getLogIn_Frame().setVisible(true);
-						getLogIn_Frame().addWindowListener(new WindowAdapter() {
-							public void windowClosing(WindowEvent e) {
-								getLogIn_Frame().getLogincontroller().closeConnection();
-								getLogIn_Frame().closeLoginFrame();
-								loginframe=null;
-							}
-						});
-					
 						getLogIn_Frame().getLogIn_Panel().getBtnExit().addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								JFrame frame = new JFrame();
@@ -287,10 +286,11 @@ public class VCP_Main_Frame extends JFrame {
 													int result = JOptionPane
 															.showConfirmDialog(
 																	frame,
-																	"Are you sure you want to exit the application?",
+																	"Are you sure you want to exit from not working places?",
 																	"Exit Application",
 																	JOptionPane.YES_NO_OPTION);
 														if (result == JOptionPane.YES_OPTION) {
+															getNotWorkingPlaces_Panel().getParkingLot_controller().closeConnection();
 															setContentPane(getEmployeePanel());
 															notworkingplaces=null;
 														}
@@ -308,11 +308,12 @@ public class VCP_Main_Frame extends JFrame {
 													JFrame frame = new JFrame();
 													int result = JOptionPane
 															.showConfirmDialog(frame,
-																	"Are you sure you want to exit the application?",
+																	"Are you sure you want to exit from find alternative parking lot?",
 																	"Exit Application",	JOptionPane.YES_NO_OPTION);
 														if (result == JOptionPane.YES_OPTION) {
-															findaltparkinglot=null;
+															getFindaltparkinglot().getParkingLot_controller().closeConnection();
 															setContentPane(getEmployeePanel());
+															findaltparkinglot=null;
 														}
 												}
 											});
@@ -355,6 +356,7 @@ public class VCP_Main_Frame extends JFrame {
 											setContentPane(getReportsGui());
 											getReportsGui().getBtnReturn().addActionListener(new ActionListener() {
 												public void actionPerformed(ActionEvent e) {
+													getReportsGui().getManagerStats().closeConnection();
 													setContentPane(getEmployeePanel());
 													reports = null;
 												}
@@ -393,6 +395,7 @@ public class VCP_Main_Frame extends JFrame {
 						getOrderPanel().getBtnReturn().addActionListener(
 								new ActionListener() {
 									public void actionPerformed(ActionEvent e) {
+										getOrderPanel().getMakeOrderController().closeConnection();
 										setContentPane(getMainPanel());
 										orderPanel = null;
 									}
@@ -407,6 +410,7 @@ public class VCP_Main_Frame extends JFrame {
 				getRegisterPanel().getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent arg0) {
+								getRegisterPanel().getRegisterController().closeConnection();
 								setContentPane(getMainPanel());
 								registerPanel = null;
 							}
@@ -452,7 +456,9 @@ public class VCP_Main_Frame extends JFrame {
 				getCancelOrderPanel().getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
+								getCancelOrderPanel().getCancelOrderController().closeConnection();
 								setContentPane(getMainPanel());
+								cancelOrder = null;
 							}
 						});
 			}
@@ -464,7 +470,9 @@ public class VCP_Main_Frame extends JFrame {
 				getComplain_Panel().getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
+								getComplain_Panel().getComplainController().closeConnection();
 								setContentPane(getMainPanel());
+								complainPanel = null;
 							}
 						});
 			}
@@ -476,7 +484,9 @@ public class VCP_Main_Frame extends JFrame {
 				getComplainFu_Panel().getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
+								getComplainFu_Panel().getComplainController().closeConnection();
 								setContentPane(getMainPanel());
+								complainFuPanel = null;
 							}
 						});
 
@@ -488,6 +498,7 @@ public class VCP_Main_Frame extends JFrame {
 				setContentPane(getResubscribePanel());
 				getResubscribePanel().getBtnReturn().addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						getResubscribePanel().getRegisterController().closeConnection();
 						setContentPane(getMainPanel());
 						resubscribePanel = null;
 					}
@@ -501,6 +512,7 @@ public class VCP_Main_Frame extends JFrame {
 				getStatisticsPanel().getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
+								//TOTO
 								setContentPane(getEmployeePanel());
 								statisticsPanel = null;
 							}
@@ -515,6 +527,7 @@ public class VCP_Main_Frame extends JFrame {
 				getStatisticsPanel().getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
+								getStatisticsPanel().getDailyStatistic().closeConnection();
 								setContentPane(getEmployeePanel());
 								quaterly = null;
 							}

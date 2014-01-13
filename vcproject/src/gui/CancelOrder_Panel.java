@@ -180,7 +180,7 @@ public class CancelOrder_Panel extends JPanel {
 		return btnSubmit_1;
 	}
 	
-	private CancelOrderController getCancelOrderController() {
+	public CancelOrderController getCancelOrderController() {
 		if(cController == null || !cController.isConnected()){
 			cController = new CancelOrderController(host,port,pricing,coEntity);
 		}

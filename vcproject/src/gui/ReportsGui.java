@@ -154,7 +154,7 @@ public class ReportsGui extends JPanel {
 		return btnActivity;
 	}
 	
-	private ManagerStats getManagerStats() {
+	public ManagerStats getManagerStats() {
 		if(managController == null || !managController.isConnected()){
 			managController = new ManagerStats(host,port,vcpInfo);
 		}

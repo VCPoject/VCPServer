@@ -1,6 +1,5 @@
 package controler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import entity.Employee;
@@ -36,8 +35,7 @@ public class LogIn_controller extends Controller{
 				showSeccussesMsg("You are already loggedin");
 		}
 		
-		if (!username.equals(employeeMap.get(getUsername()).getUserName()) || 
-				!password.equals(employeeMap.get(getUsername()).getPassword()))
+		if (!username.equals(employeeMap.get(getUsername()).getUserName()) || !password.equals(employeeMap.get(getUsername()).getPassword()))
 					showWarningMsg("Invalid username or password");
 		
 		return false;

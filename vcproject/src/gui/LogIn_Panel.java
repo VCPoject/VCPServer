@@ -99,6 +99,8 @@ public class LogIn_Panel extends JPanel{
 		{
 			logIncontroller = new LogIn_controller(this.host,employeeMap,getUserText(),getPswdText());
 		}
+		logIncontroller.setPassword(getPswdText());
+		logIncontroller.setUsername(getUserText());
 		return logIncontroller;
 	}
 }

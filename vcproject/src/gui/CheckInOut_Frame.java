@@ -5,6 +5,8 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -51,7 +53,44 @@ public class CheckInOut_Frame extends JFrame {
 		initialize();
 		listners();
 	}
-	private void listners() {
+	
+	/**
+	 * Initialize the panel of saving parking place
+	 */
+	private void initialize() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			JOptionPane.showMessageDialog(this,
+					"setLookAndFeel error: " + e.getMessage(),
+					"setLookAndFeel ERRORE", JOptionPane.ERROR_MESSAGE);
+		}
+		setDefaultCloseOperation(CheckInOut_Frame.DO_NOTHING_ON_CLOSE);
+		this.setSize(500, 400);
+		this.setResizable(false);
+		getContentPane().setBackground(SystemColor.activeCaption);
+		getContentPane().setLayout(null);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
+				/ 2 - this.getSize().height / 2);
+		if (isCheckIn)
+			this.setContentPane(getCheckInPanel());
+		else
+			this.setContentPane(getCheckOutPanel());
+	}
+	
+private void listners() {
+	
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				if(isCheckIn)
+					getCheckInPanel().getBtnReturn().doClick();
+				else
+					getCheckOutPanel().getBtnReturn().doClick();
+			}
+		});
+		
 		getCheckOutPanel().getBtnPay().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -86,31 +125,7 @@ public class CheckInOut_Frame extends JFrame {
 			}
 		});
 		
-	}
-	/**
-	 * Initialize the panel of saving parking place
-	 */
-	private void initialize() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			JOptionPane.showMessageDialog(this,
-					"setLookAndFeel error: " + e.getMessage(),
-					"setLookAndFeel ERRORE", JOptionPane.ERROR_MESSAGE);
-		}
-		this.setSize(500, 400);
-		this.setResizable(false);
-		getContentPane().setBackground(SystemColor.activeCaption);
-		getContentPane().setLayout(null);
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
-				/ 2 - this.getSize().height / 2);
-		if (isCheckIn)
-			this.setContentPane(getCheckInPanel());
-		else
-			this.setContentPane(getCheckOutPanel());
-	}
+}
 
 	public CheckIn_Panel getCheckInPanel() {
 			if (checkInPanel == null)

@@ -4,10 +4,14 @@ package gui;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
 import controler.LogIn_controller;
 import controler.Reminder;
 import controler.VcpInfo;
@@ -55,6 +59,8 @@ public class LogIn_Frame extends JFrame{
 					"setLookAndFeel error: " + e.getMessage(),
 					"setLookAndFeel ERRORE", JOptionPane.ERROR_MESSAGE);
 		}
+		setTitle("Log in");
+		setDefaultCloseOperation(LogIn_Frame.DO_NOTHING_ON_CLOSE);
 		this.setSize(500, 400);
 		this.setResizable(false);
 		getContentPane().setBackground(SystemColor.activeCaption);
@@ -64,6 +70,11 @@ public class LogIn_Frame extends JFrame{
 				/ 2 - this.getSize().height / 2);
 		this.setContentPane(getLogIn_Panel());
 		reminder=new Reminder(120,this);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				getLogIn_Panel().getBtnExit().doClick();
+			}
+		});
 	}
 	 
 	public LogIn_Panel getLogIn_Panel() { 

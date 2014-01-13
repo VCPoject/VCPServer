@@ -803,7 +803,7 @@ public class Order_Panel extends JPanel {
 		return btnReturn;
 	}
 
-	private MakeOrderController getMakeOrderController() {
+	public MakeOrderController getMakeOrderController() {
 		if (makeOrderController == null || !makeOrderController.isConnected()) {
 			makeOrderController = new MakeOrderController(host, port);
 		}

@@ -184,7 +184,7 @@ public class ComplainFu_Panel extends JPanel {
 		return btnSubmit1;
 	}
 	
-	private ComplainFuController getComplainController() {
+	public ComplainFuController getComplainController() {
 		if(complainController == null || !complainController.isConnected()){
 			complainController = new ComplainFuController(host,port);
 		}

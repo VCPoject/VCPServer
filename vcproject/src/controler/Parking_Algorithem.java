@@ -82,7 +82,7 @@ public class Parking_Algorithem extends Controller{
 			
 			if(orderIterator.hasNext()){
 				checkedInOrder=orderIterator.next().getValue();
-				if(checkedInOrder.getStatus().equals("checked in"))
+				if(checkedInOrder.getStatus().equals("checked in") && checkedInOrder.getIdparking() == parkingLot.getIdparkinglot())
 				checkInorderMap.put(checkedInOrder.getIdorder(),checkedInOrder);
 			}
 			
@@ -90,7 +90,7 @@ public class Parking_Algorithem extends Controller{
 			
 			if(subscribeIterator.hasNext()){
 				checkedInSubscribe=subscribeIterator.next().getValue();
-				if(checkedInSubscribe.getStatus().equals("checked in"))
+				if(checkedInSubscribe.getStatus().equals("checked in") && checkedInSubscribe.getIdparking() == parkingLot.getIdparkinglot())
 					checkInsubscribeMap.put(checkedInSubscribe.getSubscribeNum(),checkedInSubscribe);
 			}
 		}

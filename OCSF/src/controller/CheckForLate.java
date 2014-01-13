@@ -30,14 +30,17 @@ public class CheckForLate extends TimerTask {
 		ArrayList<Order> OrdersList = new ArrayList<Order>();
 		ArrayList<Object> lateList = getLateList();
 		for(int i = 0 ; i<lateList.size(); i++){
-			Order order = new Order();
-			order.setIdorder(Integer.parseInt(lateList.get(i++).toString()));
-			order.setFirstName(lateList.get(i++).toString());
-			order.setLastName(lateList.get(i++).toString());
-			order.setArrivalDate(lateList.get(i++).toString());
-			order.setArrivalTime(lateList.get(i++).toString());
-			order.setEmail(lateList.get(i).toString());
-			OrdersList.add(order);
+			if(!lateList.get(0).equals("No Result"))
+			{
+				Order order = new Order();
+				order.setIdorder(Integer.parseInt(lateList.get(i++).toString()));
+				order.setFirstName(lateList.get(i++).toString());
+				order.setLastName(lateList.get(i++).toString());
+				order.setArrivalDate(lateList.get(i++).toString());
+				order.setArrivalTime(lateList.get(i++).toString());
+				order.setEmail(lateList.get(i).toString());
+				OrdersList.add(order);
+			}
 		}
 		
 		for(Order lateOrder: OrdersList)

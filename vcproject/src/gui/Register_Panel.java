@@ -603,7 +603,7 @@ public class Register_Panel extends JPanel {
 		return vcpInfo;
 	}
 
-	private RegisterController getRegisterController() {
+	public RegisterController getRegisterController() {
 		if (registerController == null || !registerController.isConnected()) {
 			registerController = new RegisterController(host, port);
 		}
