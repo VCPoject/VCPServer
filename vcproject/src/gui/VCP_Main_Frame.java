@@ -4,26 +4,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-
 import java.awt.event.WindowAdapter;
-
 import javax.swing.UnsupportedLookAndFeelException;
-
 import controler.VcpInfo;
 import entity.Parking_Lot;
-
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
@@ -32,12 +23,9 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.pdf.codec.BmpImage;
-
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 public class VCP_Main_Frame extends JFrame {
 	private static final long serialVersionUID = 1L;

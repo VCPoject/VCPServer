@@ -78,6 +78,8 @@ public class CheckOut_Panel extends JPanel {
 	private JFormattedTextField frmtdtxtfldCreditCard;
 	private RegisterController registerController;
 	private ParkingLot_controller parkingLotController;
+	private boolean isTempClient = false;
+	private Order tempOrder;
 	/**
 	 * This panel is for make check - out
 	 * @param host for connecting to server side
@@ -339,12 +341,13 @@ public class CheckOut_Panel extends JPanel {
 						order.setCheckOutDate(strDate[0]);
 						order.setCheckOutTime(strDate[1]);
 						if(order.getType().equals("temp") && !panelPayment.isVisible()){
-							//TODO
 							Date arrived = StringToDate(order.getArrivalDate(), order.getArrivalTime());
 							Date exit = StringToDate(order.getCheckOutDate(),order.getCheckOutTime());
 							btnCheckOut.setEnabled(false);
 							textFieldAmount.setText(findHoursToPay(arrived,exit,order).toString());
 							panelPayment.setVisible(true);
+							isTempClient = true;
+							setTempOrder(order);
 							throw new Exception("Please make a payment");
 						}
 						order.setStatus("checked out");
@@ -358,6 +361,7 @@ public class CheckOut_Panel extends JPanel {
 						if(!getMakeOrderController().getResult().get(0).equals("done"))
 							throw new Exception("Error: Can't update order");
 						if(order.getType().equals("one time")){
+							
 							FinancialCard fCard = getFinancialCardController().getFinancialCard(order.getClient());
 							updateFinancialCard(fCard, order);
 						}
@@ -461,7 +465,7 @@ public class CheckOut_Panel extends JPanel {
 		}
 	}
 	
-	private RegisterController getRegisterController() {
+	public RegisterController getRegisterController() {
 		if (registerController == null || !registerController.isConnected()) {
 			registerController = new RegisterController(host, port);
 		}
@@ -497,5 +501,29 @@ public class CheckOut_Panel extends JPanel {
 		} else {
 			return (long) (diffHours)*payForHour;
 		}
+	}
+	public JButton getBtnPay() {
+		return btnPay;
+	}
+	public JRadioButton getRdbtnCradit() {
+		return rdbtnCradit;
+	}
+	public JFormattedTextField getFrmtdtxtfldCreditCard() {
+		return frmtdtxtfldCreditCard;
+	}
+	public JTextField getTextFieldAmount() {
+		return textFieldAmount;
+	}
+	public JButton getBtnCheckOut() {
+		return btnCheckOut;
+	}
+	public boolean isTempClient() {
+		return isTempClient;
+	}
+	public Order getTempOrder() {
+		return tempOrder;
+	}
+	public void setTempOrder(Order tempOrder) {
+		this.tempOrder = tempOrder;
 	}
 }

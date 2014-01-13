@@ -25,8 +25,7 @@ public class SendMailSSL {
         props.put("mail.transport.protocol", "smtp");
         Session mailSession = null;
 
-        mailSession = Session.getInstance(props,  
-                new javax.mail.Authenticator() {  
+        mailSession = Session.getInstance(props, new javax.mail.Authenticator() {  
             protected PasswordAuthentication getPasswordAuthentication() {  
                 return new PasswordAuthentication("vcpserver", "vcpbraude");  
             }  
@@ -46,7 +45,6 @@ public class SendMailSSL {
             String body = text;
             message.setContent(body,"text/html");
             transport.connect();
-
             transport.sendMessage(message,message.getRecipients(Message.RecipientType.TO));
             transport.close();
         } catch (Exception exception) {

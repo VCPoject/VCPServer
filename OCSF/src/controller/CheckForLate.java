@@ -53,10 +53,13 @@ public class CheckForLate extends TimerTask {
 							System.out.println("Server send email to email:" + lateOrder.getEmail());
 						}
 						getAlreadySendReminder().setOrders(lateOrder);
+						Order orderLate = getAlreadySendReminder().getOrders().get(lateOrder.getIdorder());
+						Object[] abortOrder = {"UPDATE `vcp_db`.`order` SET `status` = ? WHERE `idorder` = ?;" , "Late" ,orderLate.getIdorder()};
+						sendToSQL(abortOrder);
 					}else{
 						Order orderToAbort = getAlreadySendReminder().getOrders().get(lateOrder.getIdorder());
 						if(toAbort(orderToAbort)){
-							Object[] abortOrder = {"UPDATE `vcp_db`.`order` SET `status` = ? WHERE `idorder` = ?;" , "aborted" ,orderToAbort.getIdorder()};
+							Object[] abortOrder = {"UPDATE `vcp_db`.`order` SET `status` = ? WHERE `idorder` = ?;" , "Aborted" ,orderToAbort.getIdorder()};
 							sendToSQL(abortOrder);
 							 getAlreadySendReminder().getOrders().remove(orderToAbort.getIdorder());
 						}
@@ -100,14 +103,25 @@ public class CheckForLate extends TimerTask {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date orderDate = format.parse(orderDateStr);
 		orderDate = addMin(orderDate, 30);
-		if(toDay.after(orderDate))
-			return true;
+		if(toDay.after(orderDate)){
+			getAlreadySendReminder().getOrders().remove(orderToAbort.getIdorder());
+			if(!CheckIfArrived(orderToAbort)){
+				return true;
+			}
+		}
 		return false;
 	}
 	
+	private boolean CheckIfArrived(Order orderToAbort) {
+		Object[] isArrived = {"SELECT `order`.`status` FROM `vcp_db`.`order` WHERE idorder = ?;" , orderToAbort.getIdorder()};
+		
+		if(sendToSQL(isArrived).get(0).equals("Late"))
+			return false;
+		return true;
+	}
 	public Date addMin(Date date, int min){
 		Calendar cal = Calendar.getInstance(); // creates calendar
-	    cal.setTime(new Date()); // sets calendar time/date
+	    cal.setTime(date); // sets calendar time/date
 	    cal.add(Calendar.MINUTE, min); // adds minuts
 	    return cal.getTime(); // returns new date object, one hour in the future
 	}

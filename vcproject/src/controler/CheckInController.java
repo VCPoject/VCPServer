@@ -1,6 +1,7 @@
 package controler;  
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -107,5 +108,26 @@ public class CheckInController extends Controller {
 			parkingAlgorithem=new Parking_Algorithem(getVcpInfo(), order);
 		
 		return parkingAlgorithem;
+	}
+	
+	public long getHoursDiff(Order order) {
+		String dateStart = order.getArrivalDate() + " " + order.getArrivalTime();
+		String dateStop = order.getDepartureDate() + " " + order.getDepartureTime();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		Date d1 = null;
+		Date d2 = null;
+		try {
+			d1 = format.parse(dateStart);
+			d2 = format.parse(dateStop);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		// Get msec from each, and subtract.
+		long diff = d2.getTime() - d1.getTime();
+		long diffHours = diff / (60 * 60 * 1000);
+		
+		return diffHours;
 	}
 }

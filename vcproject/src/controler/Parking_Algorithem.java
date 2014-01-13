@@ -114,8 +114,7 @@ public class Parking_Algorithem extends Controller{
 			
 			if(orderIterator.hasNext()){
 			minOrder=orderIterator.next().getValue();
-			minOrderDate=StringToDate(((Order) minOrder).getDepartureDate()
-			,((Order) minOrder).getDepartureTime());
+			minOrderDate=StringToDate(((Order) minOrder).getDepartureDate(),((Order) minOrder).getDepartureTime());
 			}
 			
 			else if(subscribeIterator.hasNext()){

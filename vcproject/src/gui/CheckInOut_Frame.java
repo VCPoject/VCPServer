@@ -3,6 +3,8 @@ package gui;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +19,7 @@ public class CheckInOut_Frame extends JFrame {
 	private CheckIn_Panel checkInPanel;
 	private CheckOut_Panel checkOutPanel;
 	private static final long serialVersionUID = 1L;
+	private InvoicePanel invoicePanelPanel;
 	
 	/**
 	 * isCheckIn is a flag that decide if open check in panel or check out 
@@ -46,6 +49,43 @@ public class CheckInOut_Frame extends JFrame {
 		this.port = port;
 		this.vcpInfo = vcpInfo;
 		initialize();
+		listners();
+	}
+	private void listners() {
+		getCheckOutPanel().getBtnPay().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					if (getCheckOutPanel().getRdbtnCradit().isSelected()) {
+						if (getCheckOutPanel().getFrmtdtxtfldCreditCard().getText().equals(
+								"                ")) {
+							throw new Exception("You didnt insert cradit card");
+						}
+					}
+
+					if (getCheckOutPanel().getTextFieldAmount().getText().equals("0.0"))
+						throw new Exception("You didn't insert any car");
+					if(!(getCheckOutPanel().isTempClient())){
+					getCheckOutPanel().getRegisterController().showSeccussesMsg("Payment recived, you can press now submit");
+					}else{
+						setContentPane(getInvoicePanelPanel());
+						getInvoicePanelPanel().getBtnReturn().addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								setContentPane(getCheckOutPanel());
+								repaint();
+								getCheckOutPanel().getRegisterController().showSeccussesMsg("you can press now submit");
+							}
+						});
+					}
+					getCheckOutPanel().getBtnCheckOut().setEnabled(true);
+					getCheckOutPanel().getBtnPay().setEnabled(false);
+				} catch (Exception e) {
+					getCheckOutPanel().getRegisterController().showWarningMsg(
+							"Error in Payment: " + e.getMessage());
+				}
+
+			}
+		});
+		
 	}
 	/**
 	 * Initialize the panel of saving parking place
@@ -93,6 +133,11 @@ public class CheckInOut_Frame extends JFrame {
 
 	public VcpInfo getVcpInfo() {
 		return vcpInfo;
+	}
+	public InvoicePanel getInvoicePanelPanel() {
+		if(invoicePanelPanel == null)
+			invoicePanelPanel = new InvoicePanel(getCheckOutPanel().getTempOrder(),getCheckOutPanel().getTextFieldAmount().getText());
+		return invoicePanelPanel;
 	}
 
 }

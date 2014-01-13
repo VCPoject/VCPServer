@@ -24,10 +24,12 @@ import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 
 import controler.CheckInController;
+import controler.FinancialCardController;
 import controler.MakeOrderController;
 import controler.ParkingLot_controller;
 import controler.ParkingPlaceController;
 import controler.VcpInfo;
+import entity.FinancialCard;
 import entity.Order;
 import entity.Parking_Places;
 import entity.Subscribe;
@@ -62,6 +64,7 @@ public class CheckIn_Panel extends JPanel {
 	private ParkingLot_controller parkingLotController;
 	private int[] fullPositionCounter;
 	private int ParkingLotSize;
+	private FinancialCardController financialCardController;
 	/**
 	 * This panel is for make check in to parking lot.
 	 * @param host for make connection with server side
@@ -198,31 +201,41 @@ public class CheckIn_Panel extends JPanel {
 						if(order == null)
 							throw new Exception("There is no order for car number: " + carNumStr);
 						if(!order.getStatus().equals("not checked in"))
-							throw new Exception("You dont have valid order.(Canceld or already implement)");
+								if(!order.getStatus().equals("Late"))
+									throw new Exception("You dont have valid order.(Canceld or already implement)");
 						if(order.getType().equals("Full")){
-							if(!order.getIdparking().equals(getVcpInfo().getDefultParkingLot().getIdparkinglot()))
-								throw new Exception("You are in the wrong parking lot.\n"
-										+ "You should go to parking lot number:" + order.getIdparking() );
-							String arrivalDateStr = order.getArrivalDate() + " " + order.getArrivalTime();
-							Date arrivalDate = StringToDate(arrivalDateStr);
-							Date todayDate = new Date();
-							if(arrivalDate.before(todayDate)){
-								throw new Exception("Your arrival date is not now");
-							}
-							
+							throw new Exception("Parking lot is full,please go to alternative");
+						}
+						if(!order.getIdparking().equals(getVcpInfo().getDefultParkingLot().getIdparkinglot()))
+							throw new Exception("You are in the wrong parking lot.\n"
+									+ "You should go to parking lot number:" + order.getIdparking() );
+						String arrivalDateStr = order.getArrivalDate() + " " + order.getArrivalTime();
+						Date arrivalDate = StringToDate(arrivalDateStr);
+						Date todayDate = new Date();
+						if(arrivalDate.after(todayDate)){
+							throw new Exception("Your arrival date is not now");
 						}
 						getCheckInController().Algo(order);
 						departDateStr = order.getDepartureDate() + " " + order.getDepartureTime();
 						Date date = new Date();
 						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 						String[] strDate = format.format(date).split("\\s");
+						if(order.getStatus().equals("Late")){
+							FinancialCard fCard = getFinancialCardController().getFinancialCard(order.getClient());
+							updateFinancialCard(fCard, order);
+							getFinancialCardController().showWarningMsg("You have been late, you get a panalty if 20%");
+						}
 						order.setCheckInDate(strDate[0]);
 						order.setCheckInTime(strDate[1]);
 						order.setStatus("checked in");
 						getMakeOrderController().UpdateOrder(order);
-						fullPositionCounter=getVcpInfo().fullPositionCounter();
-						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]++;
+						try {
+							fullPositionCounter=getVcpInfo().fullPositionCounter();
+						} catch (Exception e2) {
+							System.out.println("Error in fullPositionCounter:  " + e2.getMessage());
+						}
 						
+						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]++;
 						if(fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]==ParkingLotSize){
 							getParkingLot_controller().updateParkingLotAsFull(getVcpInfo().getDefultParkingLot().
 							getIdparkinglot());
@@ -338,6 +351,23 @@ public class CheckIn_Panel extends JPanel {
 			makeOrderController=new MakeOrderController(host, port);
 		
 		return makeOrderController;
+		
+	}
+	
+	public FinancialCardController getFinancialCardController() {
+		if(financialCardController == null){
+			financialCardController = new FinancialCardController(host, port);
+		}
+		return financialCardController;
+	}
+	
+	private void updateFinancialCard(FinancialCard fCard, Order order) throws Exception {
+		Long hours = getCheckInController().getHoursDiff(order);
+		Float Amount = fCard.getAmount() + hours * getVcpInfo().getParkingPricingInfo().getOneTime();
+		Float refine = (float) (Amount*0.2);
+		fCard.setAmount(Amount + refine); 
+		if(!getFinancialCardController().updateFinancialCard(fCard))
+			throw new Exception("Cant update financial card");
 		
 	}
 

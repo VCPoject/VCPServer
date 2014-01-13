@@ -25,8 +25,10 @@ public class FinancialCardController extends Controller {
 			result = getResult();
 			boolean res = result.get(0).equals("No Result");
 			if(!res){
-				financialCard.setIdClient((Integer)result.get(0));
-				financialCard.setAmount((Float)result.get(1));
+				String id = result.get(0).toString();
+				financialCard.setIdClient(Integer.parseInt(id));
+				String amount = result.get(1).toString();
+				financialCard.setAmount(Float.parseFloat(amount));
 				return financialCard;
 			}
 		}
@@ -34,7 +36,7 @@ public class FinancialCardController extends Controller {
 	}
 	
 	public boolean updateFinancialCard(FinancialCard fCard){
-		String fCardUpdate = "UPDATE `vcp_employ`.`financial_card` SET `amount` = ? WHERE `idclient` = ?;";
+		String fCardUpdate = "UPDATE `vcp_employ`.`financial_card` SET `amount` = ? WHERE idclient = ?;";
 		fCard.setQuery(fCardUpdate);
 		sendQueryToServer(fCard);
 		if(getResult().get(0).equals("done"))

@@ -1,6 +1,5 @@
-package controler;  
+package controler;
    
-import gui.LogIn_Frame;
 import gui.VCP_Main_Frame;
 
 public class VCP_Main {

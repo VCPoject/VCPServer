@@ -39,7 +39,7 @@ public class FinancialCard implements Entity {
 			Object[] obj = {getQuery(),getIdClient(),getAmount() };
 			return obj;
 		}else if(getQuery().contains("UPDATE")){
-			Object[] obj = {getQuery(),getIdClient(),getAmount() };
+			Object[] obj = {getQuery(),getAmount(),getIdClient() };
 			return obj;
 		}else{
 			Object[] obj = {getQuery(),getIdClient(),getAmount() };
