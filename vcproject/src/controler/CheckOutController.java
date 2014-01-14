@@ -114,7 +114,7 @@ public void updateSubscribeAscheckedout(Subscribe subscribe){
 		+ " WHERE subscribeNum=?;","checked out",(subscribe.getEntriesDay())-1,subscribe.getSubscribeNum()};
 		sendQueryToServer(updateSubscribe);
 		subscribe.setStatus("not checked in");
-		subscribe.setEntriesDay((subscribe.getEntriesDay()));
+		subscribe.setEntriesDay((subscribe.getEntriesDay() -1));
 		
 		}
 		
