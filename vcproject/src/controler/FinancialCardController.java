@@ -6,8 +6,15 @@ import entity.FinancialCard;
 
 public class FinancialCardController extends Controller {
 	
+	/**
+	 * financialCard is a instance of the entity that holds the info about the client financial card
+	 */
 	private FinancialCard financialCard;
 	
+	/**
+	 * FinancialCardController update and get info to and from the server about client financial card
+	 * @param host to connect to server
+	 */
 	public FinancialCardController(String host) {
 		super(host);
 	}
@@ -16,6 +23,11 @@ public class FinancialCardController extends Controller {
 		super(host, port);
 	}
 	
+	/**
+	 * getFinancialCard get financial of give client
+	 * @param idclient is the id of the client
+	 * @return financial card instance of the given client
+	 */
 	public FinancialCard getFinancialCard(Integer idclient){
 		if(financialCard == null){
 			financialCard = new FinancialCard();
@@ -35,6 +47,11 @@ public class FinancialCardController extends Controller {
 		return null;
 	}
 	
+	/**
+	 * updateFinancialCard is update financial card of client by given financial card entity
+	 * @param fCard is exist financial card
+	 * @return true if update succeeded else false
+	 */
 	public boolean updateFinancialCard(FinancialCard fCard){
 		String fCardUpdate = "UPDATE `vcp_employ`.`financial_card` SET `amount` = ? WHERE idclient = ?;";
 		fCard.setQuery(fCardUpdate);

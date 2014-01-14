@@ -56,6 +56,7 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	 */
 	public NotWorkingPlaces_Panel(String host,int port, VcpInfo vcpInfo){
 		super();
+		this.vcpInfo = vcpInfo;
 		this.defaultParkingLot=vcpInfo.getDefultParkingLot().getIdparkinglot();
 		this.vcpInfo=vcpInfo;
 		this.parkingPlaces= vcpInfo.getParkingPlaces();

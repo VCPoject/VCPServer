@@ -11,6 +11,13 @@ public class LogIn_controller extends Controller{
 	private HashMap<String,Employee> employeeMap;
 	private Employee connectedEmployee;
 	
+	/**
+	 * LogIn_controller is the controller that check for validity of the employee
+	 * @param host to connect to server
+	 * @param employeeMap is holds all the employees that in the system
+	 * @param username of the employee that want to connect
+	 * @param passwordof the employee that want to connect
+	 */
 	public LogIn_controller(String host, HashMap<String, Employee> employeeMap, String username, String password) {
 		super(host);
 		setUsername(username);
@@ -19,9 +26,12 @@ public class LogIn_controller extends Controller{
 	}
 	
 	
+	/**
+	 * checkValidity is checking the user name and password of the employee and
+	 * also update him as connected in the DB if all info is correct.
+	 * @return true if user name and password are correct else false
+	 */
 	public boolean checkValidity() {
-		
-		
 		if (username.equals(employeeMap.get(getUsername()).getUserName()) && password.equals(employeeMap.get(getUsername()).getPassword())) {
 			
 			if (checkedIfAlreadyLoggedIn(employeeMap.get(getUsername()).getLogin()) == false) {
@@ -42,14 +52,23 @@ public class LogIn_controller extends Controller{
 	}
 
 	
-	public boolean checkedIfAlreadyLoggedIn(String str) {
+	/**
+	 * checkedIfAlreadyLoggedIn is getting a string with the status of connection of the employee.
+	 * @param connectedStatus is holds the status of connection of the employee
+	 * @return true if employee is not connected
+	 */
+	public boolean checkedIfAlreadyLoggedIn(String connectedStatus) {
 
-		if (str.equals("NO"))
+		if (connectedStatus.equals("NO"))
 			return false;
 
 		return true;
 	}
 	
+	/**
+	 * updateAsLoggedIn is changing the connection status of the employee to connect.
+	 * @param username of the employee
+	 */
 	public void updateAsLoggedIn(String username) {
 		Object[] sqlsMsg = { "UPDATE  vcp_employ.employ SET login=? WHERE username=?;" ,"YES",username};
 		sendQueryToServer(sqlsMsg);
@@ -57,6 +76,9 @@ public class LogIn_controller extends Controller{
 		employeeMap.get(username).setLogin("YES");
 	}
 	
+	/**
+	 * updateAsNotLoggedIn is sign the employee connection status to disconnect.
+	 */
 	public void updateAsNotLoggedIn() {
 		Object[] sqlsMsg = { "UPDATE  vcp_employ.employ SET login=? WHERE username=?;" ,
 				"NO",getUsername()};
