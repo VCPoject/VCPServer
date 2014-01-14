@@ -355,6 +355,7 @@ public class CheckOut_Panel extends JPanel {
 						getMakeOrderController().UpdateOrderCheckout(order);
 						fullPositionCounter=getVcpInfo().fullPositionCounter();
 						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]--;
+						System.out.println(fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]);
 						if(getVcpInfo().getDefultParkingLot().getStatus().equals("full"))
 							getParkingLot_controller().updateParkingLotAsAvaialble
 							(getVcpInfo().getDefultParkingLot().getIdparkinglot());

@@ -11,6 +11,10 @@ public class EmpComplainController extends Controller {
 		super();
 		empCompEntity=new EmpComplainEntity();
 	}
+	/**
+	 * get all open complains from DB to JTable
+	 * @return Vector<Vector<Object>>
+	 */
 	public Vector<Vector<Object>> obtainValues() {
 		empCompEntity.setQuery("SELECT `complain`.`complainNum`, `complain`.`idclient`, `complain`.`description`, `complain`.`status`,"
 				+ " `complain`.`date` FROM `vcp_db`.`complain` WHERE `status` = ? order by `date`;");
@@ -32,11 +36,13 @@ public class EmpComplainController extends Controller {
 			else
 				i++;
 		}
-		closeConnection();
 		return result;
 
 	}
-
+/**
+ * get field name for column 
+ * @return Vector<String>
+ */
 public Vector<String> obtainFields(){
 	Vector<String> s= new Vector<String>(5);
 	s.add("Complain Id");
@@ -47,7 +53,13 @@ public Vector<String> obtainFields(){
 	return s;
 }
 
-
+/**
+ * update the customer support answer to DB
+ * @param idNum
+ * @param idclient
+ * @param refound
+ * @param answer
+ */
 public void complainReplay(Object idNum,Object idclient,String refound,String answer){
 	try {
 		float f=Float.parseFloat(refound);
@@ -76,8 +88,6 @@ public void complainReplay(Object idNum,Object idclient,String refound,String an
 		
 	} catch (Exception e) {
 		showWarningMsg(e.getMessage());
-	}finally{
-		closeConnection();
 	}
 
 }

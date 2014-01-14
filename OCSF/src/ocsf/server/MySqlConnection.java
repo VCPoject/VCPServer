@@ -1,6 +1,7 @@
 package ocsf.server; 
 
 import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -13,10 +14,22 @@ import java.sql.Timestamp;
 
 public class MySqlConnection {
 
+	/**
+	 * result is the result from DB
+	 */
 	private ArrayList<Object> result = new ArrayList<Object>();
+	/**
+	 * conn is the connection to DB
+	 */
 	private Connection conn;
 	private ResultSet rs = null;
 
+	/**
+	 * MySqlConnection is the controller of DB
+	 * @param dbIp DB host
+	 * @param dbUser DB user
+	 * @param dbPassword DB password
+	 */
 	public MySqlConnection(String dbIp, String dbUser, String dbPassword) {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -42,6 +55,11 @@ public class MySqlConnection {
 		return conn;
 	}
 
+	/**
+	 * update do the INSERT,SELECT,UPDATE and DELETE from DB
+	 * @param conn connection to DB
+	 * @param msg is the array with the query and object for PreparedStatement
+	 */
 	public void update(Connection conn, Object[] msg) {
 		try {
 			if (msg != null) {
@@ -65,6 +83,11 @@ public class MySqlConnection {
 
 	}
 
+	/**
+	 * readDB is read from DB
+	 * @param con is the connection to the DB
+	 * @param getStatment is the array with the query and object for PreparedStatement
+	 */
 	private void readDB(Connection con, Object[] getStatment) {
 		boolean thereIsRslt = false;
 		try {
@@ -101,6 +124,8 @@ public class MySqlConnection {
 						list.add((Float) obj);
 					else if (obj instanceof Date)
 						list.add((Date)obj);
+					else if (obj instanceof BigDecimal)
+						list.add(Long.parseLong(obj.toString()));
 					else if (obj instanceof Time)
 						list.add((Time)obj);
 					else if (obj instanceof Timestamp)
@@ -123,7 +148,11 @@ public class MySqlConnection {
 		}
 
 	}
-
+	/**
+	 * updateDB is update DB
+	 * @param con is the connection to the DB
+	 * @param getStatment is the array with the query and object for PreparedStatement
+	 */
 	private void updateDB(Connection con, Object[] getStatment) {
 		try {
 			if (getStatment != null) {
@@ -162,7 +191,11 @@ public class MySqlConnection {
 		}
 		
 	}
-
+	/**
+	 * insertDB is insert to DB
+	 * @param con is the connection to the DB
+	 * @param getStatment is the array with the query and object for PreparedStatement
+	 */
 	private void insertDB(Connection con, Object[] getStatment) {
 		try {
 			if (getStatment != null) {
@@ -190,7 +223,11 @@ public class MySqlConnection {
 	}
 	
 
-
+	/**
+	 * deleteDB is delete from DB
+	 * @param con is the connection to the DB
+	 * @param getStatment is the array with the query and object for PreparedStatement
+	 */
 	private void deleteDB(Connection con, Object[] getStatment) {
 		try {
 			if (getStatment != null) {
@@ -218,6 +255,9 @@ public class MySqlConnection {
 
 	}
 
+	/**
+	 * resultReset set new instance for result
+	 */
 	public void resultReset() {
 		result = new ArrayList<Object>();
 	}

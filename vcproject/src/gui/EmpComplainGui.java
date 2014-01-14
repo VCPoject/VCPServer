@@ -23,11 +23,6 @@ public class EmpComplainGui extends JPanel {
 	private JButton btnSubmit;
 	private JTextArea textArea;
 
-	/**
-	 * This panel is for customers services to receive and answer to complains
-	 * @param host for connect to server side
-	 * @param port for connect to server side
-	 */
 	public EmpComplainGui(String host, int port) {
 		super();
 		this.host = host;
@@ -35,9 +30,7 @@ public class EmpComplainGui extends JPanel {
 		initialize();
 		listners();
 	}
-	/**
-	 * Initialize the panel of saving parking place
-	 */
+
 	private void initialize() {
 		setLayout(null);
 		this.setSize(785, 575);
@@ -56,7 +49,8 @@ public class EmpComplainGui extends JPanel {
 		scrollPane.setBounds(121, 62, 654, 268);
 		add(scrollPane);
 
-		table = new JTable(getEmpComplainController().obtainValues(),getEmpComplainController().obtainFields()) {
+		table = new JTable(getEmpComplainController().obtainValues(),
+				getEmpComplainController().obtainFields()) {
 			/**
 			 * 
 			 */
@@ -99,13 +93,14 @@ public class EmpComplainGui extends JPanel {
 		lblRefound.setBounds(24, 458, 103, 22);
 		add(lblRefound);
 	}
-	/**
-	 * Listeners of the GUI components.
-	 */
+
 	private void listners() {
+		
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				empController.complainReplay(table.getValueAt(table.getSelectedRow(), 0),
+
+				empController.complainReplay(
+						table.getValueAt(table.getSelectedRow(), 0),
 						table.getValueAt(table.getSelectedRow(), 1),
 						textField.getText(), textArea.getText());
 				btnSubmit.setEnabled(false);

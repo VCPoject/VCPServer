@@ -18,7 +18,11 @@ public class CancelOrderController extends Controller {
 		this.pricing=pricing;
 		this.coEntity = coEntity;
 	}
-	
+	/**
+	 * calculate price of refound and show it to user
+	 * @param selectedItem
+	 * @return String
+	 */
 	public String calculatePrice(String selectedItem){
 			String[] parts= selectedItem.split("'");
 			int part1 = Integer.parseInt(parts[1]);
@@ -86,7 +90,11 @@ public class CancelOrderController extends Controller {
 			
 		return "done";
 	}
-	
+	/**
+	 * update DB with refound
+	 * @param part1
+	 * @param cash
+	 */
 	private void applyDB(int part1,float cash){
 		
 		Object[] insertMoney = {
@@ -97,7 +105,12 @@ public class CancelOrderController extends Controller {
 				"UPDATE  vcp_db.order SET status = ?  WHERE idorder = ?;" ,"Aborted",part1};
 		sendQueryToServer(delOrder);
 	}
-
+/**
+ * check if the user id match the car id
+ * @param idnum
+ * @param carnum
+ * @return TRUE OR FALSE
+ */
 	public boolean checkID(int idnum, int carnum) {
 		Object[] sqlsMsg = {
 				"SELECT `car`.`carNum`,`car`.`idclient`FROM `vcp_db`.`car` WHERE "
@@ -110,7 +123,11 @@ public class CancelOrderController extends Controller {
 		}
 		return true;
 	}
-
+/**
+ * return all open orders for the user to show on GUI
+ * @param idnum
+ * @returnArrayList<String>
+ */
 	public ArrayList<String> getOrders(int idnum) {
 		Object[] sqlsMsg = {
 				"SELECT `order`.`idorder`,`order`.`arrivalDate`"
@@ -121,10 +138,6 @@ public class CancelOrderController extends Controller {
 		for(int i=0;i<getResult().size()-1;i++)
 			s.add("Order ID: '"+getResult().get(i).toString() +"' Order Date: '" +getResult().get(i+1).toString()+"'");
 		return s;
-	}
-
-	public Pricing getPricing() {
-		return pricing;
 	}
 	
 	

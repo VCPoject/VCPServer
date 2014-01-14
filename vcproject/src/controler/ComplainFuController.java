@@ -61,10 +61,6 @@ public class ComplainFuController extends Controller {
 		sendQueryToServer(sqlsMsg);	
 		return getResult().get(0).toString();
 	}
-
-	public ComplainFuEntity getComplainEntity() {
-		return complainEntity;
-	}
 	
 	
 

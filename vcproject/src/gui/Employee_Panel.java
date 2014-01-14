@@ -9,221 +9,226 @@ import java.awt.Font;
 
 public class Employee_Panel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-	private JButton btnFindAltParkin;
-	private JButton btnQuarterly;
-	private JButton btnSignAsnotWorking;
-	private JButton btnComplains;
-	private JButton btnCreateReport;
-	private JButton btnStatistics;
-	private JButton btnParkingStatus;
-	private JButton btnSaveParkin;
-	private JButton btnChangePricing;
-	private JButton btnReviewPricingRequests;
-	private JButton btnExit;
-	/**
-	 * conectedEmployee contains the employee that work on the panel
-	 */
-	private Employee conectedEmployee;
+        private static final long serialVersionUID = 1L;
+        private JButton btnFindAltParkin;
+        private JButton btnQuarterly;
+        private JButton btnSignAsnotWorking;
+        private JButton btnComplains;
+        private JButton btnCreateReport;
+        private JButton btnStatistics;
+        private JButton btnParkingStatus;
+        private JButton btnSaveParkin;
+        private JButton btnChangePricing;
+        private JButton btnReviewPricingRequests;
+        private JButton btnExit;
+        private Employee conectedEmployee;
+        private JButton systemData;
 
-	/**
-	 * This is the main panel for the employees
-	 */
-	public Employee_Panel() {
-		super();
-		initialize();
-		setLayout(null);
-	}
-	/**
-	 * Listeners of the GUI components.
-	 */
-	public void initialize() {
-		this.setSize(785, 575);
-		btnSaveParkin = new JButton("Save parking place");
-		btnSaveParkin.setBounds(230, 100, 129, 49);
-		add(btnSaveParkin);
+        public Employee_Panel() {
+                super();
+                initialize();
+                setLayout(null);
+                
 
-		JLabel vcpEmployeeLabel = new JLabel("VCP-Employee");
-		vcpEmployeeLabel
-				.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 36));
-		vcpEmployeeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		vcpEmployeeLabel.setBounds(207, 11, 371, 49);
-		add(vcpEmployeeLabel);
+        }
 
-		btnFindAltParkin = new JButton("Find alt. parking lot");
-		btnFindAltParkin.setBounds(230, 170, 129, 49);
-		add(btnFindAltParkin);
+        public void initialize() {
+                this.setSize(785, 575);
+                btnSaveParkin = new JButton("Save parking place");
+                btnSaveParkin.setBounds(230, 100, 129, 49);
+                add(btnSaveParkin);
 
-		btnQuarterly = new JButton("Setup parkin lot");
-		btnQuarterly.setBounds(230, 240, 129, 49);
-		add(btnQuarterly);
+                JLabel vcpEmployeeLabel = new JLabel("VCP-Employee");
+                vcpEmployeeLabel
+                                .setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 36));
+                vcpEmployeeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                vcpEmployeeLabel.setBounds(207, 11, 371, 49);
+                add(vcpEmployeeLabel);
 
-		btnSignAsnotWorking = new JButton("Not working  places");
-		btnSignAsnotWorking.setBounds(230, 310, 129, 49);
-		add(btnSignAsnotWorking);
+                btnFindAltParkin = new JButton("Find alt. parkin lot");
+                btnFindAltParkin.setBounds(230, 170, 129, 49);
+                add(btnFindAltParkin);
 
-		btnComplains = new JButton("Complains");
-		btnComplains.setBounds(462, 310, 129, 49);
-		add(btnComplains);
+                btnQuarterly = new JButton("Quarterly Reports");
+                btnQuarterly.setBounds(230, 240, 129, 49);
+                add(btnQuarterly);
 
-		btnCreateReport = new JButton("Reports");
-		btnCreateReport.setBounds(462, 100, 129, 49);
-		add(btnCreateReport);
+                btnSignAsnotWorking = new JButton("Not working  places");
+                btnSignAsnotWorking.setBounds(230, 310, 129, 49);
+                add(btnSignAsnotWorking);
 
-		btnStatistics = new JButton("Statistics");
-		btnStatistics.setBounds(462, 170, 129, 49);
-		add(btnStatistics);
+                btnComplains = new JButton("Complains");
+                btnComplains.setBounds(462, 310, 129, 49);
+                add(btnComplains);
 
-		btnParkingStatus = new JButton("Parking status");
-		btnParkingStatus.setBounds(462, 240, 129, 49);
-		add(btnParkingStatus);
+                btnCreateReport = new JButton("Reports");
+                btnCreateReport.setBounds(462, 100, 129, 49);
+                add(btnCreateReport);
 
-		JLabel optionLabel = new JLabel("Please choose option:");
-		optionLabel.setFont(new Font("Arial", Font.BOLD, 14));
-		optionLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		optionLabel.setBounds(26, 99, 235, 21);
-		add(optionLabel);
+                btnStatistics = new JButton("Statistics");
+                btnStatistics.setBounds(462, 170, 129, 49);
+                add(btnStatistics);
 
-		btnExit = new JButton("Exit");
-		btnExit.setBounds(26, 453, 129, 49);
-		add(btnExit);
-		
-		btnChangePricing = new JButton("Change Pricing");
-		btnChangePricing.setBounds(230, 380, 129, 49);
-		add(btnChangePricing);
+                btnParkingStatus = new JButton("Parking status");
+                btnParkingStatus.setBounds(462, 240, 129, 49);
+                add(btnParkingStatus);
 
-		btnReviewPricingRequests = new JButton("Pricing requests");
-		btnReviewPricingRequests.setBounds(462, 380, 129, 49);
-		add(btnReviewPricingRequests);
-	}
+                JLabel optionLabel = new JLabel("Please choose option:");
+                optionLabel.setFont(new Font("Arial", Font.BOLD, 14));
+                optionLabel.setHorizontalAlignment(SwingConstants.LEFT);
+                optionLabel.setBounds(26, 99, 235, 21);
+                add(optionLabel);
 
-	/**
-	 * set permissions for the connected employee by his role
-	 */
-	public void setBtnEnableByEmpRole() {
-		switch (getConectedEmployee().getRole()) {
-		case "Customer service":
-			btnFindAltParkin.setEnabled(false);
-			btnQuarterly.setEnabled(false);
-			btnSignAsnotWorking.setEnabled(false);
-			btnComplains.setEnabled(true);
-			btnCreateReport.setEnabled(false);
-			btnStatistics.setEnabled(false);
-			btnParkingStatus.setEnabled(false);
-			btnSaveParkin.setEnabled(true);
-			btnChangePricing.setEnabled(false);
-			btnReviewPricingRequests.setEnabled(false);
-			break;
+                btnExit = new JButton("Exit");
+                btnExit.setBounds(26, 453, 129, 49);
+                add(btnExit);
+                
+                btnChangePricing = new JButton("Change Pricing");
+                btnChangePricing.setBounds(230, 380, 129, 49);
+                add(btnChangePricing);
 
-		case "parking manager":
-			btnFindAltParkin.setEnabled(false);
-			btnQuarterly.setEnabled(true);
-			btnSignAsnotWorking.setEnabled(false);
-			btnComplains.setEnabled(true);
-			btnCreateReport.setEnabled(false);
-			btnStatistics.setEnabled(false);
-			btnParkingStatus.setEnabled(false);
-			btnSaveParkin.setEnabled(false);
-			btnChangePricing.setEnabled(true);
-			btnReviewPricingRequests.setEnabled(false);
-			break;
+                btnReviewPricingRequests = new JButton("Pricing requests");
+                btnReviewPricingRequests.setBounds(462, 380, 129, 49);
+                add(btnReviewPricingRequests);
+                
+                systemData = new JButton("System Data");
+                systemData.setBounds(466, 453, 129, 49);
+                add(systemData);
+        }
 
-		case "network manager":
-			btnFindAltParkin.setEnabled(true);
-			btnQuarterly.setEnabled(true);
-			btnSignAsnotWorking.setEnabled(true);
-			btnComplains.setEnabled(false);
-			btnCreateReport.setEnabled(true);
-			btnStatistics.setEnabled(true);
-			btnParkingStatus.setEnabled(true);
-			btnSaveParkin.setEnabled(true);
-			btnChangePricing.setEnabled(true);
-			btnReviewPricingRequests.setEnabled(true);
-			break;
+        public void setBtnEnableByEmpRole() {
+                switch (getConectedEmployee().getRole()) {
+                case "Customer service":
+                        btnFindAltParkin.setEnabled(false);
+                        btnQuarterly.setEnabled(false);
+                        btnSignAsnotWorking.setEnabled(false);
+                        btnComplains.setEnabled(true);
+                        btnCreateReport.setEnabled(false);
+                        btnStatistics.setEnabled(false);
+                        btnParkingStatus.setEnabled(false);
+                        btnSaveParkin.setEnabled(true);
+                        btnChangePricing.setEnabled(false);
+                        btnReviewPricingRequests.setEnabled(false);
+                        systemData.setEnabled(false);
+                        break;
 
-		case "operation":
-			btnFindAltParkin.setEnabled(true);
-			btnQuarterly.setEnabled(true);
-			btnSignAsnotWorking.setEnabled(true);
-			btnComplains.setEnabled(false);
-			btnCreateReport.setEnabled(true);
-			btnStatistics.setEnabled(false);
-			btnParkingStatus.setEnabled(false);
-			btnSaveParkin.setEnabled(true);
-			btnChangePricing.setEnabled(true);
-			btnReviewPricingRequests.setEnabled(false);
-			break;
-			
-		default:
-			btnFindAltParkin.setEnabled(true);
-			btnQuarterly.setEnabled(true);
-			btnSignAsnotWorking.setEnabled(true);
-			btnComplains.setEnabled(true);
-			btnCreateReport.setEnabled(true);
-			btnStatistics.setEnabled(true);
-			btnParkingStatus.setEnabled(true);
-			btnSaveParkin.setEnabled(true);
-			btnChangePricing.setEnabled(true);
-			btnReviewPricingRequests.setEnabled(true);
-			break;
-			
-		}
-	}
+                case "parking manager":
+                        btnFindAltParkin.setEnabled(false);
+                        btnQuarterly.setEnabled(true);
+                        btnSignAsnotWorking.setEnabled(false);
+                        btnComplains.setEnabled(true);
+                        btnCreateReport.setEnabled(false);
+                        btnStatistics.setEnabled(false);
+                        btnParkingStatus.setEnabled(false);
+                        btnSaveParkin.setEnabled(false);
+                        btnChangePricing.setEnabled(true);
+                        btnReviewPricingRequests.setEnabled(false);
+                        systemData.setEnabled(false);
+                        break;
 
-	public void listners() {
+                case "network manager":
+                        btnFindAltParkin.setEnabled(true);
+                        btnQuarterly.setEnabled(true);
+                        btnSignAsnotWorking.setEnabled(true);
+                        btnComplains.setEnabled(false);
+                        btnCreateReport.setEnabled(true);
+                        btnStatistics.setEnabled(true);
+                        btnParkingStatus.setEnabled(true);
+                        btnSaveParkin.setEnabled(true);
+                        btnChangePricing.setEnabled(true);
+                        btnReviewPricingRequests.setEnabled(true);
+                        systemData.setEnabled(true);
+                        break;
 
-	}
+                case "operation":
+                        btnFindAltParkin.setEnabled(true);
+                        btnQuarterly.setEnabled(true);
+                        btnSignAsnotWorking.setEnabled(true);
+                        btnComplains.setEnabled(false);
+                        btnCreateReport.setEnabled(true);
+                        btnStatistics.setEnabled(false);
+                        btnParkingStatus.setEnabled(false);
+                        btnSaveParkin.setEnabled(true);
+                        btnChangePricing.setEnabled(true);
+                        btnReviewPricingRequests.setEnabled(false);
+                        systemData.setEnabled(false);
+                        break;
+                        
+                default:
+                        btnFindAltParkin.setEnabled(true);
+                        btnQuarterly.setEnabled(true);
+                        btnSignAsnotWorking.setEnabled(true);
+                        btnComplains.setEnabled(true);
+                        btnCreateReport.setEnabled(true);
+                        btnStatistics.setEnabled(true);
+                        btnParkingStatus.setEnabled(true);
+                        btnSaveParkin.setEnabled(true);
+                        btnChangePricing.setEnabled(true);
+                        btnReviewPricingRequests.setEnabled(true);
+                        systemData.setEnabled(false);
+                        break;
+                        
+                }
+        }
 
-	public JButton getbtnSaveParkin() {
-		return btnSaveParkin;
-	}
+        public void listners() {
 
-	public JButton getbtnFindAltParkin() {
-		return btnFindAltParkin;
-	}
+        }
 
-	public JButton getbtnQuarterly() {
-		return btnQuarterly;
-	}
+        public JButton getbtnSaveParkin() {
+                return btnSaveParkin;
+        }
 
-	public JButton getbtnSignAsnotWorking() {
-		return btnSignAsnotWorking;
-	}
+        public JButton getbtnFindAltParkin() {
+                return btnFindAltParkin;
+        }
 
-	public JButton getbtnComplains() {
-		return btnComplains;
-	}
+        public JButton getbtnQuarterly() {
+                return btnQuarterly;
+        }
 
-	public JButton getbtnCreateReport() {
-		return btnCreateReport;
-	}
+        public JButton getbtnSignAsnotWorking() {
+                return btnSignAsnotWorking;
+        }
 
-	public JButton getbtnStatistics() {
-		return btnStatistics;
-	}
+        public JButton getbtnComplains() {
+                return btnComplains;
+        }
 
-	public JButton getbtnParkingStatus() {
-		return btnParkingStatus;
-	}
+        public JButton getbtnCreateReport() {
+                return btnCreateReport;
+        }
+        
+        public JButton getSystemData(){
+                return systemData ;
+        }
 
-	public JButton getbtnExit() {
-		return btnExit;
-	}
+        public JButton getbtnStatistics() {
+                return btnStatistics;
+        }
 
-	public JButton getBtnChangePricing() {
-		return btnChangePricing;
-	}
+        public JButton getbtnParkingStatus() {
+                return btnParkingStatus;
+        }
 
-	public JButton getBtnReviewPricingRequests() {
-		return btnReviewPricingRequests;
-	}
+        public JButton getbtnExit() {
+                return btnExit;
+        }
 
-	public Employee getConectedEmployee() {
-		return conectedEmployee;
-	}
+        public JButton getBtnChangePricing() {
+                return btnChangePricing;
+        }
 
-	public void setConectedEmployee(Employee conectedEmployee) {
-		this.conectedEmployee = conectedEmployee;
-	}
+        public JButton getBtnReviewPricingRequests() {
+                return btnReviewPricingRequests;
+        }
+
+        public Employee getConectedEmployee() {
+                return conectedEmployee;
+        }
+
+        public void setConectedEmployee(Employee conectedEmployee) {
+                this.conectedEmployee = conectedEmployee;
+        }
 
 }

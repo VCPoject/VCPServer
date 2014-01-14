@@ -68,6 +68,7 @@ public class VCP_Main_Frame extends JFrame {
 	private StatisticsPanel statisticsPanel;
 	private ReportsGui reports;
 	private QuarterlyGui quaterly;
+	private SystemData systemData;
 	
 	 
 	/**This is the main frame of the VCP system
@@ -506,36 +507,39 @@ public class VCP_Main_Frame extends JFrame {
 				});
 			}
 		});
+		
+		
 			
 		getEmployeePanel().getbtnStatistics().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				setContentPane(getStatisticsPanel());
-				getStatisticsPanel().getBtnReturn().addActionListener(
-						new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								//TOTO
-								setContentPane(getEmployeePanel());
-								statisticsPanel = null;
-							}
-						});
+            public void actionPerformed(ActionEvent arg0) {
+                    setContentPane(getStatistics());
+                    getStatistics().getBtnReturn().addActionListener(
+                                    new ActionListener() {
+                                            public void actionPerformed(ActionEvent e) {
+                                                    setContentPane(getEmployeePanel());
+                                                    statisticsPanel = null;
+                                            }
+                                    });
 
-			}
-		});	
+            }
+    });        
+    
+    getEmployeePanel().getbtnQuarterly().addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                    setContentPane(getQuarterlyGui());
+                    getQuarterlyGui().getBtnReturn().addActionListener(
+                                    new ActionListener() {
+                                            public void actionPerformed(ActionEvent e) {
+                                                    setContentPane(getEmployeePanel());
+                                                    quaterly = null;
+                                                    
+                                            }
+                                    });
+
+            }
+    });
 		
-		getEmployeePanel().getbtnQuarterly().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				setContentPane(getQuarterlyGui());
-				getStatisticsPanel().getBtnReturn().addActionListener(
-						new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								getStatisticsPanel().getDailyStatistic().closeConnection();
-								setContentPane(getEmployeePanel());
-								quaterly = null;
-							}
-						});
-
-			}
-		});	
+		
 		
 	}
 
@@ -707,7 +711,7 @@ public class VCP_Main_Frame extends JFrame {
 	
 	public QuarterlyGui getQuarterlyGui() {
 		if(quaterly == null){
-			quaterly = new QuarterlyGui(host, DEFAULT_PORT, vcpInfo);
+			quaterly = new QuarterlyGui(host, DEFAULT_PORT, vcpInfo,getEmployeePanel().getConectedEmployee());
 		}
 		return quaterly;
 	}
@@ -802,6 +806,21 @@ public class VCP_Main_Frame extends JFrame {
         cal.add(Calendar.DATE, days); //minus number would decrement the days
         return cal.getTime();
     }
+	
+	public SystemData getSystemData() {
+		if(systemData == null)
+		{
+			systemData = new SystemData(host, DEFAULT_PORT,vcpInfo);
+		}
+		return systemData;
+	}
+	
+	public StatisticsPanel getStatistics() {
+        if(statisticsPanel == null){
+        	statisticsPanel = new StatisticsPanel(host, DEFAULT_PORT);
+        }
+        return statisticsPanel;
+}
 }
 
 

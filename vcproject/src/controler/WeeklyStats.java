@@ -5,10 +5,22 @@ import java.util.Vector;
 
 
 public class WeeklyStats extends Controller {
+
+
+
+
+
 	public WeeklyStats(String host, int port) {
 		super();
+
+
 	}
 	
+
+	/**
+	 * get data from DB that is needed to print to JTable
+	 * @return Vector<Vector<Object>>
+	 */
 	public Vector<Vector<Object>> toVector() {
 		Vector<Vector<Object>> result = new Vector<Vector<Object>>();
 		Vector<Object> row=new Vector<Object>(13);
@@ -16,6 +28,8 @@ public class WeeklyStats extends Controller {
 		Object[] obj ={"SELECT name,avg,median,decile1,decile2,decile3,decile4,decile5,decile6,decile7,decile8,decile9,decile10"
 				+ " FROM vcp_employ.weekly_reports ORDER BY date DESC;"};
 		sendQueryToServer(obj);
+		if(getResult().get(0).equals("No Result"))
+			showWarningMsg("There is no data in DB");
 		int j=1;
 		for(int i=0;i<getResult().size();i++){
 			if(!getResult().get(i).equals("no value"))
@@ -35,7 +49,10 @@ public class WeeklyStats extends Controller {
 		return result;
 	}
 	
-	
+	/**
+	 * get culomn list to JTable
+	 * @return Vector<String>
+	 */
 	public Vector<String> obtainFields(){
 		Vector<String> s= new Vector<String>(12);
 		s.add(" ");
