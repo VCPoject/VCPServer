@@ -14,13 +14,9 @@ public class CheckOutController extends Controller {
 	private VcpInfo vcpInfo;
 	private RegisterController registerController;
 	private Parking_Algorithem parkingAlgorithem;
-	private String host;
-	private int port;
 	
 	public CheckOutController(String host, int port, VcpInfo vcpInfo) {
 		super(host, port);
-		this.host = host;
-		this.port = port;
 		this.vcpInfo = vcpInfo;
 	}
 	
@@ -82,7 +78,7 @@ public class CheckOutController extends Controller {
 	
 	public Parking_Algorithem getParking_Algorithem(Object order) throws ParseException {
 		if (parkingAlgorithem == null)
-			parkingAlgorithem = new Parking_Algorithem(host,port,order,getVcpInfo());
+			parkingAlgorithem = new Parking_Algorithem(order,getVcpInfo());
 
 		return parkingAlgorithem;
 	}
@@ -117,8 +113,13 @@ public void updateSubscribeAscheckedout(Subscribe subscribe){
 		Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?,entriesDay=?"
 		+ " WHERE subscribeNum=?;","checked out",(subscribe.getEntriesDay())-1,subscribe.getSubscribeNum()};
 		sendQueryToServer(updateSubscribe);
+<<<<<<< HEAD
 		subscribe.setStatus("not checked in");
+		subscribe.setEntriesDay((subscribe.getEntriesDay()));
+=======
+		subscribe.setStatus("checked out");
 		subscribe.setEntriesDay((subscribe.getEntriesDay() -1));
+>>>>>>> refs/remotes/origin/ofer
 		
 		}
 		

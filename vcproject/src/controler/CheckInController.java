@@ -13,10 +13,13 @@ public class CheckInController extends Controller {
 	private RegisterController registerController;
 	private Parking_Algorithem parkingAlgorithem;
 	private int fullPositionCounter;
-
+	private String host;
+	private int port;
 
 	public CheckInController(String host, int port, VcpInfo vcpInfo) {
 		super(host, port);
+		this.host = host;
+		this.port = port;
 		this.vcpInfo = vcpInfo;
 	}
 
@@ -102,7 +105,7 @@ public class CheckInController extends Controller {
 	public Parking_Algorithem getParking_Algorithem(Object order) throws ParseException{
 		
 		if (parkingAlgorithem == null)
-			parkingAlgorithem=new Parking_Algorithem(getVcpInfo(), order);
+			parkingAlgorithem=new Parking_Algorithem(host,port,getVcpInfo(), order);
 		
 		return parkingAlgorithem;
 	}

@@ -9,7 +9,7 @@ public class SystemDataControler extends Controller {
         private ArrayList<Object> orders= new ArrayList<Object>();
         private VcpInfo vcpInfo;
         public SystemDataControler(String host, int port,VcpInfo vcpInfo){
-                super();
+                super(host,port);
                 this.vcpInfo=vcpInfo;
         }
         

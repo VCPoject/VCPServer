@@ -8,7 +8,7 @@ public class EmpComplainController extends Controller {
 
 	private EmpComplainEntity empCompEntity;
 	public EmpComplainController(String host, int port) {
-		super();
+		super(host,port);
 		empCompEntity=new EmpComplainEntity();
 	}
 	/**

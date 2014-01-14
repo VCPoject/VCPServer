@@ -338,7 +338,7 @@ public class CheckIn_Panel extends JPanel {
 	
 	public ParkingLot_controller getParkingLot_controller(){
 		if(parkingLotController==null)
-			parkingLotController=new ParkingLot_controller();
+			parkingLotController=new ParkingLot_controller(host,port,getVcpInfo());
 		
 		return parkingLotController;
 	}

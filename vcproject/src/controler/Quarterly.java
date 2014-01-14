@@ -11,7 +11,7 @@ public class Quarterly extends Controller {
         ArrayList <Object> parkingDownReport = new ArrayList<Object>();
         private VcpInfo vcpInfo;
         public Quarterly(String host, int port,VcpInfo vcpInfo){
-                super();
+                super(host,port);
                 this.vcpInfo=vcpInfo;
         }
         

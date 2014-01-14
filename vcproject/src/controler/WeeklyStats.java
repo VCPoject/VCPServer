@@ -11,7 +11,7 @@ public class WeeklyStats extends Controller {
 
 
 	public WeeklyStats(String host, int port) {
-		super();
+		super(host,port);
 
 
 	}

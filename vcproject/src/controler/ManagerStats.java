@@ -28,7 +28,7 @@ public class ManagerStats extends Controller {
 
 	private VcpInfo vcpInfo;
 	public ManagerStats(String host, int port,VcpInfo vcpInfo){
-		super();
+		super(host,port);
 
 		this.vcpInfo=vcpInfo;
 	}

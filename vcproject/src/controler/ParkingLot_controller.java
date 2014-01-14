@@ -28,10 +28,6 @@ public class ParkingLot_controller extends Controller{
 	private HashMap<Integer,Subscribe>subscribeMap;
 	private VcpInfo vcpInfo;
 	
-	public ParkingLot_controller(){
-		super();
-	}
-	
 	
 	public ParkingLot_controller(String host, int port, VcpInfo vcpInfo) {
 		super(host, port);

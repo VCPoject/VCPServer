@@ -353,8 +353,16 @@ public class CheckOut_Panel extends JPanel {
 						order.setStatus("checked out");
 						getCheckOutController().Algo(order);
 						getMakeOrderController().UpdateOrderCheckout(order);
+<<<<<<< HEAD
+						
+						System.out.println(fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]);
+=======
 						fullPositionCounter=getVcpInfo().fullPositionCounter();
 						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]--;
+						if(getVcpInfo().getDefultParkingLot().getStatus().equals("full"))
+							getParkingLot_controller().updateParkingLotAsAvaialble
+							(getVcpInfo().getDefultParkingLot().getIdparkinglot());
+>>>>>>> refs/remotes/origin/ofer
 						if(!getMakeOrderController().getResult().get(0).equals("done"))
 							throw new Exception("Error: Can't update order");
 						if(order.getType().equals("one time")){
@@ -436,7 +444,7 @@ public class CheckOut_Panel extends JPanel {
 		
 	public Parking_Algorithem getParking_Algorithem(Order order,Parking_Lot parkingLot) throws ParseException {
 		if(parkingAlgorithem==null)
-			parkingAlgorithem = new Parking_Algorithem(host,port,order,getVcpInfo());
+			parkingAlgorithem = new Parking_Algorithem(order,getVcpInfo());
 		
 		return parkingAlgorithem;
 	}
@@ -477,7 +485,7 @@ public class CheckOut_Panel extends JPanel {
 	
 	public ParkingLot_controller getParkingLot_controller(){
 		if(parkingLotController==null)
-			parkingLotController=new ParkingLot_controller(host,port,getVcpInfo());
+			parkingLotController=new ParkingLot_controller();
 		
 		return parkingLotController;
 	}

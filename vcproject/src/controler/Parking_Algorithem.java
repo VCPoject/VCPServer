@@ -23,6 +23,48 @@ import entity.Subscribe;
  *from the parking lot.
  */
 public class Parking_Algorithem extends Controller{
+	private String host;
+	private int port;
+	
+	public Parking_Algorithem(String host, int port,VcpInfo vcpInfo,Object checkIn) throws ParseException{
+		super(host,port);
+		this.host = host;
+		this.port = port;
+		this.parkingPlacesList=vcpInfo.getParkingPlaces();
+		this.parkingLot=vcpInfo.getDefultParkingLot();
+		this.reservation=vcpInfo.getReservation();
+		this.orderMap=vcpInfo.getAllOrders();
+		this.subscribeMap=vcpInfo.getAllSubscribed();
+		if(checkIn instanceof Order)
+			this.checkIn=(Order)checkIn;
+		
+		else if(checkIn instanceof Subscribe)
+			this.checkIn=(Subscribe)checkIn;
+		
+		getCheckedInOrders();
+		getParkingLotParkingPalces();
+		sortedParkingPlaceInIt();
+		sortOrders();
+	}
+	
+	public Parking_Algorithem(String host, int port,Object checkOut,VcpInfo vcpInfo){
+		super(host,port);
+		this.host = host;
+		this.port = port;
+		this.parkingPlacesList=vcpInfo.getParkingPlaces();
+		this.parkingLot=vcpInfo.getDefultParkingLot();
+		this.orderMap=vcpInfo.getAllOrders();
+		this.subscribeMap=vcpInfo.getAllSubscribed();
+		
+		if(checkOut instanceof Order)
+			checkOut=(Order)checkOut;
+	
+		else if(checkOut instanceof Subscribe)
+			checkOut=(Subscribe)checkOut;
+		
+		findCar(checkOut);
+	}
+
 	/**
 	 * arrayList witch contain all parking places from all parking lots.
 	 */
@@ -67,39 +109,6 @@ public class Parking_Algorithem extends Controller{
 	 * variable which holds the current order or subscribe that has checked in. 
 	 */
 	private Object checkIn;
-	
-	public Parking_Algorithem(VcpInfo vcpInfo,Object checkIn) throws ParseException{
-		this.parkingPlacesList=vcpInfo.getParkingPlaces();
-		this.parkingLot=vcpInfo.getDefultParkingLot();
-		this.reservation=vcpInfo.getReservation();
-		this.orderMap=vcpInfo.getAllOrders();
-		this.subscribeMap=vcpInfo.getAllSubscribed();
-		if(checkIn instanceof Order)
-			this.checkIn=(Order)checkIn;
-		
-		else if(checkIn instanceof Subscribe)
-			this.checkIn=(Subscribe)checkIn;
-		
-		getCheckedInOrders();
-		getParkingLotParkingPalces();
-		sortedParkingPlaceInIt();
-		sortOrders();
-	}
-	
-	public Parking_Algorithem(Object checkOut,VcpInfo vcpInfo){
-		this.parkingPlacesList=vcpInfo.getParkingPlaces();
-		this.parkingLot=vcpInfo.getDefultParkingLot();
-		this.orderMap=vcpInfo.getAllOrders();
-		this.subscribeMap=vcpInfo.getAllSubscribed();
-		
-		if(checkOut instanceof Order)
-			checkOut=(Order)checkOut;
-	
-		else if(checkOut instanceof Subscribe)
-			checkOut=(Subscribe)checkOut;
-		
-		findCar(checkOut);
-	}
 	
 	/**
 	 * This method insert into parkingPlaceMap all the parking place from specific parking lot.

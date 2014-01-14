@@ -12,10 +12,6 @@ public class DailyStatistic extends Controller {
 	 * DailyStatistic is the controller that controller the daily statistics.
 	 * extend Controller
 	 */
-	public DailyStatistic() {
-		super();
-	}
-
 	public DailyStatistic(String host, int port) {
 		super(host, port);
 	}

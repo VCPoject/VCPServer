@@ -8,7 +8,6 @@ public class ComplainFuController extends Controller {
 	
 	public ComplainFuController(String host, int port) {
 		super(host, port);
-		// TODO Auto-generated constructor stub
 	}
 
 	public boolean checkValidity(int idnum, int carnum) {
