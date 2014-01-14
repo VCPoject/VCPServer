@@ -33,6 +33,11 @@ public class InvoicePanel extends JPanel {
 	private JTextField textFieldPaymentTime;
 	private JButton btnReturn;
 
+	/**
+	 * InvoicePanel display the invoice of given order
+	 * @param order is Order entity
+	 * @param amount is the amount to that was paid
+	 */
 	public InvoicePanel(Order order, String amount) {
 		super();
 		this.amount = amount;
@@ -41,6 +46,9 @@ public class InvoicePanel extends JPanel {
 		listners();
 	}
 
+	/**
+	 * initialize is initialize the panel GUI
+	 */
 	private void initialize() {
 		this.setBounds(10, 11, 464, 340);
 		setLayout(null);

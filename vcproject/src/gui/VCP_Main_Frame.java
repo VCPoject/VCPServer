@@ -217,8 +217,7 @@ public class VCP_Main_Frame extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								if (getLogIn_Frame().getLogIn_Panel().checkValidity()){
 									getEmployeePanel().setConectedEmployee(getLogIn_Frame().getConnectedEmployee());
-									//set it up for employee permissions
-									//getEmployeePanel().setBtnEnableByEmpRole(); 
+									getEmployeePanel().setBtnEnableByEmpRole(); 
 									getLogIn_Frame().closeLoginFrame();
 									loginframe=null;
 									setContentPane(getEmployeePanel());

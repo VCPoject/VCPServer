@@ -40,7 +40,6 @@ public class LogIn_Panel extends JPanel{
 		setLayout(null);
 		
 		usertxtfieled = new JTextField();
-		usertxtfieled.setText("sapir");
 		usertxtfieled.setBounds(170, 130, 228, 22);
 		add(usertxtfieled);
 		usertxtfieled.setColumns(10);
