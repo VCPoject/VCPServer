@@ -1,7 +1,5 @@
 package entity;
 
-import gui.NotWorkingPlaces_Panel;
-
 public class NotWorkingPlaces {
 	private int parkingLotid;
 	private int parkingPlaceNum;

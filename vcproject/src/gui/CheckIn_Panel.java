@@ -203,9 +203,6 @@ public class CheckIn_Panel extends JPanel {
 						if(!order.getStatus().equals("not checked in"))
 								if(!order.getStatus().equals("Late"))
 									throw new Exception("You dont have valid order.(Canceld or already implement)");
-						if(order.getType().equals("Full")){
-							throw new Exception("Parking lot is full,please go to alternative");
-						}
 						if(!order.getIdparking().equals(getVcpInfo().getDefultParkingLot().getIdparkinglot()))
 							throw new Exception("You are in the wrong parking lot.\n"
 									+ "You should go to parking lot number:" + order.getIdparking() );

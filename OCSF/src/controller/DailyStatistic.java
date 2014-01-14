@@ -17,6 +17,13 @@ public class DailyStatistic extends TimerTask {
 	private String dbPassword;
 	private int port;
 
+	/**
+	 * DailyStatistic is a check every day in midnight daily statistic and update the DB
+	 * @param port for connect to DB
+	 * @param dbIp is host to connect to DB
+	 * @param dbUser is DB user
+	 * @param dbPassword is DB password
+	 */
 	public DailyStatistic(int port, String dbIp, String dbUser,String dbPassword) {
 		this.dbIp = dbIp;
 		this.dbUser = dbUser;
@@ -75,6 +82,10 @@ public class DailyStatistic extends TimerTask {
 		return sendToSQL(getsubscribe);
 	}
 
+	/**
+	 * getSubscribeWithMoreCars is getting subscribes that have more then one car
+	 * @return number of subscribe that have more then one car
+	 */
 	public ArrayList<Object> getSubscribeWithMoreCars() {
 		Object[] moreThenOneCars = { "SELECT count(idclient) AS id FROM "
 				+ "(SELECT idclient FROM vcp_db.subscribe "
@@ -94,6 +105,10 @@ public class DailyStatistic extends TimerTask {
 
 	}
 
+	/**
+	 * setDailyStatistic insert daily statistic to DB
+	 * @param dStatistic is daily statistic entity
+	 */
 	public void setDailyStatistic(DailyStatisticEntity dStatistic) {
 		String insertDaily = "INSERT INTO `vcp_employ`.`daily_statistic` "
 				+ "(`implementOrders`,`canceledOrders`,`memberCount`,`memberMoreCarsCount`,`lateCount`)"
@@ -112,6 +127,12 @@ public class DailyStatistic extends TimerTask {
 		return port;
 	}
 
+	/**
+	 * StringToDate convert String to Date instance
+	 * @param strDate is a string with date
+	 * @return date from the given string
+	 * @throws ParseException
+	 */
 	public Date StringToDate(String strDate) throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dateFormat.parse(strDate);

@@ -122,6 +122,10 @@ public class CancelOrderController extends Controller {
 			s.add("Order ID: '"+getResult().get(i).toString() +"' Order Date: '" +getResult().get(i+1).toString()+"'");
 		return s;
 	}
+
+	public Pricing getPricing() {
+		return pricing;
+	}
 	
 	
 }

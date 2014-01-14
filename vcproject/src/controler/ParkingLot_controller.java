@@ -6,16 +6,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-
-import com.sun.rmi.rmid.ExecPermission;
-
 import entity.NotWorkingPlaces;
 import entity.Order;
 import entity.Parking_Lot;
 import entity.Parking_Places;
 import entity.Reservation;
 import entity.Subscribe;
-import gui.NotWorkingPlaces_Panel;
 
 public class ParkingLot_controller extends Controller{
 	private ArrayList<Parking_Lot> parkingLotList;

@@ -6,14 +6,11 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import controler.LogIn_controller;
-import controler.Reminder;
 import controler.VcpInfo;
 import entity.Employee;
 
@@ -24,10 +21,6 @@ public class LogIn_Frame extends JFrame{
 	 * loginpanel is the login panel to set in this frame
 	 */
 	private LogIn_Panel loginpanel;
-	/**
-	 * reminder if no action takes for 5 minutes
-	 */
-	private Reminder reminder;
 	private String host;
 	/** vcpInfo is a controller that run on start-up of the 
 	 * application and download all the info form the DB
@@ -69,7 +62,6 @@ public class LogIn_Frame extends JFrame{
 		this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height
 				/ 2 - this.getSize().height / 2);
 		this.setContentPane(getLogIn_Panel());
-		reminder=new Reminder(120,this);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				getLogIn_Panel().getBtnExit().doClick();
@@ -91,7 +83,6 @@ public class LogIn_Frame extends JFrame{
 	public void closeLoginFrame() {
 		this.setVisible(false);
 		this.dispose();
-		reminder.timer.cancel();
 	}
 	
 	public LogIn_controller getLogincontroller(){

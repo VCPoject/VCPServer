@@ -10,14 +10,27 @@ import entity.Subscribe;
 
 public class RegisterController extends Controller {
 
+	/**
+	 * RegisterController is a controller that manage all subscribe
+	 * @param host to connect to server side
+	 * @param port to connect to server side
+	 */
 	public RegisterController(String host, int port) {
 		super(host, port);
 	}
 
+	/**
+	 * addNewSubscribe is adding new subscribe to DB by given subscribe entity
+	 * @param newSubscribed is a new subscribe entity to add to DB
+	 */
 	public void addNewSubscribe(Subscribe newSubscribed) {
 		sendQueryToServer(newSubscribed);
 	}
 
+	/**
+	 * updateResubscribe is update existing and expired subscribe to be renew 
+	 * @param reSubscribed is expired subscribe
+	 */
 	public void updateResubscribe(Subscribe reSubscribed) {
 		Object[] updateResubscribe = {
 				"UPDATE `vcp_db`.`subscribe` SET `idparking` = ?, `startDate` = ?, `endDate` = ?, `subscribType` = ?"
@@ -29,7 +42,11 @@ public class RegisterController extends Controller {
 
 	}
 
-	/* Check if subscribe is expired- if expired return true else false */
+	/**
+	 * isExpired check if the subscribe is expired by give subscribe entity
+	 * @param subscribe entity
+	 * @return true if subscribe is expired
+	 */
 	public boolean isExpired(Subscribe subscribe) {
 		String time = "00:00:00";
 		String dateStart = subscribe.getStartDate() + " " + time;

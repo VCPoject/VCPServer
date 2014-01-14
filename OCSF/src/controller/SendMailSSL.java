@@ -11,9 +11,19 @@ import javax.mail.internet.MimeMessage;
  
 public class SendMailSSL {
 	
+		/**
+		 * SendMailSSL send mail to clients.
+		 */
 		public SendMailSSL() {
 	}
 		
+	/**
+	 * sendMail is sending mails by given email,subject, and body of the mail
+	 * @param email to send message
+	 * @param subject of the message
+	 * @param text is the body of the send message
+	 * @return
+	 */
 	public boolean sendMail(String email,String subject, String text){
 		Properties props = new Properties();  
         props.put("mail.smtp.host", "smtp.gmail.com");  

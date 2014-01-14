@@ -18,6 +18,14 @@ public class ResubscribeReminder extends TimerTask {
 	private int port;
 	private AlreadySendReminder alreadySendReminder;
 
+	/**
+	 * ResubscribeReminder is checking for subscribes that have 14 days left and email them about it.
+	 * @param port for connect to DB
+	 * @param dbIp is host to connect to DB
+	 * @param dbUser is DB user
+	 * @param dbPassword is DB password
+	 * @param alreadySendReminder holds all subscribes that have been mailed
+	 */
 	public ResubscribeReminder(int port, String dbIp, String dbUser,
 			String dbPassword, AlreadySendReminder alreadySendReminder) {
 		super();
@@ -71,6 +79,12 @@ public class ResubscribeReminder extends TimerTask {
 		return toDB.getResult();
 	}
 
+	/**
+	 * isNeedToSend is checking if there is a need to send email to inform the subscribe that 
+	 * his member is going to end in 14 days
+	 * @param subscribe entity
+	 * @return true if need to send email to subscribe
+	 */
 	public boolean isNeedToSend(Subscribe subscribe) {
 		Date toDay = new Date();
 		toDay = addDays(toDay, 14);
@@ -88,6 +102,12 @@ public class ResubscribeReminder extends TimerTask {
 		return false;
 	}
 
+	/**
+	 * addDays add to given date more days by given days.
+	 * @param date instance
+	 * @param days to add to date
+	 * @return date with add number of given days
+	 */
 	public Date addDays(Date date, int days) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);

@@ -594,7 +594,7 @@ public class ResubscribePanel extends JPanel {
 					}
 					
 					if (rdbtnPartial.isSelected()) {
-						subscribe.setSubscribeType(rdbtnPartial.getText());
+						subscribe.setSubscribeType(rdbtnPartial.getText().toLowerCase());
 						String departureTime = comboBoxDepartureHour
 								.getSelectedItem()
 								+ ":"
@@ -605,7 +605,7 @@ public class ResubscribePanel extends JPanel {
 								.parseInt(comboBoxParkingLot.getSelectedItem()
 										.toString()));
 					}else{
-						subscribe.setSubscribeType(rdbtnFull.getText());
+						subscribe.setSubscribeType(rdbtnFull.getText().toLowerCase());
 						subscribe.setDepartureTime(null);
 						subscribe.setIdparking(null);
 					}

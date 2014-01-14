@@ -1,5 +1,9 @@
 package entity;
 
+/**
+ * Daily statistic entity
+ *
+ */
 public class DailyStatisticEntity implements Entity {
 
 	private Integer statisticNum;
@@ -76,6 +80,7 @@ public class DailyStatisticEntity implements Entity {
 	public void setDate(String date) {
 		this.date = date;
 	}
+
 
 	@Override
 	public Object[] toObject() {

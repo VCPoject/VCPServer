@@ -63,6 +63,9 @@ public class Main_Panel extends JPanel {
 	private JPanel panelDB;
 	private JTextField textFieldLocalIP;
 
+	/**
+	 * Main_Panel is the main panel of the server
+	 */
 	public Main_Panel() {
 		super();
 		initialize();
@@ -226,6 +229,9 @@ public class Main_Panel extends JPanel {
 
 	}
 
+	/**
+	 * listners is the listener of all panel components
+	 */
 	private void listners() {
 		btnChangeDB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -266,6 +272,10 @@ public class Main_Panel extends JPanel {
 		return tableClientConnected;
 	}
 
+	/**
+	 * setTableClientConnected set the table with connected clients
+	 * @param tableClientConnected a table with connected clients
+	 */
 	public void setTableClientConnected(JTable tableClientConnected) {
 		this.tableClientConnected = tableClientConnected;
 		this.tableClientConnected.setSurrendersFocusOnKeystroke(true);
@@ -284,6 +294,9 @@ public class Main_Panel extends JPanel {
 		return passwordField;
 	}
 
+	/**
+	 * getDbInfo getting DB host, user and password info from file dbInfo.txt
+	 */
 	private void getDbInfo() {
 		// The name of the file to open.
 		String fileName = "dateBaseConnectionInfo/dbInfo.txt";
@@ -332,6 +345,9 @@ public class Main_Panel extends JPanel {
 
 	}
 
+	/**
+	 * setDbInfo setting DB host, user and password info to file dbInfo.txt
+	 */
 	private void setDbInfo() {
 
 		// The name of the file to open.

@@ -466,17 +466,17 @@ public class Register_Panel extends JPanel {
 						String subscribeQuery;
 						if (rdbtnPartial.isSelected()) {
 							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`idparking`,`startDate`,`endDate`,`subscribType`,`customerType`,`leavingTime`,`status`) VALUES(?,?,?,?,?,?,?,?,?);";
-							newSubscribe.setSubscribeType(rdbtnPartial.getText());
+							newSubscribe.setSubscribeType(rdbtnPartial.getText().toLowerCase());
 							newSubscribe.setIdparking(Integer.parseInt(comboBoxParkingLot.getSelectedItem().toString()));
 							newSubscribe.setDepartureTime(comboBoxDepartureHour.getSelectedItem()+ ":"	+ comboBoxDepartureMin.getSelectedItem() + ":00");
 						} else {
-							newSubscribe.setSubscribeType(rdbtnFull.getText());
+							newSubscribe.setSubscribeType(rdbtnFull.getText().toLowerCase());
 							subscribeQuery = "INSERT INTO `vcp_db`.`subscribe`(`idclient`,`carNum`,`startDate`,`endDate`,`subscribType`,`customerType`,`status`) VALUES(?,?,?,?,?,?,?);";
 						}
 						if (rdbtnPrivate.isSelected())
-							newSubscribe.setCustomerType(rdbtnPrivate.getText());
+							newSubscribe.setCustomerType(rdbtnPrivate.getText().toLowerCase());
 						else
-							newSubscribe.setCustomerType(rdbtnBusiness.getText());
+							newSubscribe.setCustomerType(rdbtnBusiness.getText().toLowerCase());
 						newSubscribe.setSubscribeNum(getVcpInfo().getAllSubscribed().size() + 1);
 						newSubscribe.setStatus("not checked in");
 						newSubscribe.setQuery(subscribeQuery);

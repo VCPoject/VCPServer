@@ -4,10 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
-
 import entity.Order;
-import entity.Parking_Lot;
-import entity.Parking_Places;
 import entity.Subscribe;
 
 public class CheckInController extends Controller {
@@ -129,5 +126,9 @@ public class CheckInController extends Controller {
 		long diffHours = diff / (60 * 60 * 1000);
 		
 		return diffHours;
+	}
+
+	public int getFullPositionCounter() {
+		return fullPositionCounter;
 	}
 }

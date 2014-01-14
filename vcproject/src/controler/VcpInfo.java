@@ -19,10 +19,18 @@ public class VcpInfo extends Controller  {
 	private HashMap<Integer, Reservation> reservationList;
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
-	private boolean systemEnable = false;
 	private ParkingLot_controller parkingLotController;
+	/**
+	 * fullPositionCounter is a counter for available parking places in parking lots
+	 */
 	private int[] fullPositionCounter;
 
+	/**
+	 * VcpInfo is holds info from DB that is been download at start up.
+	 * it contains: all parking lot,parking places, clients, orders,subscribe,employees, cars,not working places
+	 * ,reservation,pricing,defultParkingLot, full position counter.
+	 * @param host to connect server
+	 */
 	public VcpInfo(String host) {
 		super(host);
 		getParkingLotInfo();
@@ -340,14 +348,6 @@ public class VcpInfo extends Controller  {
 
 	public void setDefultParkingLot(Parking_Lot defultParkingLot) {
 		this.defultParkingLot = defultParkingLot;
-	}
-
-	public boolean isSystemEnable() {
-		return systemEnable;
-	}
-
-	public void setSystemEnable(boolean systemEnable) {
-		this.systemEnable = systemEnable;
 	}
 
 	public void setEmployee(HashMap<String, Employee> employeeMap) {

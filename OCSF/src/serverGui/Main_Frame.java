@@ -29,12 +29,18 @@ public class Main_Frame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private Main_Panel mainPanel;
 	private int port;
+	/**
+	 * sv is EchoServer entity that listen to server side and handel client requests
+	 */
 	private EchoServer sv;
 	private String dbIp;
 	private String dbUser;
 	private String dbPassword;
 	private Scheduler scheduler;
 
+	/**
+	 * @param port to listen to
+	 */
 	public Main_Frame(int port) {
 		super();
 		this.port = port;
@@ -42,6 +48,11 @@ public class Main_Frame extends JFrame {
 		listners();
 	}
 
+	/**
+	 * ConnectionStatus is setting all the GUI that give info about the server status.
+	 * Given info:Connecterd/Disconnected, client IP and port table.
+	 * Checking every one second.
+	 */
 	private void ConnectionStatus() {
 		ScheduledExecutorService exec = Executors
 				.newSingleThreadScheduledExecutor();
@@ -49,7 +60,7 @@ public class Main_Frame extends JFrame {
 			@Override
 			public void run() {
 
-				getMainPanel().setTextFieldNumberOfConnections(sv.getNumberOfConnections());//TODO
+				getMainPanel().setTextFieldNumberOfConnections(sv.getNumberOfConnections());
 				if (sv.isListening()) {
 					getMainPanel().setTxtStatus("Connected");
 					Thread[] clientList = sv.getClientConnections();
@@ -93,6 +104,13 @@ public class Main_Frame extends JFrame {
 
 	}
 
+	/**
+	 * setConnection is set the server and DB.
+	 * @param port to listen to
+	 * @param dbIp is host to connect to DB
+	 * @param dbUser is DB user
+	 * @param dbPassword is DB password
+	 */
 	private void setConnection(int port, String dbIp, String dbUser,String dbPassword) {
 		sv = new EchoServer(port, dbIp, dbUser, dbPassword);
 
@@ -105,6 +123,9 @@ public class Main_Frame extends JFrame {
 		ConnectionStatus();
 	}
 
+	/**
+	 * initialize is initialize the frame GUI
+	 */
 	private void initialize() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -123,6 +144,9 @@ public class Main_Frame extends JFrame {
 				/ 2 - this.getSize().height / 2);
 	}
 
+	/**
+	 * listners is the listener to all components of the GUI
+	 */
 	private void listners() {
 		getMainPanel().getBtnExit().addActionListener(new ActionListener() {/*
 																			 * Exit
