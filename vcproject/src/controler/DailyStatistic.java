@@ -8,6 +8,10 @@ import java.util.Vector;
 
 public class DailyStatistic extends Controller {
 
+	/**
+	 * DailyStatistic is the controller that controller the daily statistics.
+	 * extend Controller
+	 */
 	public DailyStatistic() {
 		super();
 	}
@@ -20,6 +24,11 @@ public class DailyStatistic extends Controller {
 		super(host);
 	}
 	
+	/**
+	 * getDailyStatistic is getting info from server about statistics by given date
+	 * @param date to get the daily statistic
+	 * @return vector with all the info of the daily statistic
+	 */
 	public Vector<Vector<Object>> getDailyStatistic(Date date){
 		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 		Integer columnLength = 7;

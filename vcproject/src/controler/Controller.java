@@ -18,35 +18,71 @@ import entity.Subscribe;
 
 public abstract class Controller {
 	final public static int DEFAULT_PORT = 5555;
+	/**
+	 * server for connecting to server side
+	 */
 	private ClientConsole server;
+	/**
+	 * host for connecting the server
+	 */
 	private String host;
+	/**
+	 * port for connecting the server
+	 */
 	private int port;
 
+	/**
+	 * Controller is the basic controller for all the system controllers
+	 * this constructor connect with default port that is 5555 and with local host
+	 */
 	public Controller() {
 		this("localhost", DEFAULT_PORT);
 	}
 
+	/**
+	 * Controller is the basic controller for all the system controllers
+	 * this constructor connect with default port that is 5555
+	 * @param host for connecting the server
+	 * 
+	 */
 	public Controller(String host) {
 		this(host, DEFAULT_PORT);
 	}
 
+	/**
+	 * Controller is the basic controller for all the system controllers
+	 * @param host for connecting the server
+	 * @param port for connecting the server
+	 */
 	public Controller(String host, int port) {
 		this.host = host;
 		this.port = port;
 	}
 
+	/**
+	 * showWarningMsg display pop up massage of warning
+	 * @param msg to be display
+	 */
 	public void showWarningMsg(String msg) {
 		JFrame frame = new JFrame();
 		JOptionPane.showMessageDialog(frame, msg, "Warning",
 				JOptionPane.WARNING_MESSAGE);
 	}
 
+	/**
+	 * showSeccussesMsg display pop up massage of success
+	 * @param msg to be display
+	 */
 	public void showSeccussesMsg(String msg) {
 		JFrame frame = new JFrame();
 		JOptionPane
 				.showMessageDialog(frame, msg, "", JOptionPane.PLAIN_MESSAGE);
 	}
 
+	/**
+	 * sendQueryToServer send entity to server by identify the instance of the entity
+	 * @param entity to be send to server
+	 */
 	public void sendQueryToServer(Object entity) {
 		openConnection();
 		Object[] toServer = { null };
@@ -73,11 +109,19 @@ public abstract class Controller {
 
 	}
 
+	/**
+	 * openConnection is opening connection to the server side using host and port parameters
+	 * that was defined in the constructor
+	 */
 	private void openConnection() {
 		if (server == null || !server.isConnected())
 			server = new ClientConsole(this.host, this.port);
 	}
 
+	/**
+	 * getResult is getting result from server side.
+	 * @return result from the sever side
+	 */
 	public ArrayList<Object> getResult() {
 		ArrayList<Object> result = null;
 		boolean flag = false;
@@ -97,6 +141,10 @@ public abstract class Controller {
 		return result;
 	}
 
+	/**
+	 * closeConnection is closing the connection with the server side
+	 * only if the connection is connected
+	 */
 	public void closeConnection() {
 		try {
 			if(isConnected())
@@ -106,6 +154,10 @@ public abstract class Controller {
 		}
 	}
 
+	/**
+	 * isConnected is checking if the connection to server is open
+	 * @return true if the connection to server is open, else false.
+	 */
 	public boolean isConnected() {
 		if(server != null)
 			return server.isConnected();

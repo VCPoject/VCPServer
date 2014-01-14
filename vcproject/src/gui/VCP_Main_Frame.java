@@ -26,7 +26,6 @@ import com.itextpdf.text.Font;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.awt.Window.Type;
 
 public class VCP_Main_Frame extends JFrame {
 	private static final long serialVersionUID = 1L;
