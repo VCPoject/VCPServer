@@ -59,7 +59,7 @@ public class CheckInController extends Controller {
 		Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?,entriesDay=?"
 		+ " WHERE subscribeNum=?;","checked in",(subscribe.getEntriesDay())+1,subscribe.getSubscribeNum()};
 		subscribe.setStatus("checked in");
-		subscribe.setEntriesDay((subscribe.getEntriesDay()));
+		subscribe.setEntriesDay((subscribe.getEntriesDay() +1));
 		sendQueryToServer(updateSubscribe);
 		}
 		

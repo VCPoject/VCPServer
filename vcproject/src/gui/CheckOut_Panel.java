@@ -355,7 +355,6 @@ public class CheckOut_Panel extends JPanel {
 						getMakeOrderController().UpdateOrderCheckout(order);
 						fullPositionCounter=getVcpInfo().fullPositionCounter();
 						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]--;
-						System.out.println(fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]);
 						if(getVcpInfo().getDefultParkingLot().getStatus().equals("full"))
 							getParkingLot_controller().updateParkingLotAsAvaialble
 							(getVcpInfo().getDefultParkingLot().getIdparkinglot());
@@ -389,6 +388,11 @@ public class CheckOut_Panel extends JPanel {
 						if(!isOrderExist)
 							throw new Exception("Car number " + subscribe.getCarNum() + " is not in parking lot contact admin or try again");
 						subscribe.setStatus("not checked in");
+						fullPositionCounter=getVcpInfo().fullPositionCounter();
+						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]--;
+						if(getVcpInfo().getDefultParkingLot().getStatus().equals("full"))
+							getParkingLot_controller().updateParkingLotAsAvaialble
+							(getVcpInfo().getDefultParkingLot().getIdparkinglot());
 						getCheckOutController().updateSubscribeAscheckedout(subscribe);
 					}
 					

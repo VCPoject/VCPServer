@@ -269,7 +269,7 @@ public class CheckIn_Panel extends JPanel {
 							if(!subscribe.getIdparking().equals(getVcpInfo().getDefultParkingLot().getIdparkinglot()))
 								throw new Exception("You are in the wrong parking lot.\n"
 										+ "You should go to parking lot number:" + subscribe.getIdparking());
-							if(subscribe.getEntriesDay() > 1)
+							if(Math.abs(subscribe.getEntriesDay()) > 1)
 								throw new Exception("You cant check in today");
 							
 							Calendar date = Calendar.getInstance();    
