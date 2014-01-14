@@ -11,6 +11,7 @@ import entity.Car;
 import entity.ClientEntity;
 import entity.Employee;
 import entity.FinancialCard;
+import entity.NotWorkingPlaces;
 import entity.Order;
 import entity.Parking_Places;
 import entity.Reservation;
@@ -63,8 +64,10 @@ public abstract class Controller {
 			toServer = ((FinancialCard) entity).toObject();
 		}else if(entity instanceof Reservation){
 			toServer=((Reservation) entity).toObject();
+		}else if(entity instanceof NotWorkingPlaces){
+			toServer=((NotWorkingPlaces) entity).toObject();
 		}else if (entity instanceof Object[]) {
-			toServer = (Object[]) entity;
+			toServer = (Object[]) entity;	
 		}
 		server.accept(toServer);
 

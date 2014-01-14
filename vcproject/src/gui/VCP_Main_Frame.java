@@ -28,8 +28,10 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Font;
+
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class VCP_Main_Frame extends JFrame {
@@ -775,7 +777,22 @@ public class VCP_Main_Frame extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 	}
+	
+
+	/**
+	 * addDays is adding to give date number of x days
+	 * @param date to be add
+	 * @param days to add to date
+	 * @return
+	 */
+	public Date addDays(Date date, int days){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
+    }
 }
 
 

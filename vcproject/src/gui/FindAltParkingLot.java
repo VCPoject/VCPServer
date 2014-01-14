@@ -1,12 +1,15 @@
 package gui;
 
 import javax.swing.*;
+
 import controler.*;
 import entity.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+
 import javax.swing.border.TitledBorder;
 
 public class FindAltParkingLot extends JPanel{
@@ -23,17 +26,14 @@ public class FindAltParkingLot extends JPanel{
 	private VcpInfo vcpInfo;
 	private ArrayList<Parking_Lot> altParkingLots;
 	private ParkingLot_controller ParkingLotController;
-	private JComboBox <String> comboBoxParkingLotFull;
 	private JComboBox <String> comboBoxParkingLotAlternative;
-	private int fullParkingLotId;
 	private int altParkingLotId;
 	private int defaultParkingLot;
 	private JButton btnExit;
 	private JButton btnSave;
-	private JLabel lblParkingLotNumber;
 	private JLabel lblParkingLotNumber_1;
-	private JPanel panelFullParkingLot;
 	private JPanel panelAlternativeParkingLot;
+	private JButton btnRemove;
 	
 	/**
 	 * This panel is for setting full parking lot and assign alternative one.
@@ -49,6 +49,10 @@ public class FindAltParkingLot extends JPanel{
 		this.port=port;
 		initalize();
 		setLayout(null);
+		
+		btnRemove = new JButton("Remove");
+		btnRemove.setBounds(524, 390, 109, 45);
+		add(btnRemove);
 		listners();
 	}
 	/**
@@ -61,31 +65,9 @@ public class FindAltParkingLot extends JPanel{
 		lbFindAltParkinLot.setBounds(223, 11, 339, 43);
 		add(lbFindAltParkinLot);
 		
-		panelFullParkingLot = new JPanel();
-		panelFullParkingLot.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Full parking lot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelFullParkingLot.setBounds(236, 109, 313, 100);
-		add(panelFullParkingLot);
-		panelFullParkingLot.setLayout(null);
-		
-		JLabel lblSignInFullLot = new JLabel("Please sign in the full parking lot:");
-		lblSignInFullLot.setBounds(6, 16, 266, 27);
-		panelFullParkingLot.add(lblSignInFullLot);
-		lblSignInFullLot.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
-		
-		comboBoxParkingLotFull = new JComboBox<String>();
-		comboBoxParkingLotFull.setBounds(217, 71, 90, 22);
-		panelFullParkingLot.add(comboBoxParkingLotFull);
-		
-		lblParkingLotNumber = new JLabel("Parking lot number:");
-		lblParkingLotNumber.setBounds(6, 71, 181, 22);
-		panelFullParkingLot.add(lblParkingLotNumber);
-		lblParkingLotNumber.setFont(new Font("Tahoma", Font.BOLD, 18));
-		comboBoxParkingLotFull.addItem(" ");
-		fillParkinglotcombobox();
-		
 		panelAlternativeParkingLot = new JPanel();
 		panelAlternativeParkingLot.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Alternative parking lot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelAlternativeParkingLot.setBounds(236, 248, 313, 121);
+		panelAlternativeParkingLot.setBounds(249, 157, 313, 121);
 		add(panelAlternativeParkingLot);
 		panelAlternativeParkingLot.setLayout(null);
 		
@@ -97,6 +79,7 @@ public class FindAltParkingLot extends JPanel{
 		comboBoxParkingLotAlternative = new JComboBox<String>();
 		comboBoxParkingLotAlternative.setBounds(217, 92, 90, 20);
 		panelAlternativeParkingLot.add(comboBoxParkingLotAlternative);
+		fillAltParkinglotcombox();
 		
 		lblParkingLotNumber_1 = new JLabel("Parking lot number:");
 		lblParkingLotNumber_1.setBounds(6, 92, 181, 22);
@@ -110,16 +93,9 @@ public class FindAltParkingLot extends JPanel{
 		btnSave = new JButton("Save\r\n");
 		btnSave.setBounds(338, 390, 109, 45);
 		add(btnSave);
-		btnSave.setEnabled(false);
 		
 	}
-	/**
-	 * Fill the combobox of parking lot with 
-	 * the default parking lot number
-	 */
-	public void fillParkinglotcombobox() {
-			comboBoxParkingLotFull.addItem((Integer.toString(defaultParkingLot)));
-	}
+	
 	/**
 	 * Fill the combobox of alternative parking lot with 
 	 * the default parking lot number
@@ -135,13 +111,61 @@ public class FindAltParkingLot extends JPanel{
 	 */
 	public void listners(){
 		
-		btnSave.addActionListener(new ActionListener() {
+		getbtnSave().addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				getParkingLot_controller().updateparkingLotAsAlt(fullParkingLotId, altParkingLotId);
+				
+				try{
+					
+					if(comboBoxParkingLotAlternative.getSelectedItem().toString().equals(" "))
+						throw new Exception("Yoy didn't insert Alternative parking lot");
+				
+					if(getParkingLot_controller().checkAltParkingLot(altParkingLotId,defaultParkingLot))
+						throw new Exception("Parking lot"+" "+defaultParkingLot+" "+"has already alternative park");
+					
+				getParkingLot_controller().updateparkingLotAsAlt(defaultParkingLot, altParkingLotId);
+				}
+				
+				catch(Exception e1){
+				getParkingLot_controller().showWarningMsg(e1.getMessage());
+				}
 			}
 		});
 		
+		getbtnRemove().addActionListener(new ActionListener() {
+			
+			
+				public void actionPerformed(ActionEvent arg0) {
+					try{
+						if(comboBoxParkingLotAlternative.getSelectedItem().toString().equals(" "))
+							throw new Exception("Yoy didn't insert Alternative parking lot");
+			
+						if(getParkingLot_controller().checkAltParkingLot(altParkingLotId,defaultParkingLot)==false)
+							throw new Exception("Parking lot"+" "+altParkingLotId+" "+"is not the"
+							+" "+ "alternative parking lot of parking lot"+" "+defaultParkingLot);
+				
+					getParkingLot_controller().RemoveparkingLotAsAlt(defaultParkingLot, altParkingLotId);
+					}
+			
+					catch(Exception e1){
+						getParkingLot_controller().showWarningMsg(e1.getMessage());
+					}
+				}
+		});
+		
+		comboBoxParkingLotAlternative.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				try{
+					
+					altParkingLotId=Integer.parseInt(comboBoxParkingLotAlternative.getSelectedItem().toString());
+				}
+				
+				catch(Exception e1){
+					getParkingLot_controller().showWarningMsg(e1.getMessage());
+				}
+			}
+		});
 	}
 	
 	public JButton getbtnExit(){
@@ -152,7 +176,12 @@ public class FindAltParkingLot extends JPanel{
 		return btnSave;
 	}
 	
+	public JButton getbtnRemove(){
+		return btnRemove;
+	}
+	
 	public ParkingLot_controller getParkingLot_controller(){
+		
 		if(ParkingLotController==null)
 			ParkingLotController=new ParkingLot_controller( host, port,vcpInfo);
 		

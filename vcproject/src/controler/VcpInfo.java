@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import entity.*;
+import gui.NotWorkingPlaces_Panel;
 
 public class VcpInfo extends Controller  {
 
@@ -14,6 +15,7 @@ public class VcpInfo extends Controller  {
 	private HashMap <Integer,Subscribe>subscribeMap;
 	private HashMap<String, Employee> employeeMap;
 	private ArrayList<Car> allCars;
+	private ArrayList<NotWorkingPlaces> notWorkingPlacesList;
 	private HashMap<Integer, Reservation> reservationList;
 	private Pricing pricing;
 	private Parking_Lot defultParkingLot;
@@ -33,6 +35,7 @@ public class VcpInfo extends Controller  {
 		getReservationInfo();
 		getAllCars();
 		getParkingPricingInfo();
+		//getNotWorkingPlacesInfo();
 		closeConnection();
 	}
 	public ArrayList<Car> getAllCars(){
@@ -304,7 +307,7 @@ public class VcpInfo extends Controller  {
 		sendQueryToServer(reservationQuery);
 		ArrayList<Object> result = getResult();
 		HashMap<Integer,Reservation> reservationList=new HashMap<Integer,Reservation>();
-		while(i<result.size()){
+		while(i<result.size() && result!=null){
 			
 			Reservation reservation=new Reservation();
 			reservation.setParkingPlaceNum(Integer.parseInt(result.get(i++).toString()));
@@ -387,6 +390,33 @@ public class VcpInfo extends Controller  {
 		}
 		
 		return count;
+	}
+	
+	public void getNotWorkingPlacesInfo(){
+		int i=0;
+		Object[] query={"SELECT * FROM `vcp_db`.`not_working_places` ORDER BY idparking;"};
+		sendQueryToServer(query);
+		ArrayList<NotWorkingPlaces>notWorkingPlacesList=new ArrayList<NotWorkingPlaces>();
+		ArrayList<Object> result=getResult();
+		while(i<result.size() && result!=null){
+			NotWorkingPlaces nwpPlace=new NotWorkingPlaces();
+			nwpPlace.setParkingPlaceNum(Integer.parseInt(result.get(i++).toString()));
+			nwpPlace.setParkingLotid(Integer.parseInt(result.get(i++).toString()));
+			nwpPlace.setFloorNum(Integer.parseInt(result.get(i++).toString()));
+			nwpPlace.setLineNum(Integer.parseInt(result.get(i++).toString()));
+			nwpPlace.setStartDate(result.get(i++).toString());
+			nwpPlace.setEndDate(result.get(i++).toString());
+			notWorkingPlacesList.add(nwpPlace);
+		}
+		setNotWorkingPlaces(notWorkingPlacesList);
+	}
+	
+	public void setNotWorkingPlaces(ArrayList<NotWorkingPlaces> notWorkingPlacesList){
+		this.notWorkingPlacesList=notWorkingPlacesList;
+	}
+	
+	public ArrayList<NotWorkingPlaces> getNorWorkingPlaces(){
+		return notWorkingPlacesList;
 	}
 	
 	public ParkingLot_controller getParkingLot_controller(){

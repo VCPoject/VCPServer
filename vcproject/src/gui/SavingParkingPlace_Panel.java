@@ -38,6 +38,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 	private JComboBox<String> comboBoxDepartureHour;
 	private ParkingLot_controller parkinglotcontroller;
 	private ArrayList<Parking_Places> parkingPlaces;
+	private ArrayList<Parking_Places>vaccantParkingPlaces;
 	private int parkinglotId;
 	private int floorNum;
 	private int lineNum;
@@ -51,7 +52,6 @@ public class SavingParkingPlace_Panel extends JPanel {
 	 */
 	private VcpInfo vcpInfo;
 	private int port;
-	private int defaultParkingLot;
 	private JDateChooser arrivalDate;
 	private JDateChooser departureDate;
 	private String Datearrival;
@@ -82,7 +82,6 @@ public class SavingParkingPlace_Panel extends JPanel {
 	public SavingParkingPlace_Panel(String host, int port, VcpInfo vcpInfo){
 		super();
 		this.vcpInfo=vcpInfo;
-		this.defaultParkingLot=vcpInfo.getDefultParkingLot().getIdparkinglot();
 		this.parkingPlaces=vcpInfo.getParkingPlaces();
 		this.host=host;
 		this.port=port;
@@ -155,6 +154,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 		comboBoxDepartureMin = new JComboBox<String>();
 		comboBoxDepartureMin.setBounds(215, 136, 48, 20);
 		panel.add(comboBoxDepartureMin);
+
 		
 		lblArrivalDate = new JLabel("Arrival date:");
 		lblArrivalDate.setBounds(6, 16, 111, 22);
@@ -248,7 +248,8 @@ public class SavingParkingPlace_Panel extends JPanel {
 	 * the default parking lot number
 	 */
 	public void fillParkinglotcombobox(){
-		comboBoxParkinglot.addItem((Integer.toString(defaultParkingLot)));
+		for(Integer i=1;i<7;i++)
+			comboBoxParkinglot.addItem(i.toString());
 	}
 	
 	/**
@@ -280,14 +281,28 @@ public class SavingParkingPlace_Panel extends JPanel {
 			
 			public void actionPerformed(ActionEvent e) {
 				try{
-				parkinglotId=Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
+				
 				arrivalTime=arrivalTimeHour+":"+arrivalTimeMin+":"+"00";
-				Date arrival=StringToDate(arrivalDate.toString(),arrivalTime);
-				parkingPlaces=getParkingLot_controller().getVaccantParkingPlaces(parkinglotId,arrival);
+				ArrivalDate=arrivalDate.getDate();
+				
+				if(comboBoxParkinglot.getSelectedItem().toString().equals(" "))
+					throw new Exception("you didn't insert parking lot id");
+				
+				parkinglotId=Integer.parseInt(comboBoxParkinglot.getSelectedItem().toString());
+				
+				if(arrivalDate==null)
+					throw new Exception("you didnt select arrival date");
+				
+				else if(comboBoxArrivalMin.getSelectedItem().equals("Min")||comboBoxArrivalHour.getSelectedItem().equals("Hour"))
+					throw new Exception("You didn't insert arrival time");
+				
+				SimpleDateFormat formatOnlyDate = new SimpleDateFormat("yyyy-MM-dd");
+				Date arrival=StringToDate(formatOnlyDate.format(ArrivalDate),arrivalTime);
+				vaccantParkingPlaces=getParkingLot_controller().getVaccantParkingPlaces(parkinglotId,arrival);
 				}
 				
 				catch(Exception e1){
-					parkinglotId=0;
+					getParkingLot_controller().showWarningMsg(e1.getMessage());
 				}
 			}
 		});
@@ -301,9 +316,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 				floorNum=Integer.parseInt(comboBoxFloor.getSelectedItem().toString());
 				}
 				
-				catch(Exception e1){
-					floorNum=0;
-				}
+				catch(Exception e1){}
 			}
 		});
 		
@@ -313,12 +326,10 @@ public class SavingParkingPlace_Panel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				try{
 				lineNum=Integer.parseInt(comboBoxLine.getSelectedItem().toString());
-				fillParkinglotcombobox();
+				fillParkingPlacecombox();
 				}
 				
-				catch(Exception e1){
-					lineNum=0;
-				}
+				catch(Exception e1){}
 			}
 		});
 		
@@ -327,19 +338,17 @@ public class SavingParkingPlace_Panel extends JPanel {
 			
 			public void actionPerformed(ActionEvent e) {
 				try{
-				parkingplaceNum=Integer.parseInt(comboBoxLine.getSelectedItem().toString());
+				parkingplaceNum=Integer.parseInt(comboBoxParkingPlace.getSelectedItem().toString());
 				}
 				
-				catch(Exception e1){
-					parkingplaceNum=0;
-				}
+				catch(Exception e1){}
 			}
 		});
 		
 		comboBoxArrivalMin.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				arrivalTimeMin=comboBoxArrivalHour.getSelectedItem().toString();
+				arrivalTimeMin=comboBoxArrivalMin.getSelectedItem().toString();
 			}
 		});
 		
@@ -360,7 +369,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 		comboBoxDepartureHour.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				departureTimeHour=comboBoxDepartureMin.getSelectedItem().toString();
+				departureTimeHour=comboBoxDepartureHour.getSelectedItem().toString();
 			}
 		});
 		
@@ -368,16 +377,16 @@ public class SavingParkingPlace_Panel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				try{
 					
-					if(parkinglotId==0)
+					if(comboBoxParkinglot.getSelectedItem().equals(" "))
 						throw new Exception("You did'nt insert parking lot no.");
 					
-					else if(floorNum==0)
+					else if(comboBoxFloor.getSelectedItem().equals(" "))
 						throw new Exception("You did'nt insert floor no.");
 					
-					else if(lineNum==0)
+					else if(comboBoxLine.getSelectedItem().equals(" "))
 						throw new Exception("You did'nt insert line no.");
 					
-					else if(parkingplaceNum==0)
+					else if(comboBoxParkingPlace.getSelectedItem().equals(" "))
 						throw new Exception("You did'nt insert parking place no.");
 					
 					ArrivalDate=arrivalDate.getDate();
@@ -386,20 +395,18 @@ public class SavingParkingPlace_Panel extends JPanel {
 					if(ArrivalDate == null)
 						throw new Exception("You didnt select departure date");
 					
-
-					DateFormat formatArrivalDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Datearrival=formatArrivalDate.format(ArrivalDate).toString();
+					SimpleDateFormat formatArrivalDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					SimpleDateFormat formatOnlyDate = new SimpleDateFormat("yyyy-MM-dd");
+					Datearrival=formatOnlyDate.format(ArrivalDate);
 					String arrivalTime=arrivalTimeHour+":"+arrivalTimeMin+":"+"00";
-					Date arrival=formatArrivalDate.parse(Datearrival+" "+arrivalTime);
+					Date arrival=formatArrivalDate.parse(Datearrival +" "+arrivalTime);
 					
 					 if(DepartureDate == null)
 						throw new Exception("You didnt select departure date");
 					 
-					 
-
-					
-					DateFormat formatDepartureDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					Datedeparture=formatDepartureDate.format(DepartureDate).toString();
+					SimpleDateFormat formatDepartureDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					formatOnlyDate=new SimpleDateFormat("yyyy-MM-dd");
+					Datedeparture=formatOnlyDate.format(DepartureDate);
 					String departureTime=departureTimeHour+":"+departureTimeMin+":"+"00";
 					Date departure=formatDepartureDate.parse(Datedeparture+" "+departureTime);
 					
@@ -412,9 +419,9 @@ public class SavingParkingPlace_Panel extends JPanel {
 					 if(arrival.after(departure))
 						throw new Exception("You're arrival date is further then your departure date");
 					
-					DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					Date currentDate = new Date();
-				
+					
 					
 					if(arrival.before(dateFormat.parse(dateFormat.format(currentDate))))
 						throw new Exception("You're arrival date has been expired");
@@ -422,7 +429,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 					else if(departure.before(dateFormat.parse(dateFormat.format(currentDate))))
 						throw new Exception("You're arrival date has been expired");
 					
-					getParkingLot_controller().saveParkingPlace(parkinglotId,Datearrival,arrivalTime,Datedeparture,
+					getParkingLot_controller().saveParkingPlace(parkinglotId,Datearrival,Datedeparture,arrivalTime,
 					departureTime,parkingplaceNum,lineNum,floorNum);
 				}
 				catch(Exception e1){
@@ -442,7 +449,7 @@ public class SavingParkingPlace_Panel extends JPanel {
 	
 		comboBoxParkingPlace.removeAllItems();
 		comboBoxParkingPlace.addItem(" ");
-			for(Parking_Places parking_place: parkingPlaces)
+			for(Parking_Places parking_place: vaccantParkingPlaces)
 				if(parking_place.getFloor()==floorNum && parking_place.getRow()==lineNum)
 					comboBoxParkingPlace.addItem((Integer.toString(parking_place.getColumn())));
 	}

@@ -50,7 +50,7 @@ public class Employee_Panel extends JPanel {
 		vcpEmployeeLabel.setBounds(207, 11, 371, 49);
 		add(vcpEmployeeLabel);
 
-		btnFindAltParkin = new JButton("Find alt. parkin lot");
+		btnFindAltParkin = new JButton("Find alt. parking lot");
 		btnFindAltParkin.setBounds(230, 170, 129, 49);
 		add(btnFindAltParkin);
 

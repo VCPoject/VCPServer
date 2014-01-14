@@ -102,7 +102,7 @@ public class Reservation {
 	
 	public Object[] toObject() {
 	Object obj[]={getQuery(),getParkingPlaceNum(),getParkingLotNum(),getFloorNum(),
-				  getLineNum(),getArrivalDate(),getArrivalDate(),getDepartureDate(),getDepartureTime()};
+				  getLineNum(),getArrivalDate(),getArrivalTime(),getDepartureDate(),getDepartureTime()};
 	return obj;
 	}
 	
