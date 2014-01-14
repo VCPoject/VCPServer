@@ -16,7 +16,11 @@ import entity.Parking_Places;
 import entity.Reservation;
 import entity.Subscribe;
 import gui.NotWorkingPlaces_Panel;
-
+/**
+ * This class is the parking lot controller and in charge to create the parking lot entity.
+ * 
+ *
+ */
 public class ParkingLot_controller extends Controller{
 	private ArrayList<Parking_Lot> parkingLotList;
 	private ArrayList<Parking_Places> parkingPlaces;
@@ -39,7 +43,13 @@ public class ParkingLot_controller extends Controller{
 		this.parkingLotList=vcpInfo.getParkingLot();
 	}
 	
-	
+	/**
+	 * This method get all the vacant parking place in a specific parking lot,consider reservation. 
+	 * @param parkinglotId-the parking lot id
+	 * @param arrivalDate-the arrival date.
+	 * @return array list of parking place.
+	 * @throws ParseException
+	 */
 	public ArrayList<Parking_Places>  getVaccantParkingPlaces(int parkinglotId,Date arrivalDate) throws ParseException{
 		Date departureDate;
 		vaccantParkingPlaces=new ArrayList<Parking_Places>();
@@ -84,7 +94,17 @@ public class ParkingLot_controller extends Controller{
 		
 		
 	
-	
+	/**
+	 * This method save parking place in specific parking lot.
+	 * @param parkinglotId-The parking lot no.
+	 * @param arrivalDate-The arrival date.
+	 * @param departureDate-the Departure date.
+	 * @param arrivalTime-The arrival date.
+	 * @param departutreTime-The departure time.
+	 * @param parkingPlaceNum-The parking place no.
+	 * @param lineNum-the row no.
+	 * @param floorNum-the floor no.
+	 */
 	
 	public void saveParkingPlace(int parkinglotId,String arrivalDate,String departureDate,
 			String arrivalTime,String departutreTime ,int parkingPlaceNum,int lineNum,int floorNum){
@@ -125,11 +145,21 @@ public class ParkingLot_controller extends Controller{
 		closeConnection();
 	}
 	
-	
+	/**
+	 * 
+	 * @param parkinglotId=-the parking lot no.
+	 * @return Array List with all parking places of all parking lots.
+	 */
 	public ArrayList<Parking_Places> getAllparkingLotplaces(int parkinglotId){
 		return parkingPlaces;
 	}
 	
+	/**
+	 * This method update parking place as not working, only if the operation worker choose assign all paekin lot as
+	 * not working. 
+	 * @param parkingplace-The parking place no.
+	 * @param flag-flag to determine not to print messages for every parking place.
+	 */
 	public void updateParkingPlaceAsnotWorking(Parking_Places parkingplace,int flag){
 		ArrayList<Object> result = null;
 		Object[] sqlmsg={ "UPDATE  vcp_db.parking_place SET status=? WHERE idparking=? and vcp_db.parking_place.column=?"
@@ -151,7 +181,12 @@ public class ParkingLot_controller extends Controller{
 		
 		
 	}
-	
+	 
+	/**
+	 * This method update only one parking place as not working.
+	 * @param parkinglotId-The parking lot no.
+	 * @param parkingPlaceNum-The parking place no. 
+	 */
 	public void updateParkingPlaceAsnotWorking(int parkinglotId,int parkingPlaceNum){
 		
 			try{
@@ -197,6 +232,11 @@ public class ParkingLot_controller extends Controller{
 			}
 		}
 	
+	/**
+	 * This method checks whether the parking place is not working.
+	 * @param place-initialize as object so it can contain parking lot or parking place.
+	 * @return true if parking place dosen't works else false.
+	 */
 	public boolean checkIfPlaceNotWorking(Object place){
 		
 		if(place instanceof Parking_Places){
@@ -215,6 +255,11 @@ public class ParkingLot_controller extends Controller{
 		return false;
 	}
 	
+	/**
+	 * This method checks whether the parking place is working.
+	 * @param place-initialize as object so it can contain parking lot or parking place.
+	 * @return true if parking place dose works else false.
+	 */
 	public boolean checkIfPlaceWorking(Object place){
 		
 		if(place instanceof Parking_Places){
@@ -286,7 +331,10 @@ public class ParkingLot_controller extends Controller{
 	}
 	
 
-	
+	/**
+	 * 
+	 * @return all available parking places for alternative parking lot.
+	 */
 	public ArrayList<Parking_Lot> findAvailableParkingLots(){
 		ArrayList<Parking_Lot> availableParkingLots=new ArrayList<Parking_Lot>();
 		for(Parking_Lot parkingLot: parkingLotList)
@@ -296,7 +344,10 @@ public class ParkingLot_controller extends Controller{
 		
 		return availableParkingLots;
 	}
-	
+	/**
+	 * This method update parking lot as full. 
+	 * @param parkinglotId-parking lot id  no.
+	 */
 	public void updateParkingLotAsFull(int parkinglotId){
 		ArrayList<Object> result = null;
 		Object[] sqlmsg={ "UPDATE  vcp_db.parking_lot SET status=? WHERE idparking=?;" ,"full",parkinglotId};
@@ -305,7 +356,7 @@ public class ParkingLot_controller extends Controller{
 		closeConnection();
 		
 		if(result.get(0).equals("done")) {
-			showSeccussesMsg("Parking Lot has been signed up as full");
+			showSeccussesMsg("Parking Lot"+" "+parkinglotId+" has been signed up as full");
 			for(Parking_Lot parkingLot:parkingLotList)
 				if(parkingLot.getIdparkinglot()==parkinglotId)
 					parkingLot.setStatus("full");
@@ -314,7 +365,11 @@ public class ParkingLot_controller extends Controller{
 		else
 			showWarningMsg("Couldn't signed up Parking lot as full");
 	}
-	
+	/**
+	 * This method update only one parking place as not working.
+	 * @param parkinglotId-The parking lot no.
+	 * @param parkingPlaceNum-The parking place no. 
+	 */
 	public void updateparkingPlaceAsWorking(int parkinglotId,int parkingPlaceNum){
 		
 		try{
@@ -354,7 +409,10 @@ public class ParkingLot_controller extends Controller{
 			showWarningMsg(e2.getMessage());
 		}
 	}
-	
+	/** 
+	 * This method update parking lot as working and update every parking place in the parking  as not working.
+	 * @param parkinglotId the parking lot no.
+	 */
 	public void updateParkingLotAsWorking(int parkinglotId){
 		ArrayList<Object> result = null;
 		ArrayList<Parking_Places> parkingPlace= getAllparkingLotplaces(parkinglotId);
@@ -399,6 +457,12 @@ public class ParkingLot_controller extends Controller{
 			}
 	}
 	
+	/**
+	 * This method update parking place as not working, only if the operation worker choose assign all paekin lot as
+	 * not working. 
+	 * @param parkingplace-The parking place no.
+	 * @param flag-flag to determine not to print messages for every parking place.
+	 */
 	public void updateParkingPlaceAsWorking(Parking_Places parkingplace,int flag){
 		ArrayList<Object> result = null;
 		Object[] sqlmsg={ "UPDATE  vcp_db.parking_place SET status=? WHERE idparking=? and vcp_db.parking_place.column=?"
@@ -421,6 +485,10 @@ public class ParkingLot_controller extends Controller{
 		
 	}
 	
+	/**
+	 * This method update the parking lot as avaiable.
+	 * @param parkinglotId-the parking lot no.
+	 */
 	public void updateParkingLotAsAvaialble(int parkinglotId){
 		ArrayList<Object> result = null;
 		Object[] sqlmsg={ "UPDATE  vcp_db.parking_lot SET status=? 'alt_parkinglot=?"
@@ -441,6 +509,11 @@ public class ParkingLot_controller extends Controller{
 			showWarningMsg("Couldn't signed up Parking lot as available");
 	}
 	
+	/**
+	 * This method update alternative parking lot for specific parking lot which got full position.
+	 * @param fullParkinglotId-the parking which got full.
+	 * @param altParkinglotId-the alternative oarking lot.
+	 */
 	public void updateparkingLotAsAlt(int fullParkinglotId,int altParkinglotId){
 		ArrayList<Object> result = null;
 		Object[] sqlmsg={ "UPDATE vcp_db.parking_lot SET alt_parkinglot=? WHERE idparking=?;" ,altParkinglotId,
@@ -460,6 +533,12 @@ public class ParkingLot_controller extends Controller{
 		
 	}
 	
+	/**This method checks wether the parking place has specific alternative parking lot.
+	 * 
+	 * @param altParkingLot-The alternative parking lot.
+	 * @param defaultParkingLot-the default parking lot.
+	 * @return true if there is alternative parking lot for default parking lot, else false.
+	 */
 	public boolean checkAltParkingLot(int altParkingLot,int defaultParkingLot){
 		for(Parking_Lot parkinglot:parkingLotList){
 			if(parkinglot.getIdparkinglot().equals(defaultParkingLot))
@@ -484,13 +563,25 @@ public class ParkingLot_controller extends Controller{
         return cal.getTime();
     }
 	
+	/**
+	 * This method convers Date and time string into date variable
+	 * @param strDate-the Date.
+	 * @param strTime=the time.
+	 * @return date's variable containing date and time.
+	 * @throws ParseException
+	 */
 	public Date StringToDate(String strDate,String strTime) throws ParseException{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date departDate = format.parse(strDate+" "+strTime);
 		return departDate;
 	}
 
-
+	/**
+	 * This method remove alternative parking lot from being alternative parking lot for other parking lot, because
+	 * it is not full any more.
+	 * @param defaultParkingLot-the default parking lot
+	 * @param altParkingLotId-the alternative parking lot.
+	 */
 	public void RemoveparkingLotAsAlt(int defaultParkingLot, int altParkingLotId) {
 		ArrayList<Object> result = null;
 		Object[] sqlmsg={ "UPDATE vcp_db.parking_lot SET alt_parkinglot=? WHERE idparking=?;",0,defaultParkingLot};

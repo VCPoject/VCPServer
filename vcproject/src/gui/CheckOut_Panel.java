@@ -353,11 +353,7 @@ public class CheckOut_Panel extends JPanel {
 						order.setStatus("checked out");
 						getCheckOutController().Algo(order);
 						getMakeOrderController().UpdateOrderCheckout(order);
-						fullPositionCounter=getVcpInfo().fullPositionCounter();
-						fullPositionCounter[(getVcpInfo().getDefultParkingLot().getIdparkinglot())-1]--;
-						if(getVcpInfo().getDefultParkingLot().getStatus().equals("full"))
-							getParkingLot_controller().updateParkingLotAsAvaialble
-							(getVcpInfo().getDefultParkingLot().getIdparkinglot());
+						
 						if(!getMakeOrderController().getResult().get(0).equals("done"))
 							throw new Exception("Error: Can't update order");
 						if(order.getType().equals("one time")){

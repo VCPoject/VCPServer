@@ -22,9 +22,11 @@ public class VcpInfo extends Controller  {
 	private boolean systemEnable = false;
 	private ParkingLot_controller parkingLotController;
 	private int[] fullPositionCounter;
+	private String host;
 
 	public VcpInfo(String host) {
 		super(host);
+		this.host=host;
 		getParkingLotInfo();
 		getParkingPlacesInfo();
 		getDefultParkingLot();
@@ -32,10 +34,10 @@ public class VcpInfo extends Controller  {
 		getAllClients();
 		getAllOrders();
 		getAllSubscribed();
-		//getReservationInfo();
+		getReservationInfo();
 		getAllCars();
 		getParkingPricingInfo();
-		//getNotWorkingPlacesInfo();
+		getNotWorkingPlacesInfo();
 		closeConnection();
 	}
 	public ArrayList<Car> getAllCars(){
@@ -293,7 +295,7 @@ public class VcpInfo extends Controller  {
 		
 		fullPositionCounter=new int[parkingLot.size()];
 		for(int i=0;i<parkingLot.size();i++)
-			fullPositionCounter[i]=CountOccupyParkingPlaces(parkingLot.get(i).getIdparkinglot());
+			fullPositionCounter[i]=CountOccupyParkingPlaces(parkingLot.get(i));
 		
 		return parkingPlaces;
 
@@ -307,7 +309,7 @@ public class VcpInfo extends Controller  {
 		sendQueryToServer(reservationQuery);
 		ArrayList<Object> result = getResult();
 		HashMap<Integer,Reservation> reservationList=new HashMap<Integer,Reservation>();
-		while(i<result.size() && result!=null){
+		while(i<result.size() && result!=null && !result.get(0).equals("No Result")){
 			
 			Reservation reservation=new Reservation();
 			reservation.setParkingPlaceNum(Integer.parseInt(result.get(i++).toString()));
@@ -361,7 +363,7 @@ public class VcpInfo extends Controller  {
 			sendQueryToServer(employeeQuery);
 			HashMap<String, Employee> employeeHash = new HashMap<String, Employee>();
 			ArrayList<Object> result = getResult();
-			while (i < result.size()) {
+			while (i < result.size() && result!=null && !result.get(0).equals("No Result")) {
 				Employee employee = new Employee();
 				employee.setIdEmployee(Integer.parseInt(result.get(i++).toString()));
 				employee.setFirstName(result.get(i++).toString());
@@ -379,15 +381,21 @@ public class VcpInfo extends Controller  {
 		return employeeMap;
 	}
 	
-	public int CountOccupyParkingPlaces(int parkingLotId){
+	public int CountOccupyParkingPlaces(Parking_Lot parkingLotId){
 		int count=0;
+		int parkingLotSize=parkingLotId.getHight()*parkingLotId.getWidth()*parkingLotId.getDepth();
+		
 		for(Parking_Places parkingplace: parkingPlaces){
-			if(parkingplace.getIdparkinglot()==parkingLotId){
+			if(parkingplace.getIdparkinglot()==parkingLotId.getIdparkinglot()){
 				if(parkingplace.getStatus().equals("occupy") || parkingplace.getStatus().equals("save but occupy")
 				|| parkingplace.getStatus().equals("save")|| parkingplace.getStatus().equals("not working"))
 					count++;
 				}
 		}
+		
+		
+		if(parkingLotSize==count)
+			getParkingLot_controller().updateParkingLotAsFull(parkingLotId.getIdparkinglot());
 		
 		return count;
 	}
@@ -398,7 +406,7 @@ public class VcpInfo extends Controller  {
 		sendQueryToServer(query);
 		ArrayList<NotWorkingPlaces>notWorkingPlacesList=new ArrayList<NotWorkingPlaces>();
 		ArrayList<Object> result=getResult();
-		while(i<result.size() && result!=null){
+		while(i<result.size() && result!=null && !result.get(0).equals("No Result")){
 			NotWorkingPlaces nwpPlace=new NotWorkingPlaces();
 			nwpPlace.setParkingPlaceNum(Integer.parseInt(result.get(i++).toString()));
 			nwpPlace.setParkingLotid(Integer.parseInt(result.get(i++).toString()));
@@ -422,7 +430,7 @@ public class VcpInfo extends Controller  {
 	public ParkingLot_controller getParkingLot_controller(){
 		
 		if(parkingLotController==null)
-			parkingLotController=new ParkingLot_controller();
+			parkingLotController=new ParkingLot_controller(host,5555,this);
 		
 		return parkingLotController;
 	}

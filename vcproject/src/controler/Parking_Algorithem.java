@@ -15,18 +15,57 @@ import entity.Parking_Lot;
 import entity.Parking_Places;
 import entity.Reservation;
 import entity.Subscribe;
-
+/**
+ * This calss implemented the parking lot algorithem.
+ * which sort the the order's and subscribe's check in and send to the robot 
+ *to park the car in the appropriate parkin place so the orders with early time will be park
+ *at the front of the parking lot and there will be no moves of the robot when it removing car
+ *from the parking lot.
+ */
 public class Parking_Algorithem extends Controller{
+	/**
+	 * arrayList witch contain all parking places from all parking lots.
+	 */
 	private ArrayList <Parking_Places> parkingPlacesList;
+	/**
+	 * Hash map which contains all activate orders.  
+	 */
 	private HashMap<Integer, Order>  orderMap;
+	/**
+	 * Hash map which contains all checked in orders.  
+	 */
 	private HashMap<Integer, Object>  checkInorderMap;
+	/**
+	 * Hash map which contains all subscribes.  
+	 */
 	private HashMap<Integer,Subscribe>subscribeMap;
+	/**
+	 * Hash map which contains all checked in subscribes.  
+	 */
 	private HashMap<Integer,Object>checkInsubscribeMap;
+	/**
+	 * Array list which contain all parking places sorted by orders.
+	 */
 	private ArrayList<Parking_Places> sortedParkingPlaces;
+	/**
+	 * Hash map which contains all the specific parking place of certain parking lot.
+	 */
 	private HashMap <Integer,Parking_Places> parkingPlacesMap;
+	/**
+	 * Hash map which contains all saving parking places.
+	 */
 	private HashMap<Integer,Reservation> reservation;
+	/**
+	 * Variable which hold the defualt parking lot.
+	 */
 	private Parking_Lot parkingLot;
+	/**
+	 * counter  which counts the right place of the order or subscribe check in at the list.
+	 */
 	private int count=0;
+	/**
+	 * variable which holds the current order or subscribe that has checked in. 
+	 */
 	private Object checkIn;
 	
 	public Parking_Algorithem(VcpInfo vcpInfo,Object checkIn) throws ParseException{
@@ -62,7 +101,9 @@ public class Parking_Algorithem extends Controller{
 		findCar(checkOut);
 	}
 	
-
+	/**
+	 * This method insert into parkingPlaceMap all the parking place from specific parking lot.
+	 */
 	public void getParkingLotParkingPalces() {
 		parkingPlacesMap=new HashMap<Integer,Parking_Places>();
 		for(Parking_Places parkingplace:parkingPlacesList)
@@ -70,6 +111,9 @@ public class Parking_Algorithem extends Controller{
 					parkingPlacesMap.put(parkingplace.getColumn(), parkingplace);
 	}
 	
+	/**
+	 * This method gets all the orders and subscribes which made checking in. 
+	 */
 	public void getCheckedInOrders(){
 		Order checkedInOrder;
 		Subscribe checkedInSubscribe;
@@ -104,7 +148,10 @@ public class Parking_Algorithem extends Controller{
 		else if(checkIn instanceof Subscribe)
 			checkInsubscribeMap.put( ((Subscribe) checkIn).getSubscribeNum(), checkIn);
 	}
-	
+	/**
+	 * This method suppose to sort the orders and the subscribes checking in. 
+	 * @throws ParseException
+	 */
 	public void sortOrders() throws ParseException{
 		
 		while(checkInorderMap.size()!=0 ||checkInsubscribeMap.size()!=0){
@@ -186,7 +233,13 @@ public class Parking_Algorithem extends Controller{
 		}
 	}
 	
-	
+	/**
+	 * This method find the optimal place for the current car which got to the parking lot and for the cars
+	 * which recently park at the parking lot by the counter used in the method above. 
+	 * @param orderDeaprture-The departure date of the current car which want to get into the parking lot.
+	 * @param order- An object which receives the order or the  subscribe details and thus initialize as object.
+	 * @throws ParseException
+	 */
 	public void findOptimParkingPlace(Date orderDeaprture,Object order) throws ParseException{
 		int flag=0;
 		
@@ -218,7 +271,9 @@ public class Parking_Algorithem extends Controller{
 			}
 		}
 	
-		
+	/**
+	 * This method initializes the sorted parking places array list to null.
+	 */
 	public void sortedParkingPlaceInIt() {
 		sortedParkingPlaces=new ArrayList<Parking_Places>();
 		Set<Entry<Integer, Parking_Places>> parkingPlaceEntry=parkingPlacesMap.entrySet();
@@ -229,13 +284,24 @@ public class Parking_Algorithem extends Controller{
 		}
 	}
 	
+	/**
+	 * This method convers Date and time string into date variable
+	 * @param strDate-the Date.
+	 * @param strTime=the time.
+	 * @return date's variable containing date and time.
+	 * @throws ParseException
+	 */
 	public Date StringToDate(String strDate,String strTime) throws ParseException{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date departDate = format.parse(strDate+" "+strTime);
 		return departDate;
 	}
 
-
+	/**
+	 * This method send to robot the right coordinates to park the car.
+	 * @param parkingplace-the exact parking place.
+	 * @param order-the order to initialize for the parking place.
+	 */
 	public void parkCar(Parking_Places parkingplace,Object order) {
 		
 		if(order instanceof Order){
@@ -290,6 +356,11 @@ public class Parking_Algorithem extends Controller{
 		
 	}
 	
+	/**
+	 * This method remove the car from the parking lot when the clinet checling out.
+	 * @param parkingplace-the exact parking place.
+	 * @param order-the order to initialize for the parking place.
+	 */
 	public void removeCarFromLot(Parking_Places parkingplace,Object order){
 		
 		if(order instanceof Order){
@@ -342,7 +413,10 @@ public class Parking_Algorithem extends Controller{
 		
 	}
 	
-
+	/**
+	 * This method finds the accurate place where the car is in and sending it to the robot.
+	 * @param checkOut-The checkout details.
+	 */
 	public void findCar(Object checkOut) {
 		for(Parking_Places parkingplace: parkingPlacesList){
 			if(checkOut instanceof Order){
