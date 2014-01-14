@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 import javax.swing.border.TitledBorder;
 
 public class NotWorkingPlaces_Panel extends JPanel {
@@ -46,7 +47,7 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	private JLabel lblLineNumber;
 	private JLabel lblParkingPlaceNumber;
 	private JPanel panelNotWorkingPlace;
-	
+	private JButton btnRemove;
 	/**
 	 * This panel is for assign not working places or lots.
 	 * @param host for make connection with server side
@@ -56,6 +57,7 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	public NotWorkingPlaces_Panel(String host,int port, VcpInfo vcpInfo){
 		super();
 		this.defaultParkingLot=vcpInfo.getDefultParkingLot().getIdparkinglot();
+		this.vcpInfo=vcpInfo;
 		this.parkingPlaces= vcpInfo.getParkingPlaces();
 		this.host=host;
 		this.port=port;
@@ -102,6 +104,9 @@ public class NotWorkingPlaces_Panel extends JPanel {
 		add(panelNotWorkingPlace);
 		panelNotWorkingPlace.setLayout(null);
 		
+		btnRemove = new JButton("Remove");
+		btnRemove.setBounds(595, 508, 109, 56);
+		add(btnRemove);
 		
 		comboBoxParkingLot = new JComboBox <String>();
 		comboBoxParkingLot.setBounds(229, 19, 90, 22);
@@ -204,14 +209,136 @@ public class NotWorkingPlaces_Panel extends JPanel {
 		
 		btnSave.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
-					if(rdbtnParkingPlace.isSelected())
-						getParkingLot_controller().updateParkingPlaceAsnotWorking(parkingLotNum,parkingplaceNum,0);
 					
-					if(rdbtnParkingLot.isSelected())
-						getParkingLot_controller().updateParkingLotAsNotWorking(parkingLotNum);
+					try{
+						if(rdbtnParkingPlace.isSelected()){
+							
+							 if(comboBoxParkingLot.getSelectedItem().toString().equals(" "))
+							throw new Exception("You didn't insert parking lot no.");
+					
+							else if(comboBoxFloor.getSelectedItem().toString().equals(" "))
+								throw new Exception("You didn't insert floor no.");
+					
+							else if(comboBoxLine.getSelectedItem().toString().equals(" "))
+								throw new Exception("You didn't insert line no.");
+					
+							else if(comboBoxParkingPlace.getSelectedItem().toString().equals(" "))
+								throw new Exception("You didn't insert parking place no.");
+							
+						getParkingLot_controller().updateParkingPlaceAsnotWorking(parkingLotNum,parkingplaceNum);
+						}
+					
+						else if(rdbtnParkingLot.isSelected()){
+						
+							if(comboBoxParkingLot.getSelectedItem().toString().equals(" "))
+									throw new Exception("You didn't insert parking lot no.");
+							
+							getParkingLot_controller().updateParkingLotAsNotWorking(parkingLotNum);
+						}
+					}
+					catch(Exception e1){
+						getParkingLot_controller().showWarningMsg(e1.getMessage());
+					}
 				}
+		
 			});
-		}
+		
+		getbtnRemove().addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e){
+				try{
+					if(rdbtnParkingPlace.isSelected()){
+					
+					 if(comboBoxParkingLot.getSelectedItem().toString().equals(" "))
+						 throw new Exception("You didn't insert parking lot no.");
+			
+					else if(comboBoxFloor.getSelectedItem().toString().equals(" "))
+						throw new Exception("You didn't insert floor no.");
+			
+					else if(comboBoxLine.getSelectedItem().toString().equals(" "))
+						throw new Exception("You didn't insert line no.");
+			
+					else if(comboBoxParkingPlace.getSelectedItem().toString().equals(" "))
+						throw new Exception("You didn't insert parking place no.");
+					
+					 getParkingLot_controller().updateparkingPlaceAsWorking(parkingLotNum,parkingplaceNum);
+					}
+			
+				else if(rdbtnParkingLot.isSelected()){
+				
+					if(comboBoxParkingLot.getSelectedItem().toString().equals(" "))
+							throw new Exception("You didn't insert parking lot no.");
+					
+					getParkingLot_controller().updateParkingLotAsWorking(parkingLotNum);
+				}
+			}
+			catch(Exception e1){
+				getParkingLot_controller().showWarningMsg(e1.getMessage());
+			}
+		
+			}
+		});
+		
+		comboBoxParkingLot.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				try{
+					if(comboBoxParkingLot.getSelectedItem().toString().equals(" "))
+						throw new Exception();
+					
+					parkingLotNum=Integer.parseInt(comboBoxParkingLot.getSelectedItem().toString());
+				}
+				
+				catch(Exception e1){}
+			}
+		});
+		
+		comboBoxFloor.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				try{
+					if(comboBoxFloor.getSelectedItem().toString().equals(" "))
+						throw new Exception();
+					
+					floorNum=Integer.parseInt(comboBoxFloor.getSelectedItem().toString());
+				}
+				
+				catch(Exception e1){}
+			}
+		});
+		
+		comboBoxLine.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				try{
+					if(comboBoxLine.getSelectedItem().toString().equals(" "))
+						throw new Exception();
+					
+					lineNum=Integer.parseInt(comboBoxLine.getSelectedItem().toString());
+					fillParkingPlacecombox();
+				}
+				
+				catch(Exception e1){}
+			}
+		});
+		
+		comboBoxParkingPlace.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				try{
+					if(comboBoxParkingPlace.getSelectedItem().toString().equals(" "))
+						throw new Exception();
+					
+					parkingplaceNum=Integer.parseInt(comboBoxParkingPlace.getSelectedItem().toString());
+				}
+				
+				catch(Exception e1){}
+			}
+		});
+		
+	}
+	
+		
 	
 	/**
 	 * Set the visibility of components to adapt to assign not working parking places
@@ -243,8 +370,10 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	public void fillParkingPlacecombox(){
 		comboBoxParkingPlace.removeAllItems();
 		comboBoxParkingPlace.addItem(" ");
+		System.out.println(parkingLotNum+" "+lineNum+" "+floorNum);
 			for(Parking_Places parking_place: parkingPlaces)
-				if(parking_place.getFloor()==floorNum && parking_place.getRow()==lineNum)
+				if(parking_place.getIdparkinglot()==parkingLotNum &&
+				parking_place.getFloor()==floorNum && parking_place.getRow()==lineNum)
 					comboBoxParkingPlace.addItem((Integer.toString(parking_place.getColumn())));
 	}
 			
@@ -255,6 +384,10 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	
 	public JButton getbtnSave(){
 		return btnSave;
+	}
+	
+	public JButton getbtnRemove(){
+		return btnRemove;
 	}
 	
 	public ParkingLot_controller getParkingLot_controller(){

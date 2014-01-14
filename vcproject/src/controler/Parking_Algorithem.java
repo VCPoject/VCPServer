@@ -3,6 +3,7 @@ package controler;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -82,15 +83,17 @@ public class Parking_Algorithem extends Controller{
 			
 			if(orderIterator.hasNext()){
 				checkedInOrder=orderIterator.next().getValue();
-				if(checkedInOrder.getStatus().equals("checked in") && checkedInOrder.getIdparking() == parkingLot.getIdparkinglot())
-				checkInorderMap.put(checkedInOrder.getIdorder(),checkedInOrder);
+				if(checkedInOrder.getStatus().equals("checked in") && 
+				checkedInOrder.getIdparking()==parkingLot.getIdparkinglot())
+					checkInorderMap.put(checkedInOrder.getIdorder(),checkedInOrder);
 			}
 			
 			
 			
 			if(subscribeIterator.hasNext()){
 				checkedInSubscribe=subscribeIterator.next().getValue();
-				if(checkedInSubscribe.getStatus().equals("checked in") && checkedInSubscribe.getIdparking() == parkingLot.getIdparkinglot())
+				if(checkedInSubscribe.getStatus().equals("checked in") && checkedInSubscribe.getIdparking()==
+				parkingLot.getIdparkinglot())
 					checkInsubscribeMap.put(checkedInSubscribe.getSubscribeNum(),checkedInSubscribe);
 			}
 		}
@@ -127,8 +130,11 @@ public class Parking_Algorithem extends Controller{
 					((Subscribe)minOrder).getDepartureTime());
 				}
 				
-				else
-					minOrderDate=StringToDate(((Subscribe)minOrder).getEndDate(), "24:00:00");
+				else{
+					
+					Date endParkingDate=StringToDate(((Subscribe)minOrder).getEndDate(), "00:00:00");
+					minOrderDate=addDays(endParkingDate, 14);
+				}
 				
 			}
 			
@@ -156,9 +162,10 @@ public class Parking_Algorithem extends Controller{
 						((Subscribe)tempSubscribe).getDepartureTime());
 					}
 					
-					else
-						tempSubscribeDate=StringToDate(((Subscribe)tempSubscribe).getEndDate(), "24:00:00");
-					
+					else{
+						Date endParkingDate=StringToDate(((Subscribe)tempSubscribe).getEndDate(), "00:00:00");
+						tempSubscribeDate=addDays(endParkingDate, 14);
+					}
 						
 						if(tempSubscribeDate.before(minOrderDate)){
 						minOrder=tempSubscribe;
@@ -351,4 +358,17 @@ public class Parking_Algorithem extends Controller{
 		
 	}
 	
+	/**
+	 * addDays is adding to give date number of x days
+	 * @param date to be add
+	 * @param days to add to date
+	 * @return
+	 */
+	public Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
+    }
 }
