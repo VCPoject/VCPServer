@@ -371,7 +371,6 @@ public class NotWorkingPlaces_Panel extends JPanel {
 	public void fillParkingPlacecombox(){
 		comboBoxParkingPlace.removeAllItems();
 		comboBoxParkingPlace.addItem(" ");
-		System.out.println(parkingLotNum+" "+lineNum+" "+floorNum);
 			for(Parking_Places parking_place: parkingPlaces)
 				if(parking_place.getIdparkinglot()==parkingLotNum &&
 				parking_place.getFloor()==floorNum && parking_place.getRow()==lineNum)

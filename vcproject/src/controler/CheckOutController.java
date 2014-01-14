@@ -111,9 +111,9 @@ public void updateSubscribeAscheckedout(Subscribe subscribe){
 		if(subscribe.getSubscribeType().equals("partially")){
 		
 		Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?,entriesDay=?"
-		+ " WHERE subscribeNum=?;","checked in",(subscribe.getEntriesDay())-1,subscribe.getSubscribeNum()};
+		+ " WHERE subscribeNum=?;","checked out",(subscribe.getEntriesDay())-1,subscribe.getSubscribeNum()};
 		sendQueryToServer(updateSubscribe);
-		subscribe.setStatus("checked out");
+		subscribe.setStatus("not checked in");
 		subscribe.setEntriesDay((subscribe.getEntriesDay()));
 		
 		}
@@ -122,7 +122,7 @@ public void updateSubscribeAscheckedout(Subscribe subscribe){
 			Object[] updateSubscribe={"UPDATE  vcp_db.subscribe SET status=?"
 			+ " WHERE subscribeNum=?;","checked out",subscribe.getSubscribeNum()};
 			sendQueryToServer(updateSubscribe);
-			subscribe.setStatus("checked out");
+			subscribe.setStatus("not checked in");
 		}
 		
 	}
