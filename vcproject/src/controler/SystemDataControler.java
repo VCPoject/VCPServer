@@ -109,12 +109,13 @@ public class SystemDataControler extends Controller {
                 sendQueryToServer(obj);
                 if(!getResult().get(0).equals("No Result")){}
                 Vector<Vector<Object>> result = new Vector<Vector<Object>>();
-                Vector<Object> row=new Vector<Object>(6);
+                Vector<Object> row=new Vector<Object>(8);
                 for(int i=0;i<getResult().size();i++){
                         row.add(getResult().get(i));
-                        if(row.size()==6){
+                        if(row.size()==8){
                                 result.add(row);
-                                row=new Vector<Object>(6);
+                                row=new Vector<Object>(8);
+                                
                         }
                 }
                 return result;
@@ -131,7 +132,7 @@ public class SystemDataControler extends Controller {
                  s.add("Description");
                  s.add("Status");
                  s.add("Opened On Date");
-                 s.add("Status");
+                 s.add("Lot ID");
                 return s;
         }
         

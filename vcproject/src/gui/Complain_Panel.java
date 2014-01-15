@@ -5,6 +5,7 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -13,7 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 import javax.swing.JTextArea;
+
 import controler.ComplainController;
+import controler.VcpInfo;
+
 import javax.swing.SwingConstants;
 
 public class Complain_Panel extends JPanel {
@@ -29,17 +33,18 @@ public class Complain_Panel extends JPanel {
 	private String host;
 	private int port = 5555;
 	private ComplainController complainController;
-	
+	private VcpInfo vcpInfo;
 	
 	/**
 	 * This panel is for add complain from the clients
 	 * @param host for connecting to server side
 	 * @param port for connecting to server side
 	 */
-	public Complain_Panel(String host, int port) {
+	public Complain_Panel(String host, int port,VcpInfo vcpInfo) {
 		super();
 		this.host = host;
 		this.port = port;
+		this.vcpInfo=vcpInfo;
 		initialize();
 		listners();
 	}
@@ -132,7 +137,7 @@ public class Complain_Panel extends JPanel {
 	
 	public ComplainController getComplainController() {
 		if(complainController == null || !complainController.isConnected()){
-			complainController = new ComplainController(host,port);
+			complainController = new ComplainController(host,port,vcpInfo);
 		}
 			
 		return complainController;

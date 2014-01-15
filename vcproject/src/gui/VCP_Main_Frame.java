@@ -655,7 +655,7 @@ public class VCP_Main_Frame extends JFrame {
 
 	public Complain_Panel getComplain_Panel() {
 		if (complainPanel == null) {
-			complainPanel = new Complain_Panel(this.host, DEFAULT_PORT);
+			complainPanel = new Complain_Panel(this.host, DEFAULT_PORT,vcpInfo);
 		}
 		return complainPanel;
 	}

@@ -6,9 +6,10 @@ public class ComplainController extends Controller {
 
 	private String open;
 	private ComplainEntity comEnt;
-
-	public ComplainController(String host, int port) {
+	private VcpInfo vcpInfo;
+	public ComplainController(String host, int port, VcpInfo vcpInfo) {
 		super(host, port);
+		this.vcpInfo =  vcpInfo;
 		this.open="open";
 
 	}
@@ -23,9 +24,10 @@ public class ComplainController extends Controller {
 			showWarningMsg("Your id and car number are not matched");
 			return false;
 		} else {
+
 			Object[] insertComplain = {
-					"INSERT INTO `vcp_db`.`complain` (`idclient`, `description`,`status`) VALUES (?,?,?);",
-					id,complain,this.open };
+					"INSERT INTO `vcp_db`.`complain` (`idclient`, `description`,`status`,`lot_id`) VALUES (?,?,?,?);",
+					id,complain,this.open,vcpInfo.getDefultParkingLot().getIdparkinglot() };
 			sendQueryToServer(insertComplain);
 			comEnt=new ComplainEntity();
 			comEnt.setcarNum(car);

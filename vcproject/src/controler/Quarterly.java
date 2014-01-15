@@ -115,6 +115,7 @@ public class Quarterly extends Controller {
                         if(row.size()==8){
                                 result.add(row);
                                 row=new Vector<Object>(8);
+                                
                         }
                 }
                 return result;
