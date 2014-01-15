@@ -51,24 +51,24 @@ public class CancelOrderController extends Controller {
 				long diffHoursDeparture = diffDeparture / (60 * 60 * 1000);
 				if (diffHoursArrival>=3){
 					if(getResult().get(2).equals("temp")){
-						Float cash = ((float)4*diffHoursDeparture);
+						Float cash = ((float)pricing.getOccasional()*diffHoursDeparture);
 						applyDB(part1,cash);
 						return cash.toString();
 					}
 					else{
-						Float cash = ((float)4*diffHoursDeparture);
+						Float cash = ((float)pricing.getOneTime()*diffHoursDeparture);
 						applyDB(part1,cash);
 						return cash.toString();
 					} 
 				}
 				else if(diffHoursArrival<=3 && diffHoursArrival>=1){
 					if(getResult().get(2).equals("temp")){
-						Float cash = (float) (4*diffHoursDeparture*0.5);
+						Float cash = (float) (pricing.getOccasional()*diffHoursDeparture*0.5);
 						applyDB(part1,cash);
 						return cash.toString();
 					}
 					else{
-						Float cash = (float)(4*diffHoursDeparture*0.5);
+						Float cash = (float)(pricing.getOneTime()*diffHoursDeparture*0.5);
 						applyDB(part1,cash);
 						return cash.toString();
 					}
