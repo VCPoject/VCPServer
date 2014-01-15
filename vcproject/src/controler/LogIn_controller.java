@@ -83,8 +83,14 @@ public class LogIn_controller extends Controller{
 		Object[] sqlsMsg = { "UPDATE  vcp_employ.employ SET login=? WHERE username=?;" ,
 				"NO",getUsername()};
 		sendQueryToServer(sqlsMsg);
-		closeConnection();
 		employeeMap.get(getUsername()).setLogin("NO");
+	}
+	
+	public void updateAsNotLoggedIn(Employee connectedEmployee) {
+		Object[] sqlsMsg = { "UPDATE  vcp_employ.employ SET login=? WHERE username=?;" ,
+				"NO",connectedEmployee.getUserName()};
+		sendQueryToServer(sqlsMsg);
+		employeeMap.get(connectedEmployee.getUserName()).setLogin("NO");
 	}
 
 	public String getUsername() {

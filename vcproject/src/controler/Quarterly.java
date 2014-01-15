@@ -26,29 +26,30 @@ public class Quarterly extends Controller {
          */
         protected void getRowData(String start,String end,int lotID){
 
-                Object[] obj ={"SELECT * FROM vcp_db.order WHERE arrivalDate < ? AND arrivalDate > ? AND idparking = ? ORDER BY type;",end,start,lotID};
+                Object[] obj ={"SELECT DISTINCT * FROM vcp_db.order WHERE arrivalDate < ? AND arrivalDate > ? AND idparking = ? ORDER BY type;",end,start,lotID};
                 sendQueryToServer(obj);
                 if(!getResult().get(0).equals("No Result")){}
                 for(int i=0;i<getResult().size();i++)
                         orderReport.add(getResult().get(i));
-                Object[] obj1 ={"SELECT * FROM vcp_db.complain WHERE date < ? AND date > ? AND lot_id = ?  ORDER BY status;",end,start,lotID};
+                Object[] obj1 ={"SELECT DISTINCT * FROM vcp_db.complain WHERE date < ? AND date > ? AND lot_id = ?  ORDER BY status;",end,start,lotID};
                 sendQueryToServer(obj1);
                 if(!getResult().get(0).equals("No Result")){}
                 for(int i=0;i<getResult().size();i++)
                         complainReport.add(getResult().get(i));
-                Object[] obj2 ={"SELECT COUNT(parkingPlaceNum) FROM vcp_db.not_working_places WHERE endDate < ? AND startDate > ? AND idparking = ? AND parkingPlaceNum !=0 ;",end,start,lotID};
+                Object[] obj2 ={"SELECT COUNT(parkingPlaceNum) FROM vcp_db.not_working_places WHERE startDate < ? AND startDate > ? AND idparking = ? AND parkingPlaceNum !=0 ;",end,start,lotID};
                 sendQueryToServer(obj2);
                 if(!getResult().get(0).equals("No Result")){}
                 for(int i=0;i<getResult().size();i++)
                         parkingDownReport.add(getResult().get(i));
-                Object[] obj3 ={"SELECT idparking FROM vcp_db.not_working_places WHERE endDate < ? AND startDate > ?  AND parkingPlaceNum = 0 AND idparking = ?;",end,start,lotID};
+                Object[] obj3 ={"SELECT idparking FROM vcp_db.not_working_places WHERE startDate < ? AND startDate > ?  AND parkingPlaceNum = 0 AND idparking = ?;",end,start,lotID};
                 sendQueryToServer(obj3);
-                if(!getResult().get(0).equals("No Result")){}
+                if(!getResult().get(0).equals("No Result")){
                 for(int i =0;i<getResult().size();i++)
                         parkingDownReport.add(vcpInfo.getParkingLotInfo().get(Integer.parseInt(getResult().get(i).toString())).getDepth()*
                                         vcpInfo.getParkingLotInfo().get(Integer.parseInt(getResult().get(i).toString())).getHight()*
                                         vcpInfo.getParkingLotInfo().get(Integer.parseInt(getResult().get(i).toString())).getWidth());   
-                
+                }else 
+                	parkingDownReport.add(0);
         }
         
         /**
@@ -107,13 +108,13 @@ public class Quarterly extends Controller {
                         getRowData(year + "-10-01", year + "-12-31", lotID);
                 }
                 Vector<Vector<Object>> result = new Vector<Vector<Object>>();
-                Vector<Object> row=new Vector<Object>(6);
+                Vector<Object> row=new Vector<Object>(8);
                 for(int i=0;i<complainReport.size();i++)
                 {
                         row.add(complainReport.get(i));
-                        if(row.size()==6){
+                        if(row.size()==8){
                                 result.add(row);
-                                row=new Vector<Object>(6);
+                                row=new Vector<Object>(8);
                         }
                 }
                 return result;
@@ -125,7 +126,7 @@ public class Quarterly extends Controller {
          * @param lotID
          * @return Vector<Object> result
          */
-        public Vector<Object> NotWorking(int qurater, int year,int lotID){
+        public Vector<Vector<Object>> NotWorking(int qurater, int year,Integer lotID){
                 if(qurater ==1){
                         getRowData(year + "-01-01", year + "-03-31", lotID);
                 }
@@ -139,12 +140,18 @@ public class Quarterly extends Controller {
                         getRowData(year + "-10-01", year + "-12-31", lotID);
                 }
                 
-                Vector<Object> result = new Vector<Object>();
-                result.add(lotID);
-                int sum=0;
+                Vector<Vector<Object>> result = new Vector<Vector<Object>>();
+                Vector<Object> row=new Vector<Object>();
+                row.add("Lot Number");
+                row.add(lotID);
+                result.add(row);
+                Integer sum=0;
                 for(int i=0;i<parkingDownReport.size();i++)
                         sum=sum + Integer.parseInt(parkingDownReport.get(i).toString());
-                result.add(sum);
+                row=new Vector<Object>();
+                row.add("Number Of Not Working Places");
+                row.add(sum);
+                result.add(row);
                 return result;
         }
         

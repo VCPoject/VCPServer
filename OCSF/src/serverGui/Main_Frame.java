@@ -43,6 +43,7 @@ public class Main_Frame extends JFrame {
 	 */
 	public Main_Frame(int port) {
 		super();
+		setTitle("VCP Server");
 		this.port = port;
 		initialize();
 		listners();

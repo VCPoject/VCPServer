@@ -66,9 +66,11 @@ public class ManagerStats extends Controller {
 		Object[] ParkingAboted = {"SELECT COUNT(idorder) FROM vcp_db.order WHERE status ='Aborted' "
 				+ "GROUP BY idparking ORDER BY idparking;"};
 			sendQueryToServer(ParkingAboted);
-			if(!getResult().get(0).equals("No Result")){}
-			for(int i=0;i<getResult().size();i++)
-			abortedParking.add(Integer.parseInt(getResult().get(i++).toString()));
+			if(!getResult().get(0).equals("No Result")){
+				for(int i=0;i<getResult().size();i++)
+					abortedParking.add(Integer.parseInt(getResult().get(i++).toString()));
+			}else
+				abortedParking.add(0);
 			Object[] late = {"SELECT CAST(SUM(TIME_TO_SEC(SUBTIME(checkInTime,arrivalTime)))AS SIGNED) FROM vcp_db.order WHERE checkInTime > arrivalTime GROUP BY idorder;"};
 			sendQueryToServer(late);
 			if(getResult().get(0).equals("No Result")){}
@@ -77,9 +79,12 @@ public class ManagerStats extends Controller {
 			Object[] lateByParking = {"SELECT CAST(SUM(TIME_TO_SEC(SUBTIME(checkInTime,arrivalTime))) AS SIGNED) FROM vcp_db.order WHERE checkInTime > "
 					+ "arrivalTime GROUP BY idparking ORDER BY idparking;"};
 			sendQueryToServer(lateByParking);
-			if(getResult().get(0).equals("No Result")){}
-			for(int i=0;i<getResult().size();i++)
-				lateTimeByParking.add((Integer.parseInt(getResult().get(i).toString()))/60);
+			if(!getResult().get(0).equals("No Result")){
+				for(int i=0;i<getResult().size();i++)
+					lateTimeByParking.add((Integer.parseInt(getResult().get(i).toString()))/60);
+			}else
+				lateTimeByParking.add(0);
+			
 	}
 	
 	/**

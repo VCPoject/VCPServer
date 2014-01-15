@@ -276,15 +276,18 @@ public class ParkingLot_controller extends Controller{
 	public void updateParkingLotAsNotWorking(int parkinglotId){
 		ArrayList<Object> result = null;
 		ArrayList<Parking_Places> parkingPlace= getAllparkingLotplaces(parkinglotId);
-		
-		
 		try{
 		for(Parking_Lot parkingLot:parkingLotList)
 			if(parkingLot.getIdparkinglot()==parkinglotId){
 				if(checkIfPlaceNotWorking(parkingLot))
 					throw new Exception("This Parking Lot is already assigned as not working");
-				else
+				else{
 					parkingLot.setStatus("not working");
+					if(parkingLot.getIdparkinglot().equals(vcpInfo.getDefultParkingLot().getIdparkinglot()))
+						vcpInfo.setDefultParkingLot(parkingLot);
+				}
+					
+				
 			}
 				
 		
@@ -351,15 +354,32 @@ public class ParkingLot_controller extends Controller{
 		closeConnection();
 		
 		if(result.get(0).equals("done")) {
-			showSeccussesMsg("Parking Lot"+" "+parkinglotId+" has been signed up as full");
+			if(checkIfParkngLotIsFull(parkinglotId)==false);
+				showSeccussesMsg("Parking Lot"+" "+parkinglotId+" has been signed up as full");
 			for(Parking_Lot parkingLot:parkingLotList)
-				if(parkingLot.getIdparkinglot()==parkinglotId)
+				if(parkingLot.getIdparkinglot()==parkinglotId){
 					parkingLot.setStatus("full");
+					if(parkingLot.getIdparkinglot().equals(vcpInfo.getDefultParkingLot().getIdparkinglot()))
+						vcpInfo.setDefultParkingLot(parkingLot);
+				}
+					
+					
 		}
 		
 		else
 			showWarningMsg("Couldn't signed up Parking lot as full");
 	}
+	
+	public boolean checkIfParkngLotIsFull(int parkinglotId){
+		for(Parking_Lot parkingLot:parkingLotList)
+			if(parkingLot.getIdparkinglot()==parkinglotId)
+				if(parkingLot.getStatus().equals("full"))
+					return true;
+		
+		return false;
+	}
+	
+	
 	/**
 	 * This method update only one parking place as not working.
 	 * @param parkinglotId-The parking lot no.
@@ -370,7 +390,6 @@ public class ParkingLot_controller extends Controller{
 		try{
 			for(Parking_Places parkingPlace:parkingPlaces){
 				if(parkingPlace.getIdparkinglot()==parkinglotId && parkingPlace.getColumn()==parkingPlaceNum){
-					
 					if(checkIfPlaceWorking(parkingPlace)==false){
 						ArrayList<Object> result = null;
 						Object[] sqlmsg={ "UPDATE  vcp_db.parking_place SET status=? WHERE idparking=? and vcp_db.parking_place.column=?;"
@@ -416,8 +435,12 @@ public class ParkingLot_controller extends Controller{
 				if(parkingLot.getIdparkinglot()==parkinglotId){
 					if(checkIfPlaceWorking(parkingLot)==false)
 						throw new Exception("This Parking Lot is already assigned as working");
-					else
+					else{
 						parkingLot.setStatus("available");
+						if(parkingLot.getIdparkinglot().equals(vcpInfo.getDefultParkingLot().getIdparkinglot()))
+							vcpInfo.setDefultParkingLot(parkingLot);
+						
+					}
 				}
 					
 			
@@ -497,6 +520,8 @@ public class ParkingLot_controller extends Controller{
 				if(parkingLot.getIdparkinglot()==parkinglotId){
 					parkingLot.setStatus("available");
 					parkingLot.setAltparkinglot(0);
+					if(parkingLot.getIdparkinglot().equals(vcpInfo.getDefultParkingLot().getIdparkinglot()))
+							vcpInfo.setDefultParkingLot(parkingLot);
 				}
 		}
 		

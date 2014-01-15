@@ -187,6 +187,11 @@ public class CheckIn_Panel extends JPanel {
 					String departDateStr = "";
 					String carNumStr = textFieldCarNumber.getText();
 					
+					if(getVcpInfo().getDefultParkingLot().getStatus().equals("not working"))
+						throw new Exception("Sorry parking lot"+" "+
+				getVcpInfo().getDefultParkingLot().getIdparkinglot()+" "+"is not working "+"you can go to"+
+				" "+getVcpInfo().getDefultParkingLot().getAltparkinglot()+" "+"instead");
+					
 					if(getVcpInfo().getDefultParkingLot().getStatus().equals("full"))
 							throw new Exception("Sorry parking lot"+" "+
 					getVcpInfo().getDefultParkingLot().getIdparkinglot()+" "+"is full"+"you can go to"+

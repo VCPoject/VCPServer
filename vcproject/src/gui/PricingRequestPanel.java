@@ -18,6 +18,8 @@ import controler.PricingController;
 import javax.swing.JButton;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
 import entity.Pricing;
 
@@ -102,7 +104,7 @@ public class PricingRequestPanel extends JPanel {
 		}
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(33, 92, 720, 293);
+		scrollPane.setBounds(146, 92, 492, 293);
 		add(scrollPane);
 		
 		table = new JTable(data, cols) {
@@ -114,6 +116,7 @@ public class PricingRequestPanel extends JPanel {
 		};
 		table.setSurrendersFocusOnKeystroke(true);
 		scrollPane.setViewportView(table);
+		arrangeTable();
 		
 		
 		
@@ -132,12 +135,12 @@ public class PricingRequestPanel extends JPanel {
 			}
 		});
 		btnApproval.setEnabled(false);
-		btnApproval.setBounds(664, 396, 89, 23);
+		btnApproval.setBounds(403, 396, 89, 23);
 		add(btnApproval);
 		
 		btnDisapprove = new JButton("Disapprove");
 		btnDisapprove.setEnabled(false);
-		btnDisapprove.setBounds(565, 396, 89, 23);
+		btnDisapprove.setBounds(293, 396, 89, 23);
 		add(btnDisapprove);
 		
 		
@@ -198,5 +201,26 @@ public class PricingRequestPanel extends JPanel {
 			pricingController = new PricingController(host,port);
 		}
 		return pricingController;
+	}
+	
+	/**
+	 * arrangeTable make the table view more readable.
+	 */
+	public void arrangeTable(){
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+ 	        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+ 	        table.setDefaultRenderer(String.class, centerRenderer);
+ 	        for(int i=0;i<table.getColumnCount();i++){
+ 	        	table.getColumnModel().getColumn(i).setCellRenderer( centerRenderer );
+ 	        }
+			TableCellRenderer rendererHeader = table.getTableHeader().getDefaultRenderer();
+			JLabel label = (JLabel)rendererHeader;
+			label.setHorizontalAlignment(JLabel.CENTER);
+			
+			table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			TableColumnAdjuster tca = new TableColumnAdjuster(table);
+			tca.adjustColumns();
+			scrollPane.revalidate();
+			scrollPane.repaint();
 	}
 }

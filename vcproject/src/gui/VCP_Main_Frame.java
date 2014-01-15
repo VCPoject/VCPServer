@@ -270,8 +270,8 @@ public class VCP_Main_Frame extends JFrame {
 															"Are you sure you want to exit the application?",
 															"Exit Application",	JOptionPane.YES_NO_OPTION);
 											if (result == JOptionPane.YES_OPTION) {
+												getLogIn_Frame().getLogIn_Panel().getLogincontroller().updateAsNotLoggedIn(getEmployeePanel().getConectedEmployee());
 												setContentPane(getMainPanel());
-												getLogIn_Frame().getLogIn_Panel().getLogincontroller().updateAsNotLoggedIn();
 												getLogIn_Frame().getLogIn_Panel().getLogincontroller().closeConnection();
 												employee_panel = null;
 											}
@@ -427,6 +427,7 @@ public class VCP_Main_Frame extends JFrame {
 				getCheckInFrame(true).getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
+								getCheckInFrame(true).getCheckInPanel().getCheckInController().closeConnection();
 								getCheckInFrame(true).dispose();
 								enableMainFrame();
 								CheckInOutFrame = null;
@@ -443,6 +444,7 @@ public class VCP_Main_Frame extends JFrame {
 				getCheckInFrame(false).getBtnReturn().addActionListener(
 						new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
+								getCheckInFrame(false).getCheckOutPanel().getCheckOutController().closeConnection();
 								getCheckInFrame(false).dispose();
 								enableMainFrame();
 								CheckInOutFrame = null;
@@ -515,13 +517,30 @@ public class VCP_Main_Frame extends JFrame {
                     getStatistics().getBtnReturn().addActionListener(
                                     new ActionListener() {
                                             public void actionPerformed(ActionEvent e) {
-                                                    setContentPane(getEmployeePanel());
-                                                    statisticsPanel = null;
+                                            	getStatistics().getDailyStatistic().closeConnection();
+                                                setContentPane(getEmployeePanel());
+                                                statisticsPanel = null;
                                             }
                                     });
 
             }
-    });        
+    });  
+		
+		getEmployeePanel().getSystemData().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setContentPane(getSystemData());
+				getSystemData().getBtnReturn().addActionListener(
+						new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								getSystemData().getSystemDataControler().closeConnection();
+								setContentPane(getEmployeePanel());
+								quaterly = null;
+								
+							}
+						});
+
+			}
+		});	
     
     getEmployeePanel().getbtnQuarterly().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -529,6 +548,7 @@ public class VCP_Main_Frame extends JFrame {
                     getQuarterlyGui().getBtnReturn().addActionListener(
                                     new ActionListener() {
                                             public void actionPerformed(ActionEvent e) {
+                                            		getQuarterlyGui().getQuarterly().closeConnection();
                                                     setContentPane(getEmployeePanel());
                                                     quaterly = null;
                                                     
@@ -537,6 +557,9 @@ public class VCP_Main_Frame extends JFrame {
 
             }
     });
+    
+    
+    
 		
 		
 		

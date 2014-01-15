@@ -193,10 +193,10 @@ public class SystemData extends JPanel {
                                                  arrangeTable();
                                          }
                                          else if(comboBox_1.getSelectedItem().toString().equals("Not Working Lot Report")){
-                                                 Vector<Object> data=getQuarterly().NotWorking(Integer.parseInt(comboBox.getSelectedItem().toString()), yearChooser.getYear(), Integer.parseInt(comboBox_2.getSelectedItem().toString()));
+                                        	 Vector<Vector<Object>> data=getQuarterly().NotWorking(Integer.parseInt(comboBox.getSelectedItem().toString()), yearChooser.getYear(), Integer.parseInt(comboBox_2.getSelectedItem().toString()));
                                                  Vector<String> s = new Vector<String>(2);
-                                                 s.add("Lot Number");
-                                                 s.add("Number Of Not Working Place");
+                                                 s.add(" ");
+                                                 s.add(" ");
                                                  table.setModel((new DefaultTableModel(data,s)));
                                                  arrangeTable();
                                          }
@@ -234,7 +234,7 @@ public class SystemData extends JPanel {
                 return qControler;
         }
         
-        private SystemDataControler getSystemDataControler() {
+        public SystemDataControler getSystemDataControler() {
                 if(sControler == null || !sControler.isConnected()){
                         sControler = new SystemDataControler(host,port,vcpInfo);
                 }

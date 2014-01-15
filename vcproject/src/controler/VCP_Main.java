@@ -12,7 +12,7 @@ public class VCP_Main {
 		VCP_Main_Frame mainFrame;
 		
 		if (args.length == 0){
-			mainFrame = new VCP_Main_Frame("localhost");
+			mainFrame = new VCP_Main_Frame("localhost");//TODO
 		}
 		else{
 			mainFrame = new VCP_Main_Frame(args[0].toString());

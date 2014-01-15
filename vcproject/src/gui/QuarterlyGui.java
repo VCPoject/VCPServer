@@ -105,7 +105,9 @@ public class QuarterlyGui extends JPanel {
                                          s.add("Description");
                                          s.add("Status");
                                          s.add("Opened On Date");
-                                         s.add("Status");
+                                         s.add("Parking Lot");
+                                         s.add("Replay");
+                                         s.add("Refound");
                                          if(getConectedEmployee().getRole().equals("network manager")){
                                                  Vector<Vector<Object>> data = getQuarterly().ComplainStatus(Integer.parseInt(comboBox.getSelectedItem().toString()), 
                                                          yearChooser.getYear(),Integer.parseInt(comboBox_1.getSelectedItem().toString()));
@@ -126,16 +128,18 @@ public class QuarterlyGui extends JPanel {
                  btnNotWorking.addActionListener(new ActionListener() {
                                  public void actionPerformed(ActionEvent e) {
                                          Vector<String> s = new Vector<String>(2);
-                                         s.add("Lot Number");
-                                         s.add("Number Of Not Working Place");
+                                         s.add(" ");
+                                         s.add(" ");
                                          if(getConectedEmployee().getRole().equals("network manager")){
-                                                 Vector<Object> data = getQuarterly().NotWorking(Integer.parseInt(comboBox.getSelectedItem().toString()), 
+                                        	 Vector<Vector<Object>> data1 = getQuarterly().NotWorking(Integer.parseInt(comboBox.getSelectedItem().toString()), 
                                                          yearChooser.getYear(),Integer.parseInt(comboBox_1.getSelectedItem().toString()));
-                                         table.setModel((new DefaultTableModel(data,s)));
-                                         arrangeTable();
+
+                                                 DefaultTableModel tModel= new DefaultTableModel(data1,s);
+		                                         table.setModel(tModel);
+		                                         arrangeTable();
                                          }
                                          else {
-                                                 Vector<Object> data = getQuarterly().NotWorking(Integer.parseInt(comboBox.getSelectedItem().toString()), 
+                                        	 Vector<Vector<Object>> data = getQuarterly().NotWorking(Integer.parseInt(comboBox.getSelectedItem().toString()), 
                                                                  yearChooser.getYear(),vcpInfo.getDefultParkingLot().getIdparkinglot());
                                                  table.setModel((new DefaultTableModel(data,s)));
                                                  arrangeTable();
@@ -232,7 +236,7 @@ public class QuarterlyGui extends JPanel {
                 
         }
         
-        private Quarterly getQuarterly() {
+        public Quarterly getQuarterly() {
                 if(qControler == null || !qControler.isConnected()){
                         qControler = new Quarterly(host,port,vcpInfo);
                 }
