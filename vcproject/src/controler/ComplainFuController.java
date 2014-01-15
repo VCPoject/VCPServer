@@ -47,8 +47,8 @@ public class ComplainFuController extends Controller {
 
 	public String getSelectedItemComplain(String selectedItem) {
 		Object[] sqlsMsg = {
-				"SELECT `complain_`.`replay` FROM `vcp_db`.`complain` WHERE "
-						+ " `complain_ans`.`complainNum`= ?", Integer.parseInt(selectedItem)};
+				"SELECT `complain`.`replay` FROM `vcp_db`.`complain` WHERE "
+						+ " `complain`.`complainNum`= ?", Integer.parseInt(selectedItem)};
 		sendQueryToServer(sqlsMsg);
 		return getResult().get(0).toString();
 	}

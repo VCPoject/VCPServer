@@ -110,6 +110,7 @@ public class StatisticsPanel extends JPanel {
 		 		getWeeklyStats();
 		 		table.setModel(new DefaultTableModel(weekController.toVector(),weekController.obtainFields()));
 		 		arrangeTable();
+		 		getWeeklyStats().closeConnection();
 		 	}
 		 });
 		
@@ -131,6 +132,7 @@ public class StatisticsPanel extends JPanel {
 		 		if(data != null){
 		 			table.setModel(new DefaultTableModel(data,cols));
 		 			arrangeTable();
+		 			getDailyStatistic().closeConnection();
 		 		}
 		 	}
 		 });

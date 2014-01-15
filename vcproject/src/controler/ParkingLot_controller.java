@@ -131,8 +131,10 @@ public class ParkingLot_controller extends Controller{
 		reservation.setQuery(addReservationQuery);
 		sendQueryToServer(reservation);
 		result=getResult();
-		if(result.get(0).equals("done")) 
+		if(result.get(0).equals("done")) {
 			showSeccussesMsg("Parking Place has been saved");
+			vcpInfo.getReservation().put(reservation.getParkingPlaceNum(), reservation);
+		}
 			
 		else
 			showWarningMsg("Couldn't save Parking Palce");

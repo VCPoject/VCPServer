@@ -95,6 +95,7 @@ public class VCP_Main_Frame extends JFrame {
 				
 				if (getLogIn_Frame().getLogIn_Panel().checkValidity()){
 					getLogIn_Frame().getLogIn_Panel().getLogincontroller().updateAsNotLoggedIn();
+					getLogIn_Frame().getLogIn_Panel().getLogincontroller().closeConnection();
 						getLogIn_Frame().setContentPane(getParkingLotInit());
 				}
 							
@@ -128,6 +129,7 @@ public class VCP_Main_Frame extends JFrame {
 					if(parkinglot.getIdparkinglot()== defaultParkinglotNum){
 						getVcpInfo().setDefultParkingLot(parkinglot);
 						getLogIn_Frame().closeLoginFrame();
+						parkinglotinit = null;
 						loginframe=null;
 						initialize();
 					}
